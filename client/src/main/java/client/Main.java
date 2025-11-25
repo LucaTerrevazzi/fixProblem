@@ -28,7 +28,7 @@ import client.scenes.QuoteOverviewCtrl;
 import client.utils.ServerUtils;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
+// this is a test comment to practice during the CSEP lecture
 public class Main extends Application {
 
 	private static final Injector INJECTOR = createInjector(new MyModule());
