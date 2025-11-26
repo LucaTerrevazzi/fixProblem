@@ -71,6 +71,14 @@ public class RecipeIngredient {
         this.amount = amount;
     }
 
+    /**
+     * Creates a copy of the ingredient.
+     * @return
+     */
+    public RecipeIngredient copy(){
+        return new RecipeIngredient(ingredient, unit, amount);
+    }
+
     @Override
     public String toString() {
         return Integer.toString(amount) + unit + " " + ingredient.getIngredientName();
