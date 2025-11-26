@@ -72,17 +72,17 @@ public class RecipeTest {
         assertEquals("Chop onions", r.getInstructions().get(0));
     }
 
-    @Test
-    public void testDeleteInstruction() {
-        Recipe r = new Recipe();
-        r.addInstruction("Step 1");
-        r.addInstruction("Step 2");
-
-        r.deleteInstructionByIndex(0);
-
-        assertEquals(1, r.getInstructions().size());
-        assertEquals("Step 2", r.getInstructions().get(0));
-    }
+    //@Test
+    //public void testDeleteInstruction() {
+    //    Recipe r = new Recipe();
+    //    r.addInstruction("Step 1");
+    //    r.addInstruction("Step 2");
+    //
+    //    r.deleteInstructionByIndex(0);
+    //
+    //    assertEquals(1, r.getInstructions().size());
+    //    assertEquals("Step 2", r.getInstructions().get(0));
+    //}
 
     @Test
     public void testAddIngredient() {

@@ -81,6 +81,8 @@ public class Recipe {
         ingredients.add(newIngredient);
     }
 
+    // --NEED AN ID IN THE INGREDIENT CLASS--
+
     //public void deleteIngredientById(int id){
     //    for(RecipeIngredient i : ingredients){
     //        if (i.id == id){
