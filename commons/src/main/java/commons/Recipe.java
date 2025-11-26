@@ -61,10 +61,21 @@ public class Recipe {
         this.instructions = instructions;
     }
 
+    /**
+     * Add an instruction to the list of instructions in this recipe.
+     * This only alows the user to add an instruction (a step of the recipe)
+     * at the end of all the steps.
+     * @param instruction The instruction to add.
+     */
     public void addInstruction(String instruction) {
         instructions.add(instruction);
     }
 
+    /**
+     * Delete an instruction from the instruction list.
+     * While creating a recipe, the user can choose to delete one of the instructions.
+     * @param index the index at which we would like to remove the instruction.
+     */
     public void deleteInstructionByIndex(int index){
         instructions.remove(index);
     }
@@ -77,6 +88,10 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
+    /**
+     * Add an ingredient to the recipe.
+     * @param newIngredient the ingredient to add.
+     */
     public void addIngredient(RecipeIngredient newIngredient) {
         ingredients.add(newIngredient);
     }
@@ -165,7 +180,10 @@ public class Recipe {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Recipe recipe = (Recipe) o;
-        return getRecipeID() == recipe.getRecipeID() && Objects.equals(getRecipeName(), recipe.getRecipeName()) && Objects.equals(getInstructions(), recipe.getInstructions()) && Objects.equals(getIngredients(), recipe.getIngredients());
+        return getRecipeID() == recipe.getRecipeID() &&
+                Objects.equals(getRecipeName(), recipe.getRecipeName()) &&
+                Objects.equals(getInstructions(), recipe.getInstructions()) &&
+                Objects.equals(getIngredients(), recipe.getIngredients());
     }
 
     @Override

@@ -73,7 +73,7 @@ public class RecipeIngredient {
 
     /**
      * Creates a copy of the ingredient.
-     * @return
+     * @return a new recipe ingredient, with exactly the same attributes.
      */
     public RecipeIngredient copy(){
         return new RecipeIngredient(ingredient, unit, amount);
