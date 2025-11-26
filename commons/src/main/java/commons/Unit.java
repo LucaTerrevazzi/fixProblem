@@ -1,5 +1,40 @@
 package commons;
 
+/**
+ * Represents a set of unit types that could be used in a recipe via RecipeIngredients
+ */
 public enum Unit {
-    kg, g, L, ml, tbsp, tsp, pinch
+    /**
+     * kilograms
+     */
+    kg,
+
+    /**
+     * grams
+     */
+    g,
+    /**
+     * Litres
+     */
+    L,
+
+    /**
+     * millilitres
+     */
+    mL,
+
+    /**
+     * tablespoons
+     */
+    tbsp,
+
+    /**
+     * teaspoons
+     */
+    tsp,
+
+    /**
+     * pinch (informal)
+     */
+    pinch
 }
