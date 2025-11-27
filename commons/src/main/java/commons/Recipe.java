@@ -1,15 +1,24 @@
 package commons;
 
-import java.util.List;
+import commons.RecipeIngredient;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Recipe {
 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int recipeID;
     private String recipeName;
-    private List<String> instructions = new ArrayList<>();
+    private List<Instruction> steps = new ArrayList<>();
     private List<RecipeIngredient> ingredients = new ArrayList<>();
+
 
     /**
      * This constructor creates a Recipe without any attributes set.
@@ -25,17 +34,19 @@ public class Recipe {
     }
 
     /**
-     * This constructor creates a non-empty Recipe.
-     * @param recipeID The unique ID of the recipe (e.g. 3284)
-     * @param recipeName The name of the recipe (e.g. "Pizza Regina")
-     * @param instructions A list of instructions (e.g. "Put it in the oven")
+     * Constructor of a new recipe
+     * @param recipeID ID of recipe
+     * @param recipeName Name of the recipe
+     * @param steps list of steps
+     * @param ingredients ingredients of recipe
      */
-    public Recipe(int recipeID, String recipeName, List<String> instructions, List<RecipeIngredient> ingredients) {
+    public Recipe(int recipeID, String recipeName, List<Instruction> steps, List<RecipeIngredient> ingredients) {
         this.recipeID = recipeID;
         this.recipeName = recipeName;
-        this.instructions = instructions;
+        this.steps = steps;
         this.ingredients = ingredients;
     }
+
 
     public int getRecipeID() {
         return recipeID;
@@ -53,31 +64,12 @@ public class Recipe {
         this.recipeName = recipeName;
     }
 
-    public List<String> getInstructions() {
-        return instructions;
+    public List<Instruction> getSteps() {
+        return steps;
     }
 
-    public void setInstructions(List<String> instructions) {
-        this.instructions = instructions;
-    }
-
-    /**
-     * Add an instruction to the list of instructions in this recipe.
-     * This only alows the user to add an instruction (a step of the recipe)
-     * at the end of all the steps.
-     * @param instruction The instruction to add.
-     */
-    public void addInstruction(String instruction) {
-        instructions.add(instruction);
-    }
-
-    /**
-     * Delete an instruction from the instruction list.
-     * While creating a recipe, the user can choose to delete one of the instructions.
-     * @param index the index at which we would like to remove the instruction.
-     */
-    public void deleteInstructionByIndex(int index){
-        instructions.remove(index);
+    public void setSteps(List<Instruction> steps) {
+        this.steps = steps;
     }
 
     public List<RecipeIngredient> getIngredients() {
@@ -88,88 +80,15 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
-    /**
-     * Add an ingredient to the recipe.
-     * @param newIngredient the ingredient to add.
-     */
-    public void addIngredient(RecipeIngredient newIngredient) {
-        ingredients.add(newIngredient);
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "recipeID=" + recipeID +
+                ", recipeName='" + recipeName + '\'' +
+                ", steps=" + steps +
+                ", ingredients=" + ingredients +
+                '}';
     }
-
-    // --NEED AN ID IN THE INGREDIENT CLASS--
-
-    //public void deleteIngredientById(int id){
-    //    for(RecipeIngredient i : ingredients){
-    //        if (i.id == id){
-    //            ingredients.remove(i);
-    //        }
-    //    }
-    //}
-
-    /**
-     * Copy the exact same recipe.
-     * @return a new independent Recipe with the same instructions and ingredients.
-     */
-    public Recipe copy() {
-        Recipe r = new Recipe();
-        r.setRecipeID(this.recipeID);
-        r.setRecipeName(this.recipeName);
-        r.setInstructions(this.instructions);
-
-        // Deep copy des ingrédients
-        List<RecipeIngredient> newIngredients = new ArrayList<>();
-        for (RecipeIngredient ing : this.ingredients) {
-            newIngredients.add(ing.copy());
-        }
-        r.setIngredients(newIngredients);
-
-        return r;
-    }
-
-    /**
-     * Create a printable version of the recipe (Markdown).
-     * An example of return string can be :
-     *
-     *
-     *                 ### Soup
-     *
-     *                 ## Ingredients:
-     *                 - 2g of sugar;
-     *
-     *                 ## Instructions:
-     *                 1) Heat water
-     *                 2) Add sugar
-     *
-     *                 _Good luck with the preparation!_
-     *
-     * @return a string containing the recipe.
-     */
-    public String toString(){
-        String result = "### ";
-        result += this.recipeName;
-        result += "\n\n## Ingredients:\n";
-        for(RecipeIngredient i:this.ingredients){
-            result += "- ";
-            result += String.valueOf(i.getAmount());
-            result += i.getUnit().name();
-            result += " of ";
-            result += i.getIngredient().getIngredientName();
-            result += ";";
-            result += "\n";
-        }
-        result += "\n## Instructions:\n";
-        for(int i = 0; i<instructions.size(); i++){
-            result += String.valueOf(i+1);
-            result += ") ";
-            result += this.instructions.get(i);
-            result += "\n";
-        }
-        result += "\n_Good luck with the preparation!_";
-        return result;
-    }
-
-
-
 
     /**
      * This equals-method has to change when the attributes instruction and ingredients will be added.
@@ -178,16 +97,17 @@ public class Recipe {
      */
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Recipe recipe = (Recipe) o;
-        return getRecipeID() == recipe.getRecipeID() &&
-                Objects.equals(getRecipeName(), recipe.getRecipeName()) &&
-                Objects.equals(getInstructions(), recipe.getInstructions()) &&
-                Objects.equals(getIngredients(), recipe.getIngredients());
+        return recipeID == recipe.recipeID &&
+                Objects.equals(recipeName, recipe.recipeName) &&
+                Objects.equals(steps, recipe.steps) &&
+                Objects.equals(ingredients, recipe.ingredients);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getRecipeID(), getRecipeName(), getInstructions(), getIngredients());
+        return Objects.hash(recipeID, recipeName, steps, ingredients);
     }
 }
