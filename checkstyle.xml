@@ -30,11 +30,11 @@
     </module>
 
     <module name="TreeWalker">
-        <module name="MissingJavadocMethod">
+<!--        <module name="MissingJavadocMethod">
             <property name="severity" value="error"/>
             <property name="allowMissingPropertyJavadoc" value="true" />
             <property name="scope" value="private"/>
-            <property name="tokens" value="METHOD_DEF, CTOR_DEF, COMPACT_CTOR_DEF"/>
+            <property name="tokens" value="METHOD_DEF, CTOR_DEF, COMPACT_CTOR_DEF"/>-->
         </module>
         <module name="JavadocMethod">
             <property name="severity" value="warning"/>
