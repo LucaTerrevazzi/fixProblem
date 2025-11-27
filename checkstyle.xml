@@ -48,7 +48,7 @@
             <property name="checkFirstSentence" value="false" />
         </module>
         <module name="NonEmptyAtclauseDescription" >
-            <property name="javadocTokens" value="PARAM_LITERAL,THROWS_LITERAL,RETURN_LITERAL"/>
+            <property name="javadocTokens" value="PARAM_BLOCK_TAG,THROWS_BLOCK_TAG,RETURN_BLOCK_TAG"/>
         </module>
         <module name="MethodLength">
             <property name="severity" value="warning"/>
