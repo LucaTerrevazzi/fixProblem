@@ -13,7 +13,7 @@ import java.util.List;
 public class RecipeUtil {
 
     /**
-     * Add instruction to specific place
+     * Add instruction to specific index
      * @param recipe recipe
      * @param instruction new instruction
      * @param index new instruction index
@@ -24,7 +24,7 @@ public class RecipeUtil {
     }
 
     /**
-     * Delete an instruction from the recipe by index.
+     * Delete an instruction from the recipe by index
      */
     public static void deleteInstructionByIndex(Recipe recipe, int index) {
         recipe.getSteps().remove(index);
@@ -44,18 +44,12 @@ public class RecipeUtil {
 
     /**
      * Add a RecipeIngredient to the recipe.
-     * Equivalent of original addIngredient()
      */
     public static void addIngredient(Recipe recipe, RecipeIngredient newIngredient) {
         recipe.getIngredients().add(newIngredient);
     }
     /**
-     * Builds a plain-text description of the recipe instructions,
-     * using instruction.getDescription().
-     *
-     * Example:
-     * 1) Heat water
-     * 2) Add vegetables
+     * Builds the steps description using instruction.getDescription
      */
     public static String buildInstructionDescription(Recipe recipe) {
         StringBuilder sb = new StringBuilder();
@@ -73,19 +67,16 @@ public class RecipeUtil {
     }
 
     /**
-     * Creates a deep copy of the recipe.
-     * EXACT same behavior you originally wrote.
+     * Creates a deep copy of the recipe
      */
     public static Recipe copy(Recipe original) {
         Recipe r = new Recipe();
         r.setRecipeID(original.getRecipeID());
         r.setRecipeName(original.getRecipeName());
 
-        // SAME behavior as original: shallow copy of steps
         ArrayList<Instruction> newSteps = new ArrayList<>(original.getSteps());
         r.setSteps(newSteps);
 
-        // Deep copy of ingredients
         List<RecipeIngredient> newIngredients = new ArrayList<>();
         for (RecipeIngredient ing : original.getIngredients()) {
             newIngredients.add(ing.copy());
@@ -97,7 +88,6 @@ public class RecipeUtil {
 
     /**
      * Markdown export of a recipe.
-     * EXACT logic of your original toString().
      */
     public static String toMarkdown(Recipe recipe) {
         String result = "### ";

@@ -73,9 +73,9 @@ class IngredientTest {
     @Test
     void testGetKcal() {
         Ingredient ingredient = new Ingredient("Cucumber");
-        ingredient.setFat(1);      // 1×9 = 9
-        ingredient.setProtein(2);  // 2×4 = 8
-        ingredient.setCarbs(3);    // 3×4 = 12
+        ingredient.setFat(1);
+        ingredient.setProtein(2);
+        ingredient.setCarbs(3);
 
         assertEquals(29, ingredient.getKcal());
     }

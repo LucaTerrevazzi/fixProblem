@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import java.util.Objects;
 
 /**
- * Represents an ingredient type to be used in many recipes via RecipeIngredients
+ * Represents an ingredient going to be used in a specific recipe
  */
 public class Ingredient {
 
