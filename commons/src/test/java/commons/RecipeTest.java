@@ -75,15 +75,6 @@ public class RecipeTest {
         assertEquals(0, r.getIngredients().size());
     }
 
-//    @Test
-//    public void testAddInstruction() {
-//        Recipe r = new Recipe();
-//        r.setSteps("Chop onions");
-//
-//        assertEquals(1, r.getSteps().size());
-//        assertEquals("Chop onions", r.getSteps().get(0));
-//    }
-
     //@Test
     //public void testDeleteInstruction() {
     //    Recipe r = new Recipe();
@@ -96,16 +87,6 @@ public class RecipeTest {
     //    assertEquals("Step 2", r.getInstructions().get(0));
     //}
 
-//    @Test
-//    public void testAddIngredient() {
-//        Recipe r = new Recipe();
-//        RecipeIngredient ing = new RecipeIngredient(new Ingredient("Flour"), Unit.g, 100);
-//
-//        r.addInre(ing);
-//
-//        assertEquals(1, r.getIngredients().size());
-//        assertEquals(ing, r.getIngredients().get(0));
-//    }
 //
 //    @Test
 //    public void testCopyIsDeep() {

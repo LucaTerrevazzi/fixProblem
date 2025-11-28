@@ -4,6 +4,8 @@ import commons.Instruction;
 import commons.Recipe;
 import commons.RecipeIngredient;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,28 +102,43 @@ public class RecipeUtil {
      * EXACT logic of your original toString().
      */
     public static String toMarkdown(Recipe recipe) {
-        String result = "### ";
-        result += recipe.getRecipeName();
-        result += "\n\n## Ingredients:\n";
+        String result = "";
 
-        for (RecipeIngredient i : recipe.getIngredients()) {
-            result += "- ";
-            result += i.getAmount();
-            result += i.getUnit().name();
-            result += " of ";
-            result += i.getIngredient().getIngredientName();
-            result += ";\n";
+        if (recipe.getRecipeName() != null) {
+            result += "### ";
+            result += recipe.getRecipeName();
         }
 
-        result += "\n## Instructions:\n";
-
-        for (int i = 0; i < recipe.getSteps().size(); i++) {
-            result += (i + 1) + ") ";
-            result += recipe.getSteps().get(i).toString();
-            result += "\n";
+        if (!recipe.getIngredients().isEmpty()) {
+            result += "\n\n## Ingredients:\n";
+            for (RecipeIngredient i : recipe.getIngredients()) {
+                result += "- ";
+                result += i.getAmount();
+                result += i.getUnit().name();
+                result += " of ";
+                result += i.getIngredient().getIngredientName();
+                result += ";";
+            }
         }
 
-        result += "\n_Good luck with the preparation!_";
+        if (!recipe.getSteps().isEmpty()) {
+            result += "\n\n## Instructions:\n";
+            result += buildInstructionDescription(recipe);
+            result += "\n\n_Good luck with the preparation!_";
+        }
+
         return result;
+    }
+
+    /**
+     * Saves the recipe to a file
+     * @param os The provided OutputStream (normally FileOutputStream for outputting a file)
+     */
+    public static void outputRecipeStream(Recipe r, OutputStream os) {
+        try {
+            os.write(toMarkdown(r).getBytes());
+        } catch (IOException e) {
+            System.out.println("Could not write to the file provided");
+        }
     }
 }

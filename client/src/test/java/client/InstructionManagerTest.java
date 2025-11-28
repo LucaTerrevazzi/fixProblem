@@ -1,4 +1,4 @@
-package client.scenes;
+package client;
 
 import client.utils.InstructionManager;
 import commons.Instruction;

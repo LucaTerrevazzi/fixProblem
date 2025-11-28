@@ -4,11 +4,17 @@ import java.util.Objects;
 
 public class Instruction {
 
-
-    private final int InstructionID;
+    private int InstructionID;
     private String description;
     private int recipeID;
     private int orderNumber;
+
+    /**
+     * This constructor creates an Instruction with only an id.
+     */
+    public Instruction() {
+
+    }
 
     /**
      * constructor
