@@ -1,10 +1,10 @@
-| Summary:      |                                                                                                           |  
-|---------------|-----------------------------------------------------------------------------------------------------------|  
-| Date :        | 29/11/2025                                                                                                |  
-| Time :        | 14.45                                                                                                     |  
-| Location :    | DW PC Hall 2                                                                                              |  
-| Chair :       | Doga Gurer                                                                                                |  
-| Minute Taker: |                                                                                                           |  
+| Summary:      |                                                                                                                 |  
+|---------------|-----------------------------------------------------------------------------------------------------------------|  
+| Date :        | 29/11/2025                                                                                                      |  
+| Time :        | 14.45                                                                                                           |  
+| Location :    | DW PC Hall 2                                                                                                    |  
+| Chair :       | Karsten van den Heuvel                                                                                          |  
+| Minute Taker: | Melchior Besancon                                                                                               |  
 | Attendees :   | Bo Li, Daphne Charaki, Doga Gurer, Karsten van den Heuvel, Luminita Nitescu, Luca Terrevazzi, Melchior Besancon |  
 # Agenda  Items :
 -  Opening  by  chair  (1  min )
