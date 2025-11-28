@@ -23,7 +23,6 @@ public class RecipeTest {
 
     @Test
     public void testFullConstructor() {
-        // Your Instruction constructor: (int id, String description, int recipeID, int orderNumber)
         List<Instruction> instr = List.of(
                 new Instruction(1, "Cut", 1, 1),
                 new Instruction(2, "Mix", 1, 2)
@@ -102,18 +101,15 @@ public class RecipeTest {
 
     @Test
     public void testEquals() {
-        // Create instruction list
         List<Instruction> instr = List.of(
                 new Instruction(1,"Boil water",1,1));
 
-        // Create empty ingredients list
         List<RecipeIngredient> ingr = new ArrayList<>();
 
         // Use the corrected constructor
         Recipe r1 = new Recipe(1, "Tea", instr, ingr);
         Recipe r2 = new Recipe(1, "Tea", instr, ingr);
 
-        // Compare
         assertEquals(r1, r2);
         assertEquals(r1.hashCode(), r2.hashCode());
     }
