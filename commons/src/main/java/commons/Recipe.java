@@ -14,10 +14,12 @@ public class Recipe {
     private int recipeID;
     @Column(nullable = false)
     private String recipeName;
+
     // One recipe - many instructions => One to Many
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orderNumber ASC") // ascending order of instructions
     private List<Instruction> steps = new ArrayList<>();
+
     // one instruction - many ingredients => One to Many
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeIngredient> ingredients = new ArrayList<>();

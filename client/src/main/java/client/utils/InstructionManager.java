@@ -26,6 +26,16 @@ public class InstructionManager {
     }
 
     /**
+     * Updates the order number of instructions when an actions changes index
+     */
+    private void updateOrderNumbers() {
+        for (int i = 0; i < instructions.size(); i++) {
+            instructions.get(i).setOrderNumber(i + 1);
+        }
+    }
+
+
+    /**
      * methode to delete a instruction, it checks to see it the id exists first
      * @param instructionID the id of the instruction to be deleted
      * @return if it is deleted or not
@@ -61,13 +71,5 @@ public class InstructionManager {
         return false;
     }
 
-    /**
-     * private methode so that the order is being tracked and updated
-     */
-    private void updateOrderNumbers(){
-        instructions.sort((a,b) -> a.getOrderNumber() - b.getOrderNumber());
-        for(int i = 0; i < instructions.size(); i++){
-            instructions.get(i).setOrderNumber(i + 1);
-        }
-    }
+
 }

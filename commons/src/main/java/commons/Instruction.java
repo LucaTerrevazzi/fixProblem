@@ -1,12 +1,24 @@
 package commons;
 
-import java.util.Objects;
+import jakarta.persistence.*;
 
+import java.util.Objects;
+@Entity
+@Table(name = "instruction")
 public class Instruction {
 
-    private int InstructionID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int instructionID;
+    @Column(nullable = false)
     private String description;
-    private int recipeID;
+
+    // In order for the instruction and recipe to be link JPA needs a recipe attribute
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "recipeID")
+    private Recipe recipe;
+
+    @Column(nullable = false)
     private int orderNumber;
 
     /**
@@ -17,21 +29,19 @@ public class Instruction {
     }
 
     /**
-     * constructor
-     * @param instructionID the unique instruction id number
-     * @param description the discription on what to do for the step
-     * @param recipeID the unique id for which recipe the step is
-     * @param orderNumber the order of the steps
+     * Constructorfor the Instruction class
+     * @param description description of the specific step
+     * @param orderNumber the index of the isntruction (in which order it will get exedcuted)
+     * @param recipe the recipe its linked with
      */
-    public Instruction(int instructionID, String description, int recipeID, int orderNumber) {
-        InstructionID = instructionID;
+    public Instruction(String description, int orderNumber, Recipe recipe) {
         this.description = description;
-        this.recipeID = recipeID;
         this.orderNumber = orderNumber;
+        this.recipe = recipe;
     }
 
     public int getInstructionID() {
-        return InstructionID;
+        return instructionID;
     }
 
     public String getDescription() {
@@ -41,35 +51,19 @@ public class Instruction {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public int getRecipeID() {
-        return recipeID;
+    public void setInstructionID(int id) {
+        this.instructionID = id;
     }
 
-    public void setRecipeID(int recipeID) {
-        this.recipeID = recipeID;
+    public Recipe getRecipe() {
+        return recipe;
+    }
+    public void setOrderNumber(int orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     public int getOrderNumber() {
         return orderNumber;
     }
 
-    public void setOrderNumber(int orderNumber) {
-        this.orderNumber = orderNumber;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Instruction that = (Instruction) o;
-        return InstructionID == that.InstructionID
-                && recipeID == that.recipeID
-                && orderNumber == that.orderNumber
-                && Objects.equals(description, that.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(InstructionID, description, recipeID, orderNumber);
-    }
 }
