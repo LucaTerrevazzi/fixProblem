@@ -1,15 +1,40 @@
 package commons;
 
+import jakarta.persistence.*;
 import java.util.Objects;
 
 /**
  *Represents an ingredient used in a recipe, with the type of ingredient used,
  * measurement unit and amount of ingredient.
  */
+@Entity
+@Table(name = "recipeingredient")
 public class RecipeIngredient {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    // one ingredient used in many recipeIngredients
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ingredientID")
     private Ingredient ingredient;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Unit unit;
+
+    @Column(nullable = false)
     private int amount;
+
+        // Many recipeIngredients to one recipe
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "recipeID")
+    private Recipe recipe;
+
+    /**
+     * Constructor with no-args
+     */
+    public RecipeIngredient() {}
 
     /**
      *  RecipeIngredient Constructor

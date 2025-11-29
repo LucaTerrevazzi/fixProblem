@@ -1,47 +1,65 @@
 package commons;
 
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InstructionTest {
 
     @Test
     public void testConstructor() {
-        Instruction instruction = new Instruction(3, "flip", 2,1);
-        assertEquals(instruction.getInstructionID(), 3);
-        assertEquals(instruction.getDescription(), "flip");
-        assertEquals(instruction.getRecipeID(), 2);
-        assertEquals(instruction.getOrderNumber(), 1);
+        Recipe recipe = new Recipe(2);
+        Instruction instruction = new Instruction("flip", 1, recipe);
+        instruction.setInstructionID(3);
+
+        assertEquals(3, instruction.getInstructionID());
+        assertEquals("flip", instruction.getDescription());
+        assertEquals(2, instruction.getRecipe().getRecipeID());
+        assertEquals(1, instruction.getOrderNumber());
     }
 
     @Test
-    public void testsetRecipeID() {
-        Instruction instruction = new Instruction(3, "flip", 2,1);
-        instruction.setRecipeID(1);
-        assertEquals(instruction.getRecipeID(), 1);
+    public void testSetRecipeID() {
+        Recipe recipe = new Recipe(2);
+        Instruction instruction = new Instruction("flip", 1, recipe);
+        instruction.setInstructionID(3);
+
+        instruction.getRecipe().setRecipeID(1);
+        assertEquals(1, instruction.getRecipe().getRecipeID());
     }
 
     @Test
-    public void testsetDescription() {
-        Instruction instruction = new Instruction(3, "flip", 2,1);
+    public void testSetDescription() {
+        Recipe recipe = new Recipe(2);
+        Instruction instruction = new Instruction("flip", 1, recipe);
+        instruction.setInstructionID(3);
+
         instruction.setDescription("bake");
-        assertEquals(instruction.getDescription(), "bake");
+        assertEquals("bake", instruction.getDescription());
     }
 
     @Test
-    public void testsetOrderNumber() {
-        Instruction instruction = new Instruction(3, "flip", 2,1);
+    public void testSetOrderNumber() {
+        Recipe recipe = new Recipe(2);
+        Instruction instruction = new Instruction("flip", 1, recipe);
+        instruction.setInstructionID(3);
+
         instruction.setOrderNumber(4);
-        assertEquals(instruction.getOrderNumber(), 4);
+        assertEquals(4, instruction.getOrderNumber());
     }
 
     @Test
     public void testEquals() {
-        Instruction instruction1 = new Instruction(3, "flip", 2,1);
-        Instruction instruction2 = new Instruction(3, "flip", 2,1);
+        Recipe recipe1 = new Recipe(2);
+        Recipe recipe2 = new Recipe(2);
+
+        Instruction instruction1 = new Instruction("flip", 1, recipe1);
+        Instruction instruction2 = new Instruction("flip", 1, recipe2);
+
+        instruction1.setInstructionID(3);
+        instruction2.setInstructionID(3);
 
         assertEquals(instruction1, instruction2);
         assertEquals(instruction1.hashCode(), instruction2.hashCode());
     }
+    //Used AI to adapt the tests to the new
 }

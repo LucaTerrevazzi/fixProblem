@@ -2,6 +2,7 @@ package client;
 
 import client.utils.InstructionManager;
 import commons.Instruction;
+import commons.Recipe;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,24 +15,32 @@ public class InstructionManagerTest {
     private InstructionManager instructionManager;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         instructionManager = new InstructionManager();
     }
 
+    private Instruction makeInstr(int id, String text, int recipeId, int order) {
+        Recipe r = new Recipe(recipeId);
+        Instruction instr = new Instruction(text, order, r);
+        instr.setInstructionID(id);
+        return instr;
+    }
+
     @Test
-    public void testAddInstruction(){
-        Instruction instr1 = new Instruction(1, "Instruction 1", 1, 1);
+    public void testAddInstruction() {
+        Instruction instr1 = makeInstr(1, "Instruction 1", 1, 1);
         instructionManager.addInstruction(instr1);
 
         List<Instruction> instructionList = instructionManager.getInstructions();
-        assertEquals(instructionList.size(), 1);
+        assertEquals(1, instructionList.size());
         assertEquals("Instruction 1", instructionList.get(0).getDescription());
     }
 
     @Test
-    public void testRemoveInstruction(){
-        Instruction instr1 = new Instruction(1, "Instruction 1", 1, 1);
-        Instruction instr2 = new Instruction(2, "Instruction 2", 2, 2);
+    public void testRemoveInstruction() {
+        Instruction instr1 = makeInstr(1, "Instruction 1", 1, 1);
+        Instruction instr2 = makeInstr(2, "Instruction 2", 2, 2);
+
         instructionManager.addInstruction(instr1);
         instructionManager.addInstruction(instr2);
 
@@ -45,8 +54,8 @@ public class InstructionManagerTest {
     }
 
     @Test
-    public void testEditInstruction(){
-        Instruction instr1 = new Instruction(1, "Instruction 1", 1, 1);
+    public void testEditInstruction() {
+        Instruction instr1 = makeInstr(1, "Instruction 1", 1, 1);
         instructionManager.addInstruction(instr1);
 
         boolean edited = instructionManager.editInstruction(1, "Instruction 2");
@@ -57,10 +66,10 @@ public class InstructionManagerTest {
     }
 
     @Test
-    public void testOrderNumbersAfterAddAndDelete(){
-        Instruction instr1 = new Instruction(1, "Instruction 1", 1, 1);
-        Instruction instr2 = new Instruction(2, "Instruction 2", 2, 2);
-        Instruction instr3 = new Instruction(3, "Instruction 3", 3, 3);
+    public void testOrderNumbersAfterAddAndDelete() {
+        Instruction instr1 = makeInstr(1, "Instruction 1", 1, 1);
+        Instruction instr2 = makeInstr(2, "Instruction 2", 2, 2);
+        Instruction instr3 = makeInstr(3, "Instruction 3", 3, 3);
 
         instructionManager.addInstruction(instr1);
         instructionManager.addInstruction(instr2);
@@ -72,9 +81,10 @@ public class InstructionManagerTest {
         assertEquals(3, instructionList.get(2).getOrderNumber());
 
         instructionManager.deleteInstruction(2);
-        instructionManager.getInstructions();
+
         assertEquals(1, instructionList.get(0).getOrderNumber());
         assertEquals(2, instructionList.get(1).getOrderNumber());
-
     }
+    //Used AI to alter the tests sto that they fit the new Classes compatible with jakarta annotations
+
 }
