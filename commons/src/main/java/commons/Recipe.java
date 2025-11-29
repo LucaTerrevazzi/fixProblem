@@ -1,20 +1,25 @@
 package commons;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "recipe")
 public class Recipe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int recipeID;
+    @Column(nullable = false)
     private String recipeName;
+    // One recipe - many instructions => One to Many
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("orderNumber ASC") // ascending order of instructions
     private List<Instruction> steps = new ArrayList<>();
+    // one instruction - many ingredients => One to Many
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeIngredient> ingredients = new ArrayList<>();
 
 
@@ -33,16 +38,10 @@ public class Recipe {
 
     /**
      * Constructor of a new recipe
-     * @param recipeID ID of recipe
      * @param recipeName Name of the recipe
-     * @param steps list of steps
-     * @param ingredients ingredients of recipe
      */
-    public Recipe(int recipeID, String recipeName, List<Instruction> steps, List<RecipeIngredient> ingredients) {
-        this.recipeID = recipeID;
+    public Recipe( String recipeName) {
         this.recipeName = recipeName;
-        this.steps = steps;
-        this.ingredients = ingredients;
     }
 
 
