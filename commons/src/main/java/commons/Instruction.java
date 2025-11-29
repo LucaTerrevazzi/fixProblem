@@ -2,6 +2,8 @@ package commons;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "instruction")
 public class Instruction {
@@ -23,9 +25,7 @@ public class Instruction {
     /**
      * This constructor creates an Instruction with only an id.
      */
-    public Instruction() {
-
-    }
+    public Instruction() {}
 
     /**
      * Constructorfor the Instruction class
@@ -65,4 +65,15 @@ public class Instruction {
         return orderNumber;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Instruction that = (Instruction) o;
+        return instructionID == that.instructionID && orderNumber == that.orderNumber && Objects.equals(description, that.description) && Objects.equals(recipe, that.recipe);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(instructionID, description, recipe, orderNumber);
+    }
 }
