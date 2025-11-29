@@ -1,32 +1,44 @@
 package commons;
-
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
 import java.util.Objects;
-
 /**
  * Represents an ingredient going to be used in a specific recipe
  */
+@Entity
+@Table(name = "ingredient")
 public class Ingredient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ingredientID;
 
+    @Column(nullable = false, unique = true) //column that cannot be null => its a required field
     private String ingredientName;
+
+    @Column(nullable = false)
     private double fat;
+    @Column(nullable = false)
     private double protein;
+
+    @Column(nullable = false)
     private double carbs;
 
     /**
-     * Constructor for Ingredient
-     * @param ingredientName A String name of the ingredient
+     * No arguement constructor that's required for JPA
      */
-    public Ingredient(String ingredientName) {
+    public Ingredient() {}
+
+    /**
+     * Constructor for Inrgedient
+     * @param ingredientName name of the ingredient
+     */
+    public Ingredient( String ingredientName ) {
         this.ingredientName = ingredientName;
+        this.fat = 0; // set to 0 so we dont have problems with null database
+        this.protein = 0;
+        this.carbs = 0;
     }
+
     /**
      * Getter for name of the ingredient
      * @return name of the ingredient
@@ -77,7 +89,7 @@ public class Ingredient {
 
     /**
      * Calories calculator
-     * @return total nutritional value/calories
+     * @return total nutritional value/calories in 100gr (formula found in backlog)
      */
     public double getKcal() {
         return fat*9 + protein*4 + carbs*4;
