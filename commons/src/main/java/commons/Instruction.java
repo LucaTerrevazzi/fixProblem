@@ -2,7 +2,6 @@ package commons;
 
 import jakarta.persistence.*;
 
-import java.util.Objects;
 @Entity
 @Table(name = "instruction")
 public class Instruction {

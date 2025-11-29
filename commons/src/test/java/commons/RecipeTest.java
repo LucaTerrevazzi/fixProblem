@@ -23,21 +23,27 @@ public class RecipeTest {
 
     @Test
     public void testFullConstructor() {
-        List<Instruction> instr = List.of(
-                new Instruction(1, "Cut", 1, 1),
-                new Instruction(2, "Mix", 1, 2)
-        );
+        Recipe recipeRef = new Recipe(1);
 
+        Instruction i1 = new Instruction("Cut", 1, recipeRef);
+        i1.setInstructionID(1);
+
+        Instruction i2 = new Instruction("Mix", 2, recipeRef);
+        i2.setInstructionID(2);
+
+        List<Instruction> instr = List.of(i1, i2);
         List<RecipeIngredient> ingr = new ArrayList<>();
 
-        Recipe r = new Recipe(1, "Test", instr, ingr);
+        Recipe r = new Recipe(1);
+        r.setRecipeName("Test");
+        r.setSteps(instr);
+        r.setIngredients(ingr);
 
         assertEquals(1, r.getRecipeID());
         assertEquals("Test", r.getRecipeName());
-        assertEquals(instr, r.getSteps());       // works because you store the reference directly
-        assertEquals(ingr, r.getIngredients());  // same
+        assertEquals(instr, r.getSteps());
+        assertEquals(ingr, r.getIngredients());
     }
-
 
     @Test
     public void testSetRecipeID() {
@@ -55,17 +61,17 @@ public class RecipeTest {
 
     @Test
     public void testSetInstructions() {
+        Recipe recipeRef = new Recipe(1);
+
+        Instruction step = new Instruction("Heat water", 1, recipeRef);
+        step.setInstructionID(1);
+
         Recipe r = new Recipe();
-
-        Instruction step = new Instruction(1,"Heat water",1,1);
-
-
         r.setSteps(new ArrayList<>(List.of(step)));
 
         assertEquals(1, r.getSteps().size());
         assertEquals("Heat water", r.getSteps().get(0).getDescription());
     }
-
 
     @Test
     public void testSetIngredients() {
@@ -74,41 +80,25 @@ public class RecipeTest {
         assertEquals(0, r.getIngredients().size());
     }
 
-    //@Test
-    //public void testDeleteInstruction() {
-    //    Recipe r = new Recipe();
-    //    r.addInstruction("Step 1");
-    //    r.addInstruction("Step 2");
-    //
-    //    r.deleteInstructionByIndex(0);
-    //
-    //    assertEquals(1, r.getInstructions().size());
-    //    assertEquals("Step 2", r.getInstructions().get(0));
-    //}
-
-//
-//    @Test
-//    public void testCopyIsDeep() {
-//        Recipe r = new Recipe(5, "Cake",
-//                new ArrayList<>(List.of("Mix", "Bake")),
-//                new ArrayList<>(List.of(new RecipeIngredient(new Ingredient("Sugar"), Unit.g, 50)))
-//        );
-//
-//        Recipe copy = r.copy();
-//
-//        assertEquals(r, copy);
-//    }
-
     @Test
     public void testEquals() {
-        List<Instruction> instr = List.of(
-                new Instruction(1,"Boil water",1,1));
+        Recipe recipeRef = new Recipe(1);
 
+        Instruction step = new Instruction("Boil water", 1, recipeRef);
+        step.setInstructionID(1);
+
+        List<Instruction> instr = List.of(step);
         List<RecipeIngredient> ingr = new ArrayList<>();
 
-        // Use the corrected constructor
-        Recipe r1 = new Recipe(1, "Tea", instr, ingr);
-        Recipe r2 = new Recipe(1, "Tea", instr, ingr);
+        Recipe r1 = new Recipe(1);
+        r1.setRecipeName("Tea");
+        r1.setSteps(instr);
+        r1.setIngredients(ingr);
+
+        Recipe r2 = new Recipe(1);
+        r2.setRecipeName("Tea");
+        r2.setSteps(instr);
+        r2.setIngredients(ingr);
 
         assertEquals(r1, r2);
         assertEquals(r1.hashCode(), r2.hashCode());
@@ -121,7 +111,5 @@ public class RecipeTest {
 
         assertNotEquals(r1, r2);
     }
-
-
-
+    //Used AI to alter the tests sto that they fit the new Classes compatible with jakarta annotations
 }
