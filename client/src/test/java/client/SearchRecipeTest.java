@@ -1,6 +1,9 @@
-package commons;
+package client;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import client.utils.SearchUtil;
+import commons.*;
 import org.junit.jupiter.api.Test;
 import java.util.*;
 
@@ -11,7 +14,7 @@ class SearchRecipeTest {
         Recipe r1 = new Recipe("Cake");
         Recipe r2 = new Recipe("Pie");
         List<Recipe> recipes = List.of(r1, r2);
-        List<Recipe> result = Recipe.search(recipes, "");
+        List<Recipe> result = SearchUtil.search(recipes, "");
         assertTrue(result.isEmpty());
     }
 
@@ -20,7 +23,7 @@ class SearchRecipeTest {
         Recipe r1 = new Recipe("Chocolate Cake");
         Recipe r2 = new Recipe("Vanilla Cake");
         List<Recipe> recipes = List.of(r1, r2);
-        List<Recipe> result = Recipe.search(recipes, "Chocolate");
+        List<Recipe> result = SearchUtil.search(recipes, "Chocolate");
         assertEquals(1, result.size());
         assertEquals(r1, result.get(0));
     }
@@ -32,7 +35,7 @@ class SearchRecipeTest {
         Recipe r2 = new Recipe("Pie");
         r2.setIngredients(List.of(new RecipeIngredient(new Ingredient("milk"), Unit.L, 1)));
         List<Recipe> recipes = List.of(r1, r2);
-        List<Recipe> result = Recipe.search(recipes, "Sugar");
+        List<Recipe> result = SearchUtil.search(recipes, "Sugar");
         assertEquals(1, result.size());
         assertEquals(r1, result.get(0));
     }
@@ -44,7 +47,7 @@ class SearchRecipeTest {
         Recipe r2 = new Recipe("Pie");
         r2.getSteps().add(new Instruction("Bake", 0, r2));
         List<Recipe> recipes = List.of(r1, r2);
-        List<Recipe> result = Recipe.search(recipes, "Mix");
+        List<Recipe> result = SearchUtil.search(recipes, "Mix");
         assertEquals(1, result.size());
         assertEquals(r1, result.get(0));
     }
@@ -56,7 +59,7 @@ class SearchRecipeTest {
         Recipe r2 = new Recipe("Pie");
         r2.setSteps(List.of(new Instruction("Bake", 0, r2)));
         List<Recipe> recipes = List.of(r1, r2);
-        List<Recipe> result = Recipe.search(recipes, "Chocolate Bake");
+        List<Recipe> result = SearchUtil.search(recipes, "Chocolate Bake");
         assertEquals(2, result.size());
         assertEquals(r1, result.get(0));
         assertEquals(r2, result.get(1));
@@ -67,7 +70,7 @@ class SearchRecipeTest {
         Recipe r1 = new Recipe("Cake");
         Recipe r2 = new Recipe("Pie");
         List<Recipe> recipes = List.of(r1, r2);
-        List<Recipe> result = Recipe.search(recipes, "Banana");
+        List<Recipe> result = SearchUtil.search(recipes, "Banana");
         assertTrue(result.isEmpty());
     }
 
@@ -78,7 +81,7 @@ class SearchRecipeTest {
         r1.setIngredients(List.of(new RecipeIngredient(new Ingredient("Sugar"), Unit.g, 200)));
         r2.setIngredients(List.of(new RecipeIngredient(new Ingredient("Honey"), Unit.g, 200)));
         List<Recipe> recipes = List.of(r1, r2);
-        List<Recipe> result = Recipe.search(recipes, "Chocolate Sugar");
+        List<Recipe> result = SearchUtil.search(recipes, "Chocolate Sugar");
         assertEquals(r1, result.get(0));
         assertEquals(r2, result.get(1));
     }
@@ -88,7 +91,7 @@ class SearchRecipeTest {
         Recipe r1 = new Recipe("Cake");
         r1.setIngredients(List.of(new RecipeIngredient(new Ingredient("Sugar"), Unit.g, 200)));
         List<Recipe> recipes = List.of(r1);
-        List<Recipe> result = Recipe.search(recipes, "Sugar, Cake; Mix");
+        List<Recipe> result = SearchUtil.search(recipes, "Sugar, Cake; Mix");
         assertEquals(1, result.size());
         assertEquals(r1, result.get(0));
     }
