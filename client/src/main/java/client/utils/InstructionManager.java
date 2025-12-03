@@ -41,7 +41,7 @@ public class InstructionManager {
      * @return if it is deleted or not
      */
     @SuppressWarnings("checkstyle:WhitespaceAround")
-    public boolean deleteInstruction(int instructionID){
+    public boolean deleteInstruction(long instructionID){
         for(int i = 0; i < instructions.size(); i++){
             if(instructions.get(i).getInstructionID() == instructionID){
                 instructions.remove(i);
@@ -60,7 +60,7 @@ public class InstructionManager {
      * @param newDescription the new description
      * @return boolean to check if the id of instruction exists
      */
-    public boolean editInstruction(int instructionID, String newDescription){
+    public boolean editInstruction(Long instructionID, String newDescription){
         for(Instruction instruction : instructions){
             if(instruction.getInstructionID() == instructionID){
                 instruction.setDescription(newDescription);

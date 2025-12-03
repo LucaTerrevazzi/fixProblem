@@ -11,7 +11,7 @@ public class Recipe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int recipeID;
+    private Long recipeID;
     @Column(nullable = false)
     private String recipeName;
 
@@ -34,7 +34,7 @@ public class Recipe {
      * This constructor creates an empty Recipe.
      * @param recipeID the unique ID of the recipe (e.g. 3284)
      */
-    public Recipe(int recipeID) {
+    public Recipe(Long recipeID) {
         this.recipeID = recipeID;
     }
 
@@ -47,11 +47,11 @@ public class Recipe {
     }
 
 
-    public int getRecipeID() {
+    public Long getRecipeID() {
         return recipeID;
     }
 
-    public void setRecipeID(int recipeID) {
+    public void setRecipeID(Long recipeID) {
         this.recipeID = recipeID;
     }
 

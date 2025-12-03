@@ -10,7 +10,7 @@ public class Instruction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int instructionID;
+    private Long instructionID;
     @Column(nullable = false)
     private String description;
 
@@ -39,7 +39,7 @@ public class Instruction {
         this.recipe = recipe;
     }
 
-    public int getInstructionID() {
+    public Long getInstructionID() {
         return instructionID;
     }
 
@@ -50,7 +50,7 @@ public class Instruction {
     public void setDescription(String description) {
         this.description = description;
     }
-    public void setInstructionID(int id) {
+    public void setInstructionID(Long id) {
         this.instructionID = id;
     }
 
