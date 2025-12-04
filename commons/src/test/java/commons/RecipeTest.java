@@ -38,11 +38,13 @@ public class RecipeTest {
         r.setRecipeName("Test");
         r.setSteps(instr);
         r.setIngredients(ingr);
+        r.setRecipeLanguage("English");
 
         assertEquals(1, r.getRecipeID());
         assertEquals("Test", r.getRecipeName());
         assertEquals(instr, r.getSteps());
         assertEquals(ingr, r.getIngredients());
+        assertEquals("English", r.getRecipeLanguage());
     }
 
     @Test
@@ -78,6 +80,13 @@ public class RecipeTest {
         Recipe r = new Recipe();
         r.setIngredients(new ArrayList<>());
         assertEquals(0, r.getIngredients().size());
+    }
+
+    @Test
+    public void testSetRecipeLanguage() {
+        Recipe r = new Recipe();
+        r.setRecipeLanguage("English");
+        assertEquals("English", r.getRecipeLanguage());
     }
 
     @Test

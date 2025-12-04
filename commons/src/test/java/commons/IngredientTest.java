@@ -18,23 +18,36 @@ class IngredientTest {
         ingredient.setIngredientName("Tomato");
         assertEquals("Tomato", ingredient.getIngredientName());
     }
+
+    @Test
+    void getIngredientLanguage() {
+        Ingredient ingredient = new Ingredient("Cucumber");
+        assertEquals( "No language specified", ingredient.getIngredientLanguage());
+    }
+
+    @Test
+    void setIngredientLanguage() {
+        Ingredient ingredient = new Ingredient("Cucumber");
+        ingredient.setIngredientLanguage("English");
+        assertEquals("English", ingredient.getIngredientLanguage());
+    }
+
     @Test
     void testEqualsTrue(){
         Ingredient ingredient1 = new Ingredient("Cucumber");
         Ingredient ingredient2 = new Ingredient("Cucumber");
-        assertTrue(ingredient1.equals(ingredient2));
+        assertEquals(ingredient1, ingredient2);
     }
     @Test
     void testEqualsFalse(){
         Ingredient ingredient1 = new Ingredient("Cucumber");
-        Ingredient ingredient2 = null;
-        assertFalse(ingredient1.equals(ingredient2));
+        assertNotEquals(null, ingredient1);
     }
     @Test
     void testEqualsFalse2(){
         Ingredient ingredient = new Ingredient("Cucumber");
         String stringIngredient = "Cucumber";
-        assertFalse(ingredient.equals(stringIngredient));
+        assertNotEquals(stringIngredient, ingredient);
     }
     @Test
     void testHashCode(){
@@ -83,7 +96,7 @@ class IngredientTest {
     @Test
     void testEquals() {
         Ingredient ingredient = new Ingredient("Cucumber");
-        assertTrue(ingredient.equals(ingredient));
+        assertEquals(ingredient, ingredient);
     }
 
     @Test
