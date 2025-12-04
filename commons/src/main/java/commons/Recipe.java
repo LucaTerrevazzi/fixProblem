@@ -44,7 +44,7 @@ public class Recipe {
      * Constructor of a new recipe
      * @param recipeName Name of the recipe
      */
-    public Recipe( String recipeName) {
+    public Recipe(String recipeName) {
         this.recipeName = recipeName;
     }
 
