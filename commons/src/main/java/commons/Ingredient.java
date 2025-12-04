@@ -10,7 +10,7 @@ public class Ingredient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int ingredientID;
+    private Long ingredientID;
 
     @Column(nullable = false, unique = true) //column that cannot be null => its a required field
     private String ingredientName;
@@ -39,6 +39,7 @@ public class Ingredient {
         this.carbs = 0;
     }
 
+
     /**
      * Getter for name of the ingredient
      * @return name of the ingredient
@@ -47,11 +48,11 @@ public class Ingredient {
         return ingredientName;
     }
 
-    public int getIngredientID() {
+    public Long getIngredientID() {
         return ingredientID;
     }
 
-    public void setIngredientID(int ingredientID) {
+    public void setIngredientID(Long ingredientID) {
         this.ingredientID = ingredientID;
     }
 

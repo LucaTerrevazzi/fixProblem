@@ -19,7 +19,7 @@ public class InstructionManagerTest {
         instructionManager = new InstructionManager();
     }
 
-    private Instruction makeInstr(int id, String text, int recipeId, int order) {
+    private Instruction makeInstr(Long id, String text, Long recipeId, int order) {
         Recipe r = new Recipe(recipeId);
         Instruction instr = new Instruction(text, order, r);
         instr.setInstructionID(id);
@@ -28,7 +28,7 @@ public class InstructionManagerTest {
 
     @Test
     public void testAddInstruction() {
-        Instruction instr1 = makeInstr(1, "Instruction 1", 1, 1);
+        Instruction instr1 = makeInstr(1L, "Instruction 1", 1L, 1);
         instructionManager.addInstruction(instr1);
 
         List<Instruction> instructionList = instructionManager.getInstructions();
@@ -38,27 +38,27 @@ public class InstructionManagerTest {
 
     @Test
     public void testRemoveInstruction() {
-        Instruction instr1 = makeInstr(1, "Instruction 1", 1, 1);
-        Instruction instr2 = makeInstr(2, "Instruction 2", 2, 2);
+        Instruction instr1 = makeInstr(1L, "Instruction 1", 1L, 1);
+        Instruction instr2 = makeInstr(2L, "Instruction 2", 2L, 2);
 
         instructionManager.addInstruction(instr1);
         instructionManager.addInstruction(instr2);
 
-        boolean deleted = instructionManager.deleteInstruction(1);
+        boolean deleted = instructionManager.deleteInstruction(1L);
         List<Instruction> instructionList = instructionManager.getInstructions();
 
         assertTrue(deleted);
         assertEquals(1, instructionList.size());
         assertEquals(1, instructionList.get(0).getOrderNumber());
-        assertEquals(2, instructionList.get(0).getInstructionID());
+        assertEquals(2L, instructionList.get(0).getInstructionID());
     }
 
     @Test
     public void testEditInstruction() {
-        Instruction instr1 = makeInstr(1, "Instruction 1", 1, 1);
+        Instruction instr1 = makeInstr(1L, "Instruction 1", 1L, 1);
         instructionManager.addInstruction(instr1);
 
-        boolean edited = instructionManager.editInstruction(1, "Instruction 2");
+        boolean edited = instructionManager.editInstruction(1L, "Instruction 2");
         List<Instruction> instructionList = instructionManager.getInstructions();
 
         assertTrue(edited);
@@ -67,9 +67,9 @@ public class InstructionManagerTest {
 
     @Test
     public void testOrderNumbersAfterAddAndDelete() {
-        Instruction instr1 = makeInstr(1, "Instruction 1", 1, 1);
-        Instruction instr2 = makeInstr(2, "Instruction 2", 2, 2);
-        Instruction instr3 = makeInstr(3, "Instruction 3", 3, 3);
+        Instruction instr1 = makeInstr(1L, "Instruction 1", 1L, 1);
+        Instruction instr2 = makeInstr(2L, "Instruction 2", 2L, 2);
+        Instruction instr3 = makeInstr(3L, "Instruction 3", 3L, 3);
 
         instructionManager.addInstruction(instr1);
         instructionManager.addInstruction(instr2);
@@ -80,11 +80,11 @@ public class InstructionManagerTest {
         assertEquals(2, instructionList.get(1).getOrderNumber());
         assertEquals(3, instructionList.get(2).getOrderNumber());
 
-        instructionManager.deleteInstruction(2);
+        instructionManager.deleteInstruction((Long)2L);
 
         assertEquals(1, instructionList.get(0).getOrderNumber());
         assertEquals(2, instructionList.get(1).getOrderNumber());
     }
-    //Used AI to alter the tests sto that they fit the new Classes compatible with jakarta annotations
 
+    //Used AI to alter the tests so that they fit the new Classes compatible with jakarta annotations
 }

@@ -53,11 +53,11 @@ public class FavoritesUtil {
      * @throws IOException can throw an IOException
      */
     public static void addFavorite(Recipe r) throws IOException {
-        int id = r.getRecipeID();
+        Long id = r.getRecipeID();
         FavoritesData data = loadJson();
 
         if (!data.getFavorites().contains(id)) {
-            data.getFavorites().add(id);
+            data.getFavorites().add(Math.toIntExact(id));
             saveJson(data);
         }
     }
@@ -68,10 +68,10 @@ public class FavoritesUtil {
      * @throws IOException can throw an IOException
      */
     public static void removeFavorite(Recipe r) throws IOException {
-        int id = r.getRecipeID();
+        Long id = r.getRecipeID();
         FavoritesData data = loadJson();
 
-        if (data.getFavorites().remove(Integer.valueOf(id))) {
+        if (data.getFavorites().remove(Integer.valueOf(String.valueOf(id)))) {
             saveJson(data);
         }
     }

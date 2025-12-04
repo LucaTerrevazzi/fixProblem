@@ -45,7 +45,7 @@ class IngredientTest {
     @Test
     void testSetAndGetIngredientID() {
         Ingredient ingredient = new Ingredient("Cucumber");
-        ingredient.setIngredientID(5);
+        ingredient.setIngredientID(Long.valueOf(5));
         assertEquals(5, ingredient.getIngredientID());
     }
 

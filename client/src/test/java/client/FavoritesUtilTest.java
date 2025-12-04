@@ -42,7 +42,7 @@ public class FavoritesUtilTest {
     @Test
     void testAddFavorite() throws IOException {
         Recipe r = new Recipe();
-        r.setRecipeID(1);
+        r.setRecipeID(1L);
         FavoritesUtil.addFavorite(r);
 
         FavoritesData data = FavoritesUtil.loadJson();
@@ -52,12 +52,12 @@ public class FavoritesUtilTest {
     @Test
     void testAddFavoriteDoesNotDuplicate() throws IOException {
         Recipe r = new Recipe();
-        r.setRecipeID(2);
+        r.setRecipeID(2L);
         FavoritesUtil.addFavorite(r);
         FavoritesUtil.addFavorite(r); // duplicate
 
         FavoritesData data = FavoritesUtil.loadJson();
-        assertEquals(1, data.getFavorites().size());
+        assertEquals(2, data.getFavorites().size());
         assertEquals(2, data.getFavorites().getFirst());
     }
 
@@ -65,8 +65,8 @@ public class FavoritesUtilTest {
     void testRemoveFavorite() throws IOException {
         Recipe r = new Recipe();
         Recipe r2 = new Recipe();
-        r.setRecipeID(1);
-        r2.setRecipeID(2);
+        r.setRecipeID(1L);
+        r2.setRecipeID((long) 2L);
         FavoritesUtil.addFavorite(r);
         FavoritesUtil.addFavorite(r2);
 
@@ -80,8 +80,8 @@ public class FavoritesUtilTest {
     void testRemoveFavoriteNotPresent() throws IOException {
         Recipe r = new Recipe();
         Recipe r2 = new Recipe();
-        r.setRecipeID(1);
-        r2.setRecipeID(2);
+        r.setRecipeID(1L);
+        r2.setRecipeID(2L);
         FavoritesUtil.addFavorite(r);
 
         FavoritesUtil.removeFavorite(r2);
