@@ -57,6 +57,9 @@ public class Instruction {
     public Recipe getRecipe() {
         return recipe;
     }
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
+    }
     public void setOrderNumber(int orderNumber) {
         this.orderNumber = orderNumber;
     }

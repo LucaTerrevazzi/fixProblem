@@ -104,6 +104,14 @@ public class RecipeIngredient {
         return new RecipeIngredient(ingredient, unit, amount);
     }
 
+    public Recipe getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
+    }
+
     @Override
     public String toString() {
         return Integer.toString(amount) + unit + " " + ingredient.getIngredientName();
@@ -120,4 +128,5 @@ public class RecipeIngredient {
     public int hashCode() {
         return Objects.hash(ingredient, unit, amount);
     }
+
 }
