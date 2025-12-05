@@ -14,6 +14,8 @@ public class Recipe {
     private Long recipeID;
     @Column(nullable = false)
     private String recipeName;
+    @Column(nullable = false)
+    private String recipeLanguage;
 
     // One recipe - many instructions => One to Many
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -79,6 +81,14 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
+    public String getRecipeLanguage() {
+        return recipeLanguage;
+    }
+
+    public void setRecipeLanguage(String recipeLanguage) {
+        this.recipeLanguage = recipeLanguage;
+    }
+
     @Override
     public String toString() {
         return "Recipe{" +
@@ -86,6 +96,7 @@ public class Recipe {
                 ", recipeName='" + recipeName + '\'' +
                 ", steps=" + steps +
                 ", ingredients=" + ingredients +
+                ", language='" + recipeLanguage + '\'' +
                 '}';
     }
 
@@ -102,11 +113,12 @@ public class Recipe {
         return recipeID == recipe.recipeID &&
                 Objects.equals(recipeName, recipe.recipeName) &&
                 Objects.equals(steps, recipe.steps) &&
-                Objects.equals(ingredients, recipe.ingredients);
+                Objects.equals(ingredients, recipe.ingredients) &&
+                Objects.equals(recipeLanguage, recipe.recipeLanguage);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(recipeID, recipeName, steps, ingredients);
+        return Objects.hash(recipeID, recipeName, steps, ingredients,  recipeLanguage);
     }
 }

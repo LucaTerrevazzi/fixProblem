@@ -12,8 +12,11 @@ public class Ingredient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ingredientID;
 
-    @Column(nullable = false, unique = true) //column that cannot be null => its a required field
+    @Column(nullable = false, unique = true) //column that cannot be null => it's a required field
     private String ingredientName;
+
+    @Column(nullable = false)
+    private String ingredientLanguage;
 
     @Column(nullable = false)
     private double fat;
@@ -24,19 +27,20 @@ public class Ingredient {
     private double carbs;
 
     /**
-     * No arguement constructor that's required for JPA
+     * No argument constructor that's required for JPA
      */
     public Ingredient() {}
 
     /**
-     * Constructor for Inrgedient
+     * Constructor for Ingredient
      * @param ingredientName name of the ingredient
      */
     public Ingredient( String ingredientName ) {
         this.ingredientName = ingredientName;
-        this.fat = 0; // set to 0 so we dont have problems with null database
+        this.fat = 0; // set to 0 so we don't have problems with null database
         this.protein = 0;
         this.carbs = 0;
+        this.ingredientLanguage = "No language specified";
     }
 
 
@@ -48,6 +52,10 @@ public class Ingredient {
         return ingredientName;
     }
 
+    public void setIngredientName(String ingredientName) {
+        this.ingredientName = ingredientName;
+    }
+
     public Long getIngredientID() {
         return ingredientID;
     }
@@ -56,36 +64,36 @@ public class Ingredient {
         this.ingredientID = ingredientID;
     }
 
+    public String getIngredientLanguage() {
+        return ingredientLanguage;
+    }
+
+    public void setIngredientLanguage(String ingredientLanguage) {
+        this.ingredientLanguage = ingredientLanguage;
+    }
+
     public double getFat() {
         return fat;
-    }
-
-    public double getProtein() {
-        return protein;
-    }
-
-    public double getCarbs() {
-        return carbs;
     }
 
     public void setFat(double fat) {
         this.fat = fat;
     }
 
+    public double getProtein() {
+        return protein;
+    }
+
     public void setProtein(double protein) {
         this.protein = protein;
     }
 
-    public void setCarbs(double carbs) {
-        this.carbs = carbs;
+    public double getCarbs() {
+        return carbs;
     }
 
-    /**
-     * Setter for name of the ingredient
-     * @param ingredientName Name of the ingredient to be set
-     */
-    public void setIngredientName(String ingredientName) {
-        this.ingredientName = ingredientName;
+    public void setCarbs(double carbs) {
+        this.carbs = carbs;
     }
 
     /**
@@ -109,12 +117,13 @@ public class Ingredient {
                 && Double.compare(fat, that.fat) == 0
                 && Double.compare(protein, that.protein) == 0
                 && Double.compare(carbs, that.carbs) == 0
-                && Objects.equals(ingredientName, that.ingredientName);
+                && Objects.equals(ingredientName, that.ingredientName)
+                && Objects.equals(ingredientLanguage, that.ingredientLanguage);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(ingredientID, ingredientName,
-                fat, protein, carbs);
+                fat, protein, carbs, ingredientLanguage);
     }
 }

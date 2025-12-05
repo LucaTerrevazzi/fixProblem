@@ -14,7 +14,7 @@ public class Instruction {
     @Column(nullable = false)
     private String description;
 
-    // In order for the instruction and recipe to be link JPA needs a recipe attribute
+    // In order for the instruction and recipe to be linked JPA needs a recipe attribute
     @ManyToOne(optional = false)
     @JoinColumn(name = "recipeID")
     private Recipe recipe;
@@ -28,10 +28,10 @@ public class Instruction {
     public Instruction() {}
 
     /**
-     * Constructorfor the Instruction class
+     * Constructor for the Instruction class
      * @param description description of the specific step
-     * @param orderNumber the index of the isntruction (in which order it will get exedcuted)
-     * @param recipe the recipe its linked with
+     * @param orderNumber the index of the instruction (in which order it will get executed)
+     * @param recipe the recipe it's linked with
      */
     public Instruction(String description, int orderNumber, Recipe recipe) {
         this.description = description;

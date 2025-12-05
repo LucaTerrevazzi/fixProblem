@@ -10,7 +10,4 @@ public class FavoritesData {
         return favorites;
     }
 
-    public void setFavorites(List<Integer> favorites) {
-        this.favorites = favorites;
-    }
 }
