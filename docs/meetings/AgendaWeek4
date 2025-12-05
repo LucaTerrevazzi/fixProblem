@@ -1,0 +1,41 @@
+| Summary:      |                                                                                                                 |  
+|---------------|-----------------------------------------------------------------------------------------------------------------|  
+| Date :        | 05/12/2025                                                                                                      |  
+| Time :        | 14.45                                                                                                           |  
+| Location :    | DW PC Hall 2                                                                                                    |  
+| Chair :       | Luca Terrevazzi                                                                                                 |  
+| Minute Taker: | Bo Li                                                                                                           |  
+| Attendees :   | Bo Li, Daphne Charaki, Doga Gurer, Karsten van den Heuvel, Luminita Nitescu, Luca Terrevazzi, Melchior Besancon |  
+# Agenda  Items :
+-  Opening  by  chair  (1  min )
+-  Check - in: (3  min )   
+   ->How  is  everyone  doing?    
+   ->How was the workload?
+-  Announcements  by  the  team  (1  min )
+-  Approval  of  the  agenda  -  Does  anyone  have  any  additions/ discuss something ?  (1  min )
+-  Announcements  by  the  TA  (2  min )
+-  what went good and bad during this week? (7  min )   
+   ->if problems discuss how to improve them (+5 min)
+- Explanation of the work wach team member has worked on this week  
+     ->presenting important pieces of code and explaining(20 min)
+-  Discussion on the state of the project (15 min)   
+
+   ->is the team happy with the state of the project?
+
+   ->What do we want the next steps to be?
+
+   ->What do we want the next steps to be?
+- Division of work for the next week: (10 min)
+
+  ->What do we want to get done before next thursday?
+
+  ->In what order do these things have to happen?
+- Assignment of roles for the next TA meeting (1 min )
+-  Feedback  round  (5  min )
+
+   ->How  did the meeting go?   
+   ->What do we want to change next time?
+-  Question  round (3  min )
+
+   ->How  did the meeting go?
+-  Closure  (1  min )
