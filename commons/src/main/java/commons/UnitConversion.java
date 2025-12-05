@@ -56,6 +56,11 @@ public final class UnitConversion {
      * @return the unit that best expresses the amount (kg for 1000g+, otherwise g)
      */
     public static Unit preferredMassUnit(double grams) {
-        return grams >= 1000 ? Unit.kg : Unit.g;
+        if (grams >= 1000) {
+            return Unit.kg;
+        } else {
+            return Unit.g;
+        }
     }
+
 }

@@ -1,7 +1,5 @@
 package commons;
 
-import jakarta.persistence.Column;
-
 import java.util.Objects;
 
 /**
@@ -11,14 +9,9 @@ import java.util.Objects;
  */
 public class NutritionalProfile {
 
-    @Column(nullable = false)
     private double fat;
-
-    @Column(nullable = false)
-    private double protein;
-
-    @Column(nullable = false)
     private double carbs;
+    private double protein;
 
     public NutritionalProfile() {
         //for JPA
