@@ -12,7 +12,7 @@ import java.util.Objects;
 public class RecipeIngredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long recipeIngredientId;
 
     // one ingredient used in many recipeIngredients
     @ManyToOne(optional = false)
@@ -46,6 +46,22 @@ public class RecipeIngredient {
         this.ingredient = ingredient;
         this.unit = unit;
         this.amount = amount;
+    }
+
+    /**
+     * Getter for the id
+     * @return The id of the RecipeIngredient
+     */
+    public long getRecipeIngredientId() {
+        return recipeIngredientId;
+    }
+
+    /**
+     * Setter for the id
+     * @param recipeIngredientId id of the new RecipeIngredient
+     */
+    public void setRecipeIngredientId(long recipeIngredientId) {
+        this.recipeIngredientId = recipeIngredientId;
     }
 
     /**
