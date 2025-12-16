@@ -20,4 +20,13 @@ public class RecipeController {
         this.recipeService = recipeService;
     }
 
+    /**
+     * GET /recipes
+     * returns all of the recipes
+     */
+    @GetMapping
+    public List<Recipe> getAllRecipes() {
+        return recipeService.findAll();
+    }
+
 }
