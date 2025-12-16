@@ -29,4 +29,13 @@ public class RecipeController {
         return recipeService.findAll();
     }
 
+    /**
+     * GET /recipes/{id}
+     * returns a recipe based on its ID
+     */
+    @GetMapping("/{id}")
+    public Recipe getRecipeById(@PathVariable long id) {
+        return recipeService.findById(id);
+    }
+
 }
