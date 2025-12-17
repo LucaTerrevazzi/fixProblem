@@ -1,0 +1,226 @@
+/*
+ * Copyright 2021 Delft University of Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package server.api;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
+
+import commons.Ingredient;
+import server.database.IngredientRepository;
+
+public class TestIngredientRepository implements IngredientRepository {
+
+    public final List<Ingredient> ingredients = new ArrayList<>();
+    public final List<String> calledMethods = new ArrayList<>();
+
+    private void call(String name) {
+        calledMethods.add(name);
+    }
+
+    @Override
+    public List<Ingredient> findAll() {
+        calledMethods.add("findAll");
+        return ingredients;
+    }
+
+    @Override
+    public List<Ingredient> findAll(Sort sort) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<Ingredient> findAllById(Iterable<Long> ids) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public <S extends Ingredient> List<S> saveAll(Iterable<S> entities) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void flush() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public <S extends Ingredient> S saveAndFlush(S entity) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public <S extends Ingredient> List<S> saveAllAndFlush(Iterable<S> entities) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void deleteAllInBatch(Iterable<Ingredient> entities) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void deleteAllByIdInBatch(Iterable<Long> ids) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void deleteAllInBatch() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public Ingredient getOne(Long id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Ingredient getById(Long id) {
+        call("getById");
+        return find(id).get();
+    }
+
+    @Override
+    public Ingredient getReferenceById(Long id) {
+        call("getReferenceById");
+        return find(id).get();
+    }
+
+    private Optional<Ingredient> find(Long id) {
+        return ingredients.stream().filter(q -> Objects.equals(q.getIngredientID(), id)).findFirst();
+    }
+
+    @Override
+    public <S extends Ingredient> List<S> findAll(Example<S> example) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public <S extends Ingredient> List<S> findAll(Example<S> example, Sort sort) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Page<Ingredient> findAll(Pageable pageable) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public <S extends Ingredient> S save(S entity) {
+        call("save");
+        entity.setIngredientID((long) ingredients.size());
+        ingredients.add(entity);
+        return entity;
+    }
+
+    @Override
+    public Optional<Ingredient> findById(Long id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        call("existsById");
+        return find(id).isPresent();
+    }
+
+    @Override
+    public long count() {
+        return ingredients.size();
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void delete(Ingredient entity) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void deleteAllById(Iterable<? extends Long> ids) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void deleteAll(Iterable<? extends Ingredient> entities) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void deleteAll() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public <S extends Ingredient> Optional<S> findOne(Example<S> example) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public <S extends Ingredient> Page<S> findAll(Example<S> example, Pageable pageable) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public <S extends Ingredient> long count(Example<S> example) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public <S extends Ingredient> boolean exists(Example<S> example) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public <S extends Ingredient, R> R findBy(Example<S> example, Function<FetchableFluentQuery<S>, R> queryFunction) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+}
