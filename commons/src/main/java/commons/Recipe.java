@@ -1,4 +1,5 @@
 package commons;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -20,9 +21,9 @@ public class Recipe {
     // One recipe - many instructions => One to Many
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orderNumber ASC") // ascending order of instructions
+    @JsonIgnore
     private List<Instruction> steps = new ArrayList<>();
 
-    // one instruction - many ingredients => One to Many
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeIngredient> ingredients = new ArrayList<>();
 
