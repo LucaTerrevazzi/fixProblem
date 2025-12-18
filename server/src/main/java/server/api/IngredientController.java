@@ -9,23 +9,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import commons.Ingredient;
-import server.database.IngredientRepository;
+import server.service.IngredientService;
 
 @RestController
 @RequestMapping("/api/ingredients")
 public class IngredientController {
 
-    private final IngredientRepository repo;
+    private final IngredientService service;
 
     /**
      * Creates a new IngredientController. This is only used by Spring.
      *
-     * @param repo repository used to persist and retrieve ingredients
+     * @param service repository used to persist and retrieve ingredients
      */
-    public IngredientController(IngredientRepository repo) {
-        this.repo = repo;
+    public IngredientController(IngredientService service) {
+        this.service = service;
     }
 
     /**
@@ -35,7 +36,7 @@ public class IngredientController {
      */
     @GetMapping(path = { "", "/" })
     public List<Ingredient> getAll() {
-        return repo.findAll();
+        return service.findAll();
     }
 
     /**
@@ -46,10 +47,11 @@ public class IngredientController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Ingredient> getById(@PathVariable("id") long id) {
-        if (id < 0 || !repo.existsById(id)) {
+        try {
+            return ResponseEntity.ok(service.findById(id));
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(repo.findById(id).get());
     }
 
     /**
@@ -66,8 +68,17 @@ public class IngredientController {
             return ResponseEntity.badRequest().build();
         }
 
-        Ingredient saved = repo.save(ingredient);
+        Ingredient saved = service.save(ingredient);
         return ResponseEntity.ok(saved);
+    }
+
+    /**
+     * Deletes an ingredient by id.
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        service.delete(id);
+        return ResponseEntity.ok().build();
     }
 
     /**
