@@ -1,5 +1,6 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.Objects;
 
@@ -14,7 +15,6 @@ public class RecipeIngredient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long recipeIngredientId;
 
-    // one ingredient used in many recipeIngredients
     @ManyToOne(optional = false)
     @JoinColumn(name = "ingredientID")
     private Ingredient ingredient;
@@ -26,9 +26,9 @@ public class RecipeIngredient {
     @Column(nullable = false)
     private int amount;
 
-        // Many recipeIngredients to one recipe
     @ManyToOne(optional = false)
     @JoinColumn(name = "recipeID")
+    @JsonIgnore
     private Recipe recipe;
 
     /**

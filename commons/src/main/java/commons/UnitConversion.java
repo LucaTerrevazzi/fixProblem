@@ -11,7 +11,6 @@ public final class UnitConversion {
     private static final double MILLILITRES_PER_TABLESPOON = 15;
     private static final double MILLILITRES_PER_TEASPOON = 5;
 
-    // Assuming a pinch is roughly 1/64 teaspoon (about 0.31–0.36 g).
     private static final double GRAMS_PER_PINCH = 0.36;
 
     private UnitConversion() {

@@ -1,6 +1,9 @@
 package commons;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.util.Objects;
+
 /**
  * Represents an ingredient going to be used in a specific recipe
  */
@@ -12,7 +15,7 @@ public class Ingredient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ingredientID;
 
-    @Column(nullable = false, unique = true) //column that cannot be null => it's a required field
+    @Column(nullable = false, unique = true)
     private String ingredientName;
 
     @Column(nullable = false)
@@ -20,6 +23,7 @@ public class Ingredient {
 
     @Column(nullable = false)
     private double fat;
+
     @Column(nullable = false)
     private double protein;
 
@@ -35,25 +39,12 @@ public class Ingredient {
      * Constructor for Ingredient
      * @param ingredientName name of the ingredient
      */
-    public Ingredient( String ingredientName ) {
+    public Ingredient(String ingredientName) {
         this.ingredientName = ingredientName;
-        this.fat = 0; // set to 0 so we don't have problems with null database
+        this.fat = 0;
         this.protein = 0;
         this.carbs = 0;
         this.ingredientLanguage = "No language specified";
-    }
-
-
-    /**
-     * Getter for name of the ingredient
-     * @return name of the ingredient
-     */
-    public String getIngredientName() {
-        return ingredientName;
-    }
-
-    public void setIngredientName(String ingredientName) {
-        this.ingredientName = ingredientName;
     }
 
     public Long getIngredientID() {
@@ -62,6 +53,14 @@ public class Ingredient {
 
     public void setIngredientID(Long ingredientID) {
         this.ingredientID = ingredientID;
+    }
+
+    public String getIngredientName() {
+        return ingredientName;
+    }
+
+    public void setIngredientName(String ingredientName) {
+        this.ingredientName = ingredientName;
     }
 
     public String getIngredientLanguage() {
@@ -98,25 +97,22 @@ public class Ingredient {
 
     /**
      * Calories calculator
-     * @return total nutritional value/calories in 100gr (formula found in backlog)
+     * @return total nutritional value/calories in 100gr
      */
+    @JsonProperty(value = "kcal", access = JsonProperty.Access.READ_ONLY)
     public double getKcal() {
-        return fat*9 + protein*4 + carbs*4;
+        return fat * 9 + protein * 4 + carbs * 4;
     }
 
-    /**
-     * Equals method for ingredient
-     * @param o   the reference object with which to compare.
-     * @return true if equal
-     */
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ingredient that = (Ingredient) o;
-        return ingredientID == that.ingredientID
-                && Double.compare(fat, that.fat) == 0
-                && Double.compare(protein, that.protein) == 0
-                && Double.compare(carbs, that.carbs) == 0
+        return Double.compare(that.fat, fat) == 0
+                && Double.compare(that.protein, protein) == 0
+                && Double.compare(that.carbs, carbs) == 0
+                && Objects.equals(ingredientID, that.ingredientID)
                 && Objects.equals(ingredientName, that.ingredientName)
                 && Objects.equals(ingredientLanguage, that.ingredientLanguage);
     }

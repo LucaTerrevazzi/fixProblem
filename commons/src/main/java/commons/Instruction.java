@@ -1,5 +1,6 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -17,6 +18,7 @@ public class Instruction {
     // In order for the instruction and recipe to be linked JPA needs a recipe attribute
     @ManyToOne(optional = false)
     @JoinColumn(name = "recipeID")
+    @JsonIgnore
     private Recipe recipe;
 
     @Column(nullable = false)
