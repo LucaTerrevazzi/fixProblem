@@ -25,6 +25,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import commons.Ingredient;
 import commons.Recipe;
 import org.glassfish.jersey.client.ClientConfig;
 
@@ -75,11 +76,19 @@ public class ServerUtils {
 		}
 		return true;
 	}
+
     public List<Recipe> getRecipes() {
         return ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("recipes") //
                 .request(APPLICATION_JSON)
                 .get(new GenericType<List<Recipe>>() {});
     }
+
+	public List<Ingredient> getIngredients() {
+		return ClientBuilder.newClient(new ClientConfig()) //
+				.target(SERVER).path("api/ingredients") //
+				.request(APPLICATION_JSON)
+				.get(new GenericType<List<Ingredient>>() {});
+	}
 
 }
