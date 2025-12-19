@@ -1,13 +1,18 @@
 package server.api;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import commons.Recipe;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+import server.service.RecipeService;
 
 public class RecipeControllerTest {
 
@@ -41,5 +46,68 @@ public class RecipeControllerTest {
         Recipe r = new Recipe();
         r.setRecipeName(name);
         return r;
+    }
+
+    @Test
+    public void createRecipe_savesAndReturnsRecipe() {
+        Recipe recipe = createRecipe("Lasagna");
+
+        Recipe actual = sut.createRecipe(recipe);
+
+        assertEquals(recipe, actual);
+    }
+
+    @Test
+    public void createRecipe_nullRecipe_throwsBadRequest() {
+
+        ResponseStatusException exception =
+                assertThrows(ResponseStatusException.class,
+                        () -> sut.createRecipe(null));
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    }
+
+    @Test
+    public void updateRecipe_updatesAndReturnsRecipe() {
+        Recipe updatedRecipe = createRecipe("Updated Pasta");
+
+        Recipe actual = sut.updateRecipe(1, updatedRecipe);
+
+        assertEquals(updatedRecipe, actual);
+    }
+
+    @Test
+    public void updateRecipe_nullRecipe_throwsBadRequest() {
+        ResponseStatusException exception =
+                assertThrows(ResponseStatusException.class,
+                        () -> sut.updateRecipe(1, null));
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    }
+
+    @Test
+    public void updateRecipe_recipeNotFound_throwsNotFound() {
+
+        Recipe recipe = createRecipe("Non Existing Recipe");
+
+        ResponseStatusException exception =
+                assertThrows(ResponseStatusException.class,
+                        () -> sut.updateRecipe(999, recipe));
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+    }
+
+    @Test
+    public void deleteRecipe_existingRecipe_deletesSuccessfully() {
+        assertDoesNotThrow(() -> sut.deleteRecipe(0));
+    }
+
+    @Test
+    public void deleteRecipe_recipeNotFound_throwsNotFound() {
+        ResponseStatusException exception =
+                assertThrows(ResponseStatusException.class,
+                        () -> sut.deleteRecipe(999));
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
 }
