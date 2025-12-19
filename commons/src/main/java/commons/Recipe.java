@@ -83,6 +83,9 @@ public class Recipe {
     }
 
     public String getRecipeLanguage() {
+        if (recipeLanguage == null) {
+            recipeLanguage = "English";
+        }
         return recipeLanguage;
     }
 
