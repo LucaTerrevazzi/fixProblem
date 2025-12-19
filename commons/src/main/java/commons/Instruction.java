@@ -74,7 +74,10 @@ public class Instruction {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Instruction that = (Instruction) o;
-        return instructionID == that.instructionID && orderNumber == that.orderNumber && Objects.equals(description, that.description) && Objects.equals(recipe, that.recipe);
+        return Objects.equals(instructionID, that.instructionID)
+                && orderNumber == that.orderNumber
+                && Objects.equals(description, that.description)
+                && Objects.equals(recipe, that.recipe);
     }
 
     @Override

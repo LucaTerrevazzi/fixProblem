@@ -9,14 +9,14 @@ import java.io.IOException;
 
 public class FavoritesUtil {
 
-    private static String FILE_PATH = "src/main/resources/Favorites.json";
+    private static String filePath = "src/main/resources/Favorites.json";
 
     /**
      * function to change the path of the favorites file for testing purposes
      * @param path path to set the path to
      */
     public static void setFilePath(String path) {
-        FILE_PATH = path;
+        filePath = path;
     }
 
     /**
@@ -25,7 +25,7 @@ public class FavoritesUtil {
      * @throws IOException can throw an IOException
      */
     public static FavoritesData loadJson() throws IOException {
-        File file = new File(FILE_PATH);
+        File file = new File(filePath);
         ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
         if (!file.exists()) {
@@ -44,7 +44,7 @@ public class FavoritesUtil {
      */
     protected static void saveJson(FavoritesData data) throws IOException {
         ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-        mapper.writeValue(new File(FILE_PATH), data);
+        mapper.writeValue(new File(filePath), data);
     }
 
     /**

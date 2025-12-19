@@ -137,7 +137,8 @@ public class RecipeIngredient {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         RecipeIngredient that = (RecipeIngredient) o;
-        return amount == that.amount && Objects.equals(ingredient, that.ingredient) && unit == that.unit;
+        return amount == that.amount
+                && Objects.equals(ingredient, that.ingredient) && unit == that.unit;
     }
 
     @Override
