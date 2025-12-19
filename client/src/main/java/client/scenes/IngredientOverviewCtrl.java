@@ -2,7 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.Recipe;
+import commons.Ingredient;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,16 +15,16 @@ import javafx.scene.control.ListView;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class RecipeOverviewCtrl implements Initializable {
+public class IngredientOverviewCtrl implements Initializable {
 
     @FXML
-    private Button addRecipeButton;
+    private Button addIngredientButton;
     @FXML
     private Button favoritesButton;
     @FXML
-    private Button ingredientsButton;
+    private Button recipesButton;
     @FXML
-    private Button deleteRecipeButton;
+    private Button deleteIngredientButton;
     @FXML
     private Button refreshButton;
     @Inject
@@ -33,66 +33,64 @@ public class RecipeOverviewCtrl implements Initializable {
     private FoodPalCtrl pc ;
 
     @FXML
-    private ListView<Recipe> recipeListView;
+    private ListView<Ingredient> ingredientListView;
 
     @FXML
-    private Label recipeName;
-    private final ObservableList<Recipe> recipes =
+    private Label ingredientName;
+    private final ObservableList<Ingredient> ingredients =
             FXCollections.observableArrayList();
 
     @Inject
-    public RecipeOverviewCtrl(FoodPalCtrl p, ServerUtils server) {
+    public IngredientOverviewCtrl(FoodPalCtrl p, ServerUtils server) {
         this.pc = p;
         this.server = server;
     }
 
     public void goToAddScene() {
         System.out.println(" Go to add scene ");
-        pc.showAddRecipe();
+        pc.showAddIngredient();
     }
 
     public void goToFavorites(){
         System.out.println("Go to the Favorites scene *not functional yet*");
     }
-
-    public void goToIngredients(){
-        System.out.println("Go to the Ingredients scene");
-        pc.showIngredientOverview();
+    public void goToRecipes(){
+        System.out.println("Go to the Recipes scene");
+        pc.showRecipeOverview();
     }
-
     public void goToDeleteScene(){
         System.out.println("Go to the Delete recipe scene *not functional yet*");
     }
 
     public void refresh(){
         System.out.println("Refresh button clicked!");
-        recipes.clear();
-        recipes.addAll(server.getRecipes());
+        ingredients.clear();
+        ingredients.addAll(server.getIngredients());
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("RecipeOverviewCtrl initialized");
+        System.out.println("IngredientOverviewCtrl initialized");
 
-        recipeListView.setItems(recipes);
+        ingredientListView.setItems(ingredients);
 
-        recipeListView.setCellFactory(list -> new ListCell<>() {
+        ingredientListView.setCellFactory(list -> new ListCell<>() {
             @Override
-            protected void updateItem(Recipe item, boolean empty) {
+            protected void updateItem(Ingredient item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(item.getRecipeName());
+                    setText(item.getIngredientName());
                 }
             }
         });
 
-        recipeListView.getSelectionModel()
+        ingredientListView.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((obs, oldRecipe, selectedRecipe) -> {
                     if (selectedRecipe != null) {
-                        recipeName.setText(selectedRecipe.getRecipeName());
+                        ingredientName.setText(selectedRecipe.getIngredientName());
                     }
                 });
 

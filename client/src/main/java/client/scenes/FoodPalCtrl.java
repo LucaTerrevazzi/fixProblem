@@ -9,12 +9,19 @@ public class FoodPalCtrl {
 
     private Stage primaryStage;
     private Scene recipeOverviewScene;
-    private Scene addScene;
+    private Scene addRecipeScene;
+    private Scene ingredientOverviewScene;
+    private Scene addIngredientScene;
 
-    public void init(Stage primaryStage, Pair<RecipeOverviewCtrl, Parent> overview, Pair<AddCtrl, Parent> add) {
+    public void init(Stage primaryStage, Pair<RecipeOverviewCtrl, Parent> overview,
+                     Pair<AddRecipeCtrl, Parent> addRecipe,
+                     Pair<IngredientOverviewCtrl, Parent> ingredientOverview,
+                     Pair<AddIngredientCtrl, Parent> addIngredient) {
         this.primaryStage = primaryStage;
         this.recipeOverviewScene = new Scene(overview.getValue());
-        this.addScene = new Scene(add.getValue());
+        this.addRecipeScene = new Scene(addRecipe.getValue());
+        this.ingredientOverviewScene = new Scene(ingredientOverview.getValue());
+        this.addIngredientScene = new Scene(addIngredient.getValue());
         showRecipeOverview();
         primaryStage.show();
     }
@@ -24,9 +31,19 @@ public class FoodPalCtrl {
         primaryStage.setScene(recipeOverviewScene);
     }
 
-    public void showAdd() {
+    public void showAddRecipe() {
         primaryStage.setTitle("Add Recipe");
-        primaryStage.setScene(addScene);
+        primaryStage.setScene(addRecipeScene);
+    }
+
+    public void showIngredientOverview() {
+        primaryStage.setTitle("Ingredient Overview");
+        primaryStage.setScene(ingredientOverviewScene);
+    }
+
+    public void showAddIngredient() {
+        primaryStage.setTitle("Add Ingredient");
+        primaryStage.setScene(addIngredientScene);
     }
 }
 

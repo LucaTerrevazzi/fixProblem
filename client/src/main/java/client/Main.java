@@ -20,11 +20,9 @@ import static com.google.inject.Guice.createInjector;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import client.scenes.*;
 import com.google.inject.Injector;
 
-import client.scenes.AddCtrl;
-import client.scenes.FoodPalCtrl;
-import client.scenes.RecipeOverviewCtrl;
 import client.utils.ServerUtils;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -49,9 +47,11 @@ public class Main extends Application {
 		}
 
 		var overview = FXML.load(RecipeOverviewCtrl.class, "client", "scenes", "RecipesOverview.fxml");
-		var add = FXML.load(AddCtrl.class, "client", "scenes", "AddRecipe.fxml");
+		var addRecipe = FXML.load(AddRecipeCtrl.class, "client", "scenes", "AddRecipe.fxml");
+		var ingredientOverview = FXML.load(IngredientOverviewCtrl.class, "client", "scenes", "IngredientsOverview.fxml");
+		var addIngredient =  FXML.load(AddIngredientCtrl.class, "client", "scenes", "AddIngredient.fxml");
 
 		var foodPalCtrl = INJECTOR.getInstance(FoodPalCtrl.class);
-		foodPalCtrl.init(primaryStage, overview, add);
+		foodPalCtrl.init(primaryStage, overview, addRecipe, ingredientOverview, addIngredient);
 	}
 }
