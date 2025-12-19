@@ -46,8 +46,8 @@ public class IngredientOverviewCtrl implements Initializable {
         this.server = server;
     }
 
-    public void goToAddScene() {
-        System.out.println(" Go to add scene ");
+    public void goToAddIngredientScene() {
+        System.out.println("Go to the add ingredient scene *not functional yet*");
         pc.showAddIngredient();
     }
 
@@ -58,8 +58,8 @@ public class IngredientOverviewCtrl implements Initializable {
         System.out.println("Go to the Recipes scene");
         pc.showRecipeOverview();
     }
-    public void goToDeleteScene(){
-        System.out.println("Go to the Delete recipe scene *not functional yet*");
+    public void goToDeleteIngredientScene(){
+        System.out.println("Go to the delete ingredient scene *not functional yet*");
     }
 
     public void refresh(){
