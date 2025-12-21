@@ -102,14 +102,21 @@ public class RecipeOverviewCtrl implements Initializable {
                 .selectedItemProperty()
                 .addListener((obs, oldRecipe, selectedRecipe) -> {
                     if (selectedRecipe != null) {
-                        showRecipeDetails(selectedRecipe);
+                        Recipe fullRecipe =
+                                server.getRecipeById(selectedRecipe.getRecipeID());
+                        showRecipeDetails(fullRecipe);
                     }
                 });
+
 
         refresh();
     }
 
     private void showRecipeDetails(Recipe recipe) {
+        System.out.println(
+                "DEBUG → recipe id=" + recipe.getRecipeID()
+                        + " steps=" + (recipe.getSteps() == null ? "NULL" : recipe.getSteps().size())
+        );
         recipeName.setText(recipe.getRecipeName());
 
         ingredientsList.setItems(
