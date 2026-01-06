@@ -102,7 +102,8 @@ public class Recipe {
     }
 
     /**
-     * This equals-method has to change when the attributes instruction and ingredients will be added.
+     * This equals-method has to change when the attributes
+     * instruction and ingredients will be added.
      * @param o   the reference object with which to compare.
      * @return a boolean telling whether the tho recipes are exactly the same (also the ID).
      */

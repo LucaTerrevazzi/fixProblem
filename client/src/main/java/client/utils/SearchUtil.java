@@ -11,6 +11,7 @@ public class SearchUtil {
 
     /**
      * Search for recipes with the most relevance.
+     * If the user search for a language, it will work the same as when he/she search for the name of the recipe.
      * The name of the recipe is 100 times more important than the ingredients.
      * Ingredients are 2 times more important than instructions,
      * because a user will not search for "Mix", "Add" or "Bake".
@@ -28,7 +29,7 @@ public class SearchUtil {
             if (!w.isBlank()){
                 for (int i = 0; i<recipes.size(); i++) {
                     Recipe recipe = recipes.get(i);
-                    if (recipe.getRecipeName().contains(w)) {
+                    if (recipe.getRecipeName().contains(w) || recipe.getRecipeLanguage().contains(w)) {
                         scores[i] += 200;
                     }
                     for (RecipeIngredient ing : recipe.getIngredients()) {
@@ -40,9 +41,6 @@ public class SearchUtil {
                         if (instr.getDescription().contains(w)) {
                             scores[i] += 1;
                         }
-                    }
-                    if (recipe.getRecipeLanguage().contains(w)) {
-                        scores[i] += 200;
                     }
                 }
             }
