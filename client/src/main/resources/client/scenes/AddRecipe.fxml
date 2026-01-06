@@ -1,12 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddRecipeCtrl">
-   <children>
-      <Button fx:id="toOverviewButton" layoutX="233.0" layoutY="200.0" mnemonicParsing="false" onAction="#click" text="Go to overview" />
-      <Label layoutX="228.0" layoutY="166.0" text="No functionality yet" />
-   </children>
-</Pane>
+<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddRecipeCtrl">
+
+    <!-- Top bar similar vibe -->
+    <top>
+        <HBox prefHeight="45.0" spacing="10" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="8" left="10" right="10" top="8" />
+            </padding>
+
+            <Button text="← Back" />
+            <Label text="Add Recipe">
+                <font><Font size="20" /></font>
+            </Label>
+
+            <Pane HBox.hgrow="ALWAYS" />
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="12">
+            <padding>
+                <Insets bottom="12" left="12" right="12" top="10" />
+            </padding>
+
+            <!-- Basic info -->
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="120" />
+                    <ColumnConstraints hgrow="ALWAYS" />
+                </columnConstraints>
+
+                <Label text="Recipe name:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="nameField" promptText="e.g., Pancakes" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                <Label text="Language:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <ComboBox fx:id="languageCombo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <rowConstraints>
+               <RowConstraints />
+               <RowConstraints />
+            </rowConstraints>
+            </GridPane>
+
+            <Separator />
+
+            <!-- Ingredients + Instructions side by side -->
+            <SplitPane dividerPositions="0.5" VBox.vgrow="ALWAYS">
+
+                <!-- Ingredients -->
+                <VBox spacing="8">
+                    <padding><Insets bottom="0" left="0" right="10" top="0" /></padding>
+
+                    <Label style="-fx-font-weight: bold;" text="Ingredients" />
+
+                    <HBox spacing="8">
+                        <TextField fx:id="ingredientField" promptText="e.g., 200g flour" HBox.hgrow="ALWAYS" />
+                        <Button text="Add" />
+                    </HBox>
+
+                    <ListView fx:id="ingredientsList" VBox.vgrow="ALWAYS" />
+
+                    <HBox spacing="8">
+                        <Button text="Remove selected" />
+                        <Button text="Clear" />
+                    </HBox>
+                </VBox>
+
+                <!-- Instructions -->
+                <VBox spacing="8">
+                    <padding><Insets bottom="0" left="10" right="0" top="0" /></padding>
+
+                    <Label style="-fx-font-weight: bold;" text="Instructions" />
+
+                    <HBox spacing="8">
+                        <TextField fx:id="instructionField" promptText="e.g., Mix flour and milk..." HBox.hgrow="ALWAYS" />
+                        <Button text="Add" />
+                    </HBox>
+
+                    <ListView fx:id="instructionsList" VBox.vgrow="ALWAYS" />
+
+                    <HBox spacing="8">
+                        <Button text="Move up" />
+                        <Button text="Move down" />
+                        <Button text="Remove selected" />
+                        <Button text="Clear" />
+                    </HBox>
+                </VBox>
+
+            </SplitPane>
+
+            <Label fx:id="errorLabel" style="-fx-text-fill: red;" text="" />
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="10" BorderPane.alignment="CENTER_RIGHT">
+            <padding><Insets bottom="12" left="12" right="12" top="8" /></padding>
+
+            <Pane HBox.hgrow="ALWAYS" />
+            <Button text="Cancel" />
+            <Button defaultButton="true" onAction="#createRecipe" text="Create" />
+        </HBox>
+    </bottom>
+
+</BorderPane>
