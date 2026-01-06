@@ -25,19 +25,24 @@ public class SearchUtil {
         String[] words = query.split("[ ,;.?]+"); //Will split "a b,c;d.e?f-g" into "a", "b", "c", "d", "e", "f-g"
         int[] scores = new int[recipes.size()];
         for (String w: words){
-            for (int i = 0; i<recipes.size(); i++){
-                Recipe recipe = recipes.get(i);
-                if (recipe.getRecipeName().contains(w)){
-                    scores[i] += 200;
-                }
-                for (RecipeIngredient ing: recipe.getIngredients()){
-                    if(ing.getIngredient().getIngredientName().contains(w)){
-                        scores[i] += 2;
+            if (!w.isBlank()){
+                for (int i = 0; i<recipes.size(); i++) {
+                    Recipe recipe = recipes.get(i);
+                    if (recipe.getRecipeName().contains(w)) {
+                        scores[i] += 200;
                     }
-                }
-                for (Instruction instr: recipe.getSteps()){
-                    if(instr.getDescription().contains(w)){
-                        scores[i] += 1;
+                    for (RecipeIngredient ing : recipe.getIngredients()) {
+                        if (ing.getIngredient().getIngredientName().contains(w)) {
+                            scores[i] += 2;
+                        }
+                    }
+                    for (Instruction instr : recipe.getSteps()) {
+                        if (instr.getDescription().contains(w)) {
+                            scores[i] += 1;
+                        }
+                    }
+                    if (recipe.getRecipeLanguage().contains(w)) {
+                        scores[i] += 200;
                     }
                 }
             }

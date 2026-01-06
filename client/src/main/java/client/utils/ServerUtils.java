@@ -49,10 +49,19 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .get(new GenericType<List<Recipe>>() {});
     }
-    public List<Ingredient> getIngredients() {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/ingredients") //
+
+	public List<Ingredient> getIngredients() {
+		return ClientBuilder.newClient(new ClientConfig()) //
+				.target(SERVER).path("api/ingredients") //
+				.request(APPLICATION_JSON)
+				.get(new GenericType<List<Ingredient>>() {});
+	}
+    public Recipe getRecipeById(long id) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER)
+                .path("recipes/" + id)
                 .request(APPLICATION_JSON)
-                .get(new GenericType<List<Ingredient>>() {});
+                .get(Recipe.class);
     }
+
 }

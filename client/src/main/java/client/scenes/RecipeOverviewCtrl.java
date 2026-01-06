@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Instruction;
 import commons.Recipe;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,6 +32,15 @@ public class RecipeOverviewCtrl implements Initializable {
     private ServerUtils server;
     @Inject
     private FoodPalCtrl pc ;
+
+    @FXML
+    private ListView<String> ingredientsList;
+
+    @FXML
+    private ListView<String> instructionsList;
+
+    @FXML
+    private Label recipeLanguage;
 
     @FXML
     private ListView<Recipe> recipeListView;
@@ -92,10 +102,42 @@ public class RecipeOverviewCtrl implements Initializable {
                 .selectedItemProperty()
                 .addListener((obs, oldRecipe, selectedRecipe) -> {
                     if (selectedRecipe != null) {
-                        recipeName.setText(selectedRecipe.getRecipeName());
+                        Recipe fullRecipe =
+                                server.getRecipeById(selectedRecipe.getRecipeID());
+                        showRecipeDetails(fullRecipe);
                     }
                 });
 
+
         refresh();
     }
+
+    private void showRecipeDetails(Recipe recipe) {
+        System.out.println(
+                "DEBUG → recipe id=" + recipe.getRecipeID()
+                        + " steps=" + (recipe.getSteps() == null ? "NULL" : recipe.getSteps().size())
+        );
+        recipeName.setText(recipe.getRecipeName());
+
+        ingredientsList.setItems(
+                FXCollections.observableArrayList(
+                        recipe.getIngredients().stream()
+                                .map(ri -> ri.getAmount() + " " +
+                                        ri.getUnit() + " " +
+                                        ri.getIngredient().getIngredientName())
+                                .toList()
+                )
+        );
+
+        instructionsList.setItems(
+                FXCollections.observableArrayList(
+                        recipe.getSteps().stream()
+                                .map(Instruction::getDescription)
+                                .toList()
+                )
+        );
+
+        recipeLanguage.setText("Language: " + recipe.getRecipeLanguage());
+    }
+
 }

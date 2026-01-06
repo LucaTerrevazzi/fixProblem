@@ -21,10 +21,24 @@
       </ToolBar>
    </bottom>
    <center>
-      <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label fx:id="recipeName" layoutX="172.0" layoutY="6.0" />
-         </children></Pane>
+       <VBox spacing="8">
+           <padding>
+               <Insets top="10" right="10" bottom="10" left="10"/>
+           </padding>
+           <Label fx:id="recipeName">
+               <font>
+                   <Font size="18"/>
+               </font>
+           </Label>
+
+           <Label text="Ingredients"/>
+           <ListView fx:id="ingredientsList" prefHeight="120"/>
+
+           <Label text="Instructions"/>
+           <ListView fx:id="instructionsList" prefHeight="120"/>
+
+           <Label fx:id="recipeLanguage"/>
+       </VBox>
    </center>
    <top>
       <HBox prefHeight="35.0" prefWidth="600.0" BorderPane.alignment="CENTER">
