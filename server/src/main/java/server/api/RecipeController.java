@@ -1,7 +1,9 @@
 package server.api;
 
 import commons.Recipe;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import server.database.RecipeRepository;
 import server.service.RecipeService;
 
 import java.util.List;
@@ -38,5 +40,15 @@ public class RecipeController {
         return recipeService.findById(id);
     }
 
-
+        /**
+         * POST /recipes
+         * @param recipe
+         * @return
+         */
+        @PostMapping
+        public Recipe create(@RequestBody Recipe recipe) {
+            System.out.println(recipe.toString());
+            return recipeService.save(recipe);
+        }
 }
+

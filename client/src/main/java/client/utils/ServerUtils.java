@@ -20,8 +20,13 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import java.net.ConnectException;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import commons.Ingredient;
 import commons.Recipe;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.MediaType;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.ProcessingException;
@@ -32,9 +37,9 @@ public class ServerUtils {
     private static final String SERVER = "http://localhost:8080/";
     public boolean isServerAvailable() {
         try {
-            ClientBuilder.newClient(new ClientConfig()) //
-                    .target(SERVER) //
-                    .request(APPLICATION_JSON) //
+            ClientBuilder.newClient(new ClientConfig())
+                    .target(SERVER)
+                    .request(APPLICATION_JSON)
                     .get();
         } catch (ProcessingException e) {
             if (e.getCause() instanceof ConnectException) {
@@ -44,8 +49,8 @@ public class ServerUtils {
         return true;
     }
     public List<Recipe> getRecipes() {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("recipes") //
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("recipes")
                 .request(APPLICATION_JSON)
                 .get(new GenericType<List<Recipe>>() {});
     }
@@ -63,5 +68,21 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .get(Recipe.class);
     }
+    public static Recipe addRecipe(Recipe recipe) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        String json = mapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(recipe);
+        System.out.println("JSON being sent:");
+        System.out.println(json);
+        return ClientBuilder.newClient()
+                .target(SERVER)
+                .path("recipes")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.entity(recipe, MediaType.APPLICATION_JSON),
+                        Recipe.class);
+    }
+
+
 
 }
