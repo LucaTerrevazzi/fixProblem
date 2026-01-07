@@ -56,6 +56,8 @@ public class RecipeOverviewCtrl implements Initializable {
         this.server = server;
     }
 
+
+
     public void goToAddScene() {
         System.out.println(" Go to add scene ");
         pc.showAddRecipe();
@@ -113,6 +115,7 @@ public class RecipeOverviewCtrl implements Initializable {
     }
 
     private void showRecipeDetails(Recipe recipe) {
+        refresh();
         System.out.println(
                 "DEBUG → recipe id=" + recipe.getRecipeID()
                         + " steps=" + (recipe.getSteps() == null ? "NULL" : recipe.getSteps().size())
