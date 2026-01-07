@@ -111,16 +111,23 @@ public class Recipe {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Recipe other)) return false;
-        if (this.recipeID != null && other.recipeID != null) {
-            return Objects.equals(this.recipeID, other.recipeID);
+        if (recipeID != null && other.recipeID != null) {
+            return Objects.equals(recipeID, other.recipeID);
         }
-        return false;
+        return Objects.equals(recipeName, other.recipeName)
+                && Objects.equals(recipeLanguage, other.recipeLanguage)
+                && Objects.equals(steps, other.steps)
+                && Objects.equals(ingredients, other.ingredients);
     }
 
 
 
     @Override
     public int hashCode() {
-        return (recipeID != null) ? recipeID.hashCode() : System.identityHashCode(this);
+        if (recipeID != null) {
+            return Objects.hash(recipeID);
+        }
+        return Objects.hash(recipeName, recipeLanguage, steps, ingredients);
     }
+
 }
