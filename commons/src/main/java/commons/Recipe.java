@@ -81,7 +81,7 @@ public class Recipe {
 
     public String getRecipeLanguage() {
         if (recipeLanguage == null) {
-            recipeLanguage = "English";
+            recipeLanguage = "EN";
         }
         return recipeLanguage;
     }
@@ -110,17 +110,24 @@ public class Recipe {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Recipe recipe = (Recipe) o;
-        return recipeID == recipe.recipeID &&
-                Objects.equals(recipeName, recipe.recipeName) &&
-                Objects.equals(steps, recipe.steps) &&
-                Objects.equals(ingredients, recipe.ingredients) &&
-                Objects.equals(recipeLanguage, recipe.recipeLanguage);
+        if (!(o instanceof Recipe other)) return false;
+        if (recipeID != null && other.recipeID != null) {
+            return Objects.equals(recipeID, other.recipeID);
+        }
+        return Objects.equals(recipeName, other.recipeName)
+                && Objects.equals(recipeLanguage, other.recipeLanguage)
+                && Objects.equals(steps, other.steps)
+                && Objects.equals(ingredients, other.ingredients);
     }
+
+
 
     @Override
     public int hashCode() {
-        return Objects.hash(recipeID, recipeName, steps, ingredients,  recipeLanguage);
+        if (recipeID != null) {
+            return Objects.hash(recipeID);
+        }
+        return Objects.hash(recipeName, recipeLanguage, steps, ingredients);
     }
+
 }

@@ -36,6 +36,7 @@ public class ShoppingUtil {
      */
     public static void saveToJson(ShoppingListData listData) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         mapper.writeValue(new File(filePath), listData);
     }
@@ -49,6 +50,7 @@ public class ShoppingUtil {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
             return mapper.readValue(f, ShoppingListData.class);
         } catch (IOException e) {
             return new ShoppingListData();

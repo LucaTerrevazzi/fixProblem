@@ -3,12 +3,14 @@ package commons;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Represents an ingredient going to be used in a specific recipe
  */
 @Entity
 @Table(name = "ingredient")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Ingredient {
 
     @Id

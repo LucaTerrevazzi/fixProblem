@@ -44,6 +44,7 @@ public class FavoritesUtil {
      */
     protected static void saveJson(FavoritesData data) throws IOException {
         ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         mapper.writeValue(new File(filePath), data);
     }
 

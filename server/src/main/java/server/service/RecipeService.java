@@ -1,11 +1,13 @@
 package server.service;
-import commons.Recipe;
 import commons.Instruction;
+import commons.Recipe;
 import commons.RecipeIngredient;
 import org.springframework.stereotype.Service;
-import server.database.RecipeRepository;
+import org.springframework.transaction.annotation.Transactional;
+import server.database.IngredientRepository;
 import server.database.InstructionRepository;
 import server.database.RecipeIngredientRepository;
+import server.database.RecipeRepository;
 
 import java.util.List;
 
@@ -14,23 +16,28 @@ public class RecipeService {
     private final RecipeRepository recipeRepo;
     private final InstructionRepository instructionRepo;
     private final RecipeIngredientRepository recipeIngredientRepo;
+    private final IngredientRepository ingredientRepo;
 
     /**
      * constructor for RecipeService
      * @param recipeRepo repository for saving and getting recipes
      * @param instructionRepo repository for saving and getting instructions
      * @param recipeIngredientRepo repository for saving and getting recipeIngredients
+     * @param ingredientRepo repository for resolving existing ingredients
      */
     public RecipeService(RecipeRepository recipeRepo,
                          InstructionRepository instructionRepo,
-                         RecipeIngredientRepository recipeIngredientRepo) {
+                         RecipeIngredientRepository recipeIngredientRepo,
+                         IngredientRepository ingredientRepo) {
         this.recipeRepo = recipeRepo;
         this.instructionRepo = instructionRepo;
         this.recipeIngredientRepo = recipeIngredientRepo;
+        this.ingredientRepo = ingredientRepo;
     }
 
     /**
      * get all recipes.
+     *
      * @return list of all recipes
      */
     public List<Recipe> findAll() {
@@ -51,8 +58,9 @@ public class RecipeService {
     /**
      * save a recipe with its steps and ingredients
      * @param recipe the recipe to save
-     * @return the persisted recipe (possibly with generated id)
+     * @return the recipe
      */
+    @Transactional
     public Recipe save(Recipe recipe) {
         if (recipe.getSteps() != null) {
             for (Instruction step : recipe.getSteps()) {
@@ -62,6 +70,11 @@ public class RecipeService {
         if (recipe.getIngredients() != null) {
             for (RecipeIngredient ri : recipe.getIngredients()) {
                 ri.setRecipe(recipe);
+
+                if (ri.getIngredient() == null || ri.getIngredient().getIngredientID() == null) {
+                    throw new IllegalArgumentException("RecipeIngredient must reference an existing Ingredient by id.");
+                }
+                ri.setIngredient(ingredientRepo.getReferenceById(ri.getIngredient().getIngredientID()));
             }
         }
         return recipeRepo.save(recipe);
@@ -73,10 +86,12 @@ public class RecipeService {
      * @param updated the new state to apply
      * @return the updated recipe
      */
+    @Transactional
     public Recipe update(long id, Recipe updated) {
         Recipe existing = findById(id);
 
         existing.setRecipeName(updated.getRecipeName());
+        existing.setRecipeLanguage(updated.getRecipeLanguage());
 
         existing.getSteps().clear();
         if (updated.getSteps() != null) {
@@ -90,6 +105,12 @@ public class RecipeService {
         if (updated.getIngredients() != null) {
             for (RecipeIngredient ri : updated.getIngredients()) {
                 ri.setRecipe(existing);
+
+                if (ri.getIngredient() == null || ri.getIngredient().getIngredientID() == null) {
+                    throw new IllegalArgumentException("RecipeIngredient must reference an existing Ingredient by id.");
+                }
+
+                ri.setIngredient(ingredientRepo.getReferenceById(ri.getIngredient().getIngredientID()));
                 existing.getIngredients().add(ri);
             }
         }

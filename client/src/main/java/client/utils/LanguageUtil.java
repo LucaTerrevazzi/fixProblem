@@ -25,6 +25,7 @@ public class LanguageUtil {
     public static LanguageData loadJson() throws IOException {
         File file = new File(filePath);
         ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
         if (!file.exists()) {
             LanguageData data = new LanguageData();

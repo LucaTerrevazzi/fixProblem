@@ -12,7 +12,7 @@ public class FoodPalCtrl {
     private Scene addRecipeScene;
     private Scene ingredientOverviewScene;
     private Scene addIngredientScene;
-
+    private RecipeOverviewCtrl recipeOverviewCtrl;
     public void init(Stage primaryStage, Pair<RecipeOverviewCtrl, Parent> overview,
                      Pair<AddRecipeCtrl, Parent> addRecipe,
                      Pair<IngredientOverviewCtrl, Parent> ingredientOverview,
