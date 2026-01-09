@@ -20,7 +20,6 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import java.net.ConnectException;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import commons.Ingredient;
@@ -55,12 +54,12 @@ public class ServerUtils {
                 .get(new GenericType<List<Recipe>>() {});
     }
 
-	public List<Ingredient> getIngredients() {
-		return ClientBuilder.newClient(new ClientConfig()) //
-				.target(SERVER).path("api/ingredients") //
-				.request(APPLICATION_JSON)
-				.get(new GenericType<List<Ingredient>>() {});
-	}
+    public List<Ingredient> getIngredients() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/ingredients")
+                .request(APPLICATION_JSON)
+                .get(new GenericType<List<Ingredient>>() {});
+    }
     public Recipe getRecipeById(long id) {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER)
@@ -68,6 +67,7 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .get(Recipe.class);
     }
+
     public static Recipe addRecipe(Recipe recipe) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -99,6 +99,19 @@ public class ServerUtils {
                 .put(Entity.entity(recipe, MediaType.APPLICATION_JSON), Recipe.class);
     }
 
-
+    public static Ingredient addIngredient(Ingredient ingredient) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        String json = mapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(ingredient);
+        System.out.println("JSON being sent:");
+        System.out.println(json);
+        return ClientBuilder.newClient()
+                .target(SERVER)
+                .path("api/ingredients")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.entity(ingredient, MediaType.APPLICATION_JSON),
+                        Ingredient.class);
+    }
 
 }
