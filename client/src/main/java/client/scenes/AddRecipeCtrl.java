@@ -15,6 +15,8 @@ public class AddRecipeCtrl {
     @FXML private TextField nameField;
     @FXML private ComboBox<Language> languageCombo;
 
+    @FXML private Button cloneRecipeButton;
+
     @FXML private ComboBox<Ingredient> ingredientCombo;
     @FXML private TextField ingredientAmountField;
     @FXML private ComboBox<Unit> unitCombo;
