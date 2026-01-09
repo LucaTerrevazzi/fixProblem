@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.*;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -13,6 +14,8 @@ public class AddRecipeCtrl {
 
     @FXML private TextField nameField;
     @FXML private ComboBox<String> languageCombo;
+
+    @FXML private Button cloneRecipeButton;
 
     @FXML private ComboBox<Ingredient> ingredientCombo;
     @FXML private TextField ingredientAmountField;
@@ -65,6 +68,18 @@ public class AddRecipeCtrl {
         });
 
         ingredientCombo.getItems().setAll(server.getIngredients());
+    }
+
+    public void cloneRecipe() {
+        System.out.println("Getting recipe properties for cloning");
+
+        RecipeHolder holder = RecipeHolder.getInstance();
+        Recipe r = holder.getRecipe();
+
+        if (r != null) {
+            nameField.setText(r.getRecipeName());
+            languageCombo.setValue(r.getRecipeLanguage());
+        }
     }
 
     @FXML

@@ -6,6 +6,7 @@ import commons.Instruction;
 import commons.Recipe;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -23,8 +24,6 @@ public class RecipeOverviewCtrl implements Initializable {
     private Button addRecipeButton;
     @FXML
     private Button deleteRecipeButton;
-    @FXML
-    private Button cloneRecipeButton;
     @FXML
     private Button refreshButton;
     @Inject
@@ -58,6 +57,14 @@ public class RecipeOverviewCtrl implements Initializable {
 
     public void goToAddScene() {
         System.out.println("Go to add scene");
+
+        // stores properties of selected recipes (for cloning)
+        Recipe selectedRecipe = recipeListView.getSelectionModel().getSelectedItem();
+        if (selectedRecipe != null) {
+            RecipeHolder holder = RecipeHolder.getInstance();
+            holder.setRecipe(selectedRecipe);
+        }
+
         pc.showAddRecipe();
     }
 
@@ -93,14 +100,6 @@ public class RecipeOverviewCtrl implements Initializable {
                 });
 
         refresh();
-    }
-
-    public void cloneRecipe() {
-        System.out.println("Cloning recipe *currently just goes to add scene*");
-
-        Recipe selectedRecipe = recipeListView.getSelectionModel().getSelectedItem();
-
-        goToAddScene();
     }
 
     public void refresh(){

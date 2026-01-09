@@ -17,7 +17,6 @@
         <items>
           <Button fx:id="addRecipeButton" mnemonicParsing="false" onAction="#goToAddScene" text="Add recipe" />
             <Button fx:id="deleteRecipeButton" mnemonicParsing="false" onAction="#deleteRecipeWarning" text="Delete recipe" />
-            <Button fx:id="cloneRecipeButton" mnemonicParsing="false" onAction="#cloneRecipe" text="Clone recipe" />
         </items>
       </ToolBar>
    </bottom>
