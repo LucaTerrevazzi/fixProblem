@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import commons.Ingredient;
 import commons.Recipe;
+import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import org.glassfish.jersey.client.ClientConfig;
@@ -34,10 +35,11 @@ import jakarta.ws.rs.core.GenericType;
 
 public class ServerUtils {
     private static final String SERVER = "http://localhost:8080/";
+    private static final Client client = ClientBuilder.newClient(new ClientConfig());
+
     public boolean isServerAvailable() {
         try {
-            ClientBuilder.newClient(new ClientConfig())
-                    .target(SERVER)
+            client.target(SERVER)
                     .request(APPLICATION_JSON)
                     .get();
         } catch (ProcessingException e) {
@@ -47,22 +49,21 @@ public class ServerUtils {
         }
         return true;
     }
+
     public List<Recipe> getRecipes() {
-        return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("recipes")
+        return client.target(SERVER).path("recipes")
                 .request(APPLICATION_JSON)
                 .get(new GenericType<List<Recipe>>() {});
     }
 
     public List<Ingredient> getIngredients() {
-        return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("api/ingredients")
+        return client.target(SERVER).path("api/ingredients") //
                 .request(APPLICATION_JSON)
                 .get(new GenericType<List<Ingredient>>() {});
     }
+
     public Recipe getRecipeById(long id) {
-        return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER)
+        return client.target(SERVER)
                 .path("recipes/" + id)
                 .request(APPLICATION_JSON)
                 .get(Recipe.class);
@@ -75,13 +76,13 @@ public class ServerUtils {
                 .writeValueAsString(recipe);
         System.out.println("JSON being sent:");
         System.out.println(json);
-        return ClientBuilder.newClient()
-                .target(SERVER)
+        return client.target(SERVER)
                 .path("recipes")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(recipe, MediaType.APPLICATION_JSON),
                         Recipe.class);
     }
+
     public static Recipe editRecipe(long id, Recipe recipe) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -92,26 +93,12 @@ public class ServerUtils {
         System.out.println("JSON being sent:");
         System.out.println(json);
 
-        return ClientBuilder.newClient()
-                .target(SERVER)
+        return client.target(SERVER)
                 .path("recipes/" + id)
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.entity(recipe, MediaType.APPLICATION_JSON), Recipe.class);
     }
 
-    public static Ingredient addIngredient(Ingredient ingredient) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        String json = mapper.writerWithDefaultPrettyPrinter()
-                .writeValueAsString(ingredient);
-        System.out.println("JSON being sent:");
-        System.out.println(json);
-        return ClientBuilder.newClient()
-                .target(SERVER)
-                .path("api/ingredients")
-                .request(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(ingredient, MediaType.APPLICATION_JSON),
-                        Ingredient.class);
-    }
+
 
 }
