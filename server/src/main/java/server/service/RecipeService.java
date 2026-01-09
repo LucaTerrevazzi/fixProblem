@@ -122,7 +122,7 @@ public class RecipeService {
      * delete a recipe by id.
      * @param id the id of the recipe to delete
      */
-    public void deleteById(long id) {
+    public void delete(long id) {
         recipeRepo.deleteById(id);
     }
 }
