@@ -117,13 +117,20 @@ public class RecipeOverviewCtrl implements Initializable {
 
                     System.out.println("Recipe " + selectedRecipe.getRecipeName() + " deleted");
                 });
+
+        refresh();
     }
 
     public void refresh(){
         System.out.println("Refresh ! (Refresh button clicked or else)");
         recipes.clear();
         recipes.addAll(server.getRecipes());
-        deleteRecipeButton.setDisable(true);
+
+        if (recipeListView.getSelectionModel().getSelectedItem() == null) {
+            deleteRecipeButton.setDisable(true);
+        } else {
+            deleteRecipeButton.setDisable(false);
+        }
     }
 
     @Override

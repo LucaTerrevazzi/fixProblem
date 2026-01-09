@@ -89,7 +89,10 @@
                <font>
                   <Font size="14.0" />
                </font>
-            </Label> <ListView fx:id="recipeListView" prefWidth="138.0" VBox.vgrow="ALWAYS" />
+            </Label> <ListView
+                 fx:id="recipeListView"
+                 VBox.vgrow="ALWAYS"
+                 prefWidth="138.0"/>
          </children>
       </VBox>
    </left>

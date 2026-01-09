@@ -72,9 +72,19 @@ public class RecipeUtil {
      * Creates a deep copy of the recipe
      */
     public static Recipe copy(Recipe original) {
-        Recipe r = new Recipe();
+        Recipe r = deepCopy(original.getRecipeName(), original);
+
         r.setRecipeID(original.getRecipeID());
-        r.setRecipeName(original.getRecipeName());
+
+        return r;
+    }
+
+    /**
+     * Creates a deep copy of the recipe
+     */
+    public static Recipe deepCopy(String newName, Recipe original) {
+        Recipe r = new Recipe();
+        r.setRecipeName(newName);
 
         ArrayList<Instruction> newSteps = new ArrayList<>(original.getSteps());
         r.setSteps(newSteps);
