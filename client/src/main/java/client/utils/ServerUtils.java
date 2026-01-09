@@ -20,7 +20,6 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import java.net.ConnectException;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import commons.Ingredient;
@@ -34,7 +33,9 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.GenericType;
 
 public class ServerUtils {
+
     private static final String SERVER = "http://localhost:8080/";
+
     public boolean isServerAvailable() {
         try {
             ClientBuilder.newClient(new ClientConfig())
@@ -48,6 +49,7 @@ public class ServerUtils {
         }
         return true;
     }
+
     public List<Recipe> getRecipes() {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("recipes")
@@ -55,12 +57,13 @@ public class ServerUtils {
                 .get(new GenericType<List<Recipe>>() {});
     }
 
-	public List<Ingredient> getIngredients() {
-		return ClientBuilder.newClient(new ClientConfig()) //
+    public List<Ingredient> getIngredients() {
+        return ClientBuilder.newClient(new ClientConfig()) //
 				.target(SERVER).path("api/ingredients") //
 				.request(APPLICATION_JSON)
 				.get(new GenericType<List<Ingredient>>() {});
-	}
+    }
+
     public Recipe getRecipeById(long id) {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER)
@@ -68,6 +71,7 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .get(Recipe.class);
     }
+
     public static Recipe addRecipe(Recipe recipe) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -83,6 +87,12 @@ public class ServerUtils {
                         Recipe.class);
     }
 
-
+    public void deleteRecipe(Recipe recipe) throws Exception {
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER)
+                .path("recipes/delete/" + recipe.getRecipeID())
+                .request(APPLICATION_JSON)
+                .delete(Recipe.class);
+    }
 
 }
