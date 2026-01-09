@@ -140,7 +140,7 @@ public class RecipeOverviewCtrl implements Initializable {
                 )
         );
 
-        recipeLanguage.setText("Language: " + recipe.getRecipeLanguage());
+        recipeLanguage.setText("Language: " + recipe.getRecipeLanguage().toString());
     }
 
 }

@@ -20,8 +20,9 @@ public class Ingredient {
     @Column(nullable = false, unique = true)
     private String ingredientName;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String ingredientLanguage;
+    private Language ingredientLanguage;
 
     @Column(nullable = false)
     private double fat;
@@ -46,7 +47,7 @@ public class Ingredient {
         this.fat = 0;
         this.protein = 0;
         this.carbs = 0;
-        this.ingredientLanguage = "No language specified";
+        this.ingredientLanguage = Language.EN;
     }
 
     public Long getIngredientID() {
@@ -65,11 +66,11 @@ public class Ingredient {
         this.ingredientName = ingredientName;
     }
 
-    public String getIngredientLanguage() {
+    public Language getIngredientLanguage() {
         return ingredientLanguage;
     }
 
-    public void setIngredientLanguage(String ingredientLanguage) {
+    public void setIngredientLanguage(Language ingredientLanguage) {
         this.ingredientLanguage = ingredientLanguage;
     }
 
