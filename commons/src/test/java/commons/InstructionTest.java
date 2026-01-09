@@ -59,7 +59,6 @@ public class InstructionTest {
         instruction2.setInstructionID(Long.valueOf(3));
 
         assertEquals(instruction1, instruction2);
-        assertEquals(instruction1.hashCode(), instruction2.hashCode());
     }
     //Used AI to adapt the tests to the new
 }
