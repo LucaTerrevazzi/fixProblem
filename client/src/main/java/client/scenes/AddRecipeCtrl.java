@@ -78,7 +78,18 @@ public class AddRecipeCtrl {
 
         if (r != null) {
             nameField.setText(r.getRecipeName());
-            languageCombo.setValue(r.getRecipeLanguage());
+            languageCombo.setValue(languageToCode(r.getRecipeLanguage()));
+
+            ingredientsList.getItems().clear();
+            for (RecipeIngredient ri : r.getIngredients()) {
+                ingredientsList.getItems().add(ri);
+            }
+
+            instructionsList.getItems().clear();
+            for (Instruction i : r.getSteps()) {
+                instructionsList.getItems().add(i.getDescription());
+            }
+
         }
     }
 
@@ -214,6 +225,15 @@ public class AddRecipeCtrl {
             case "NL" -> "Dutch";
             case "GR" -> "Greek";
             default -> "English";
+        };
+    }
+
+    private String languageToCode(String language) {
+        return switch (language) {
+            case "English" -> "EN";
+            case "Dutch" -> "NL";
+            case "Greek" -> "GR";
+            default -> "EN";
         };
     }
 }
