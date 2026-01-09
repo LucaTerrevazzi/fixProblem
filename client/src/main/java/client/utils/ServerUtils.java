@@ -99,6 +99,19 @@ public class ServerUtils {
                 .put(Entity.entity(recipe, MediaType.APPLICATION_JSON), Recipe.class);
     }
 
+    public static Ingredient addIngredient(Ingredient ingredient) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        String json = mapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(ingredient);
+        System.out.println("JSON being sent:");
+        System.out.println(json);
+        return client.target(SERVER)
+                .path("api/ingredients")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.entity(ingredient, MediaType.APPLICATION_JSON),
+                        Ingredient.class);
+    }
 
 
 }
