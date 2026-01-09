@@ -90,7 +90,7 @@ public class ServerUtils {
     public void deleteRecipe(Recipe recipe) throws Exception {
         ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER)
-                .path("recipes/delete/" + recipe.getRecipeID())
+                .path("recipes/" + recipe.getRecipeID())
                 .request(APPLICATION_JSON)
                 .delete(Recipe.class);
     }
