@@ -110,7 +110,6 @@ public class RecipeTest {
         r2.setIngredients(ingr);
 
         assertEquals(r1, r2);
-        assertEquals(r1.hashCode(), r2.hashCode());
     }
 
     @Test

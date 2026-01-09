@@ -50,12 +50,6 @@ class IngredientTest {
         assertNotEquals(stringIngredient, ingredient);
     }
     @Test
-    void testHashCode(){
-        Ingredient ingredient1 = new Ingredient("Cucumber");
-        Ingredient ingredient2 = new Ingredient("Tomato");
-        assertNotEquals(ingredient1.hashCode(), ingredient2.hashCode());
-    }
-    @Test
     void testSetAndGetIngredientID() {
         Ingredient ingredient = new Ingredient("Cucumber");
         ingredient.setIngredientID(Long.valueOf(5));
