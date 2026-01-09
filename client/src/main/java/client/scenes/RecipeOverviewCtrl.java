@@ -96,7 +96,7 @@ public class RecipeOverviewCtrl implements Initializable {
     }
 
     public void cloneRecipe() {
-        System.out.println("Cloning recipe");
+        System.out.println("Cloning recipe *currently just goes to add scene*");
 
         Recipe selectedRecipe = recipeListView.getSelectionModel().getSelectedItem();
 

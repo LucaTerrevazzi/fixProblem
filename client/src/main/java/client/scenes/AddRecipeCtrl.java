@@ -34,7 +34,7 @@ public class AddRecipeCtrl {
     }
 
     public void initialize() {
-        
+
         languageCombo.getItems().setAll("EN", "NL", "GR");
         languageCombo.setValue("EN");
 
