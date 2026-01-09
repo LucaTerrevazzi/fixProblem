@@ -83,7 +83,7 @@ public class RecipeController {
     public void deleteRecipe(@PathVariable long id) {
         try {
             recipeService.findById(id);
-            recipeService.deleteById(id);
+            recipeService.delete(id);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

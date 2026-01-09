@@ -75,6 +75,14 @@ public class RecipeOverviewCtrl implements Initializable {
 
     public void goToAddScene() {
         System.out.println("Go to add scene");
+
+        // stores properties of selected recipes (for cloning)
+        Recipe selectedRecipe = recipeListView.getSelectionModel().getSelectedItem();
+        if (selectedRecipe != null) {
+            RecipeHolder holder = RecipeHolder.getInstance();
+            holder.setRecipe(selectedRecipe);
+        }
+
         pc.showAddRecipe();
     }
 
