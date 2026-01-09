@@ -1,5 +1,6 @@
 package client.scenes;
 
+import commons.Recipe;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -12,16 +13,19 @@ public class FoodPalCtrl {
     private Scene addRecipeScene;
     private Scene ingredientOverviewScene;
     private Scene addIngredientScene;
+    private Scene downloadRecipeScene;
     private RecipeOverviewCtrl recipeOverviewCtrl;
     public void init(Stage primaryStage, Pair<RecipeOverviewCtrl, Parent> overview,
                      Pair<AddRecipeCtrl, Parent> addRecipe,
                      Pair<IngredientOverviewCtrl, Parent> ingredientOverview,
-                     Pair<AddIngredientCtrl, Parent> addIngredient) {
+                     Pair<AddIngredientCtrl, Parent> addIngredient,
+                     Pair<DownloadRecipeCtrl, Parent> downloadRecipe) {
         this.primaryStage = primaryStage;
         this.recipeOverviewScene = new Scene(overview.getValue());
         this.addRecipeScene = new Scene(addRecipe.getValue());
         this.ingredientOverviewScene = new Scene(ingredientOverview.getValue());
         this.addIngredientScene = new Scene(addIngredient.getValue());
+        this.downloadRecipeScene = new Scene(downloadRecipe.getValue());
         showRecipeOverview();
         primaryStage.show();
     }
@@ -34,6 +38,11 @@ public class FoodPalCtrl {
     public void showAddRecipe() {
         primaryStage.setTitle("Add Recipe");
         primaryStage.setScene(addRecipeScene);
+    }
+
+    public void showDownloadRecipe(Recipe recipe) {
+        primaryStage.setTitle("Download Recipe");
+        primaryStage.setScene(downloadRecipeScene);
     }
 
     public void showIngredientOverview() {

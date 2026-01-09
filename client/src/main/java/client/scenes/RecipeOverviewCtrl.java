@@ -18,6 +18,8 @@ import java.util.ResourceBundle;
 
 public class RecipeOverviewCtrl implements Initializable {
 
+    private Recipe selectedRecipe = null;
+
     @FXML
     private Button addRecipeButton;
     @FXML
@@ -28,6 +30,8 @@ public class RecipeOverviewCtrl implements Initializable {
     private Button deleteRecipeButton;
     @FXML
     private Button refreshButton;
+    @FXML
+    private Button downloadButton;
     @Inject
     private ServerUtils server;
     @Inject
@@ -61,6 +65,15 @@ public class RecipeOverviewCtrl implements Initializable {
     public void goToAddScene() {
         System.out.println(" Go to add scene ");
         pc.showAddRecipe();
+    }
+
+    public void goToDownloadRecipe() {
+        if(selectedRecipe != null) {
+            System.out.println(" Go to download Recipe ");
+            pc.showDownloadRecipe(selectedRecipe);
+        } else {
+            System.out.println(" No Recipe Selected ");
+        }
     }
 
     public void goToFavorites(){
@@ -115,6 +128,8 @@ public class RecipeOverviewCtrl implements Initializable {
     }
 
     private void showRecipeDetails(Recipe recipe) {
+        selectedRecipe = recipe;
+
         refresh();
         System.out.println(
                 "DEBUG → recipe id=" + recipe.getRecipeID()
