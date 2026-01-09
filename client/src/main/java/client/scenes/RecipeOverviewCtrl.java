@@ -27,6 +27,8 @@ public class RecipeOverviewCtrl implements Initializable {
     @FXML
     private Button deleteRecipeButton;
     @FXML
+    private Button editRecipeButton;
+    @FXML
     private Button refreshButton;
     @Inject
     private ServerUtils server;
@@ -56,7 +58,19 @@ public class RecipeOverviewCtrl implements Initializable {
         this.server = server;
     }
 
+    public void goToEditScene(){
+        System.out.println(" Go to edit scene ");
+        Recipe selected = recipeListView.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            System.out.println("No recipe selected for editing");
+            return;
+        }
 
+        Recipe fullRecipe = server.getRecipeById(selected.getRecipeID());
+
+        pc.showEditRecipe(fullRecipe);
+
+    }
 
     public void goToAddScene() {
         System.out.println(" Go to add scene ");

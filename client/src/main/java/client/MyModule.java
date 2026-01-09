@@ -22,6 +22,7 @@ import com.google.inject.Scopes;
 import client.scenes.AddRecipeCtrl;
 import client.scenes.FoodPalCtrl;
 import client.scenes.RecipeOverviewCtrl;
+import client.scenes.EditRecipeCtrl;
 
 public class MyModule implements Module {
 
@@ -30,5 +31,7 @@ public class MyModule implements Module {
         binder.bind(FoodPalCtrl.class).in(Scopes.SINGLETON);
         binder.bind(AddRecipeCtrl.class).in(Scopes.SINGLETON);
         binder.bind(RecipeOverviewCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(EditRecipeCtrl.class).in(Scopes.SINGLETON);
+
     }
 }
