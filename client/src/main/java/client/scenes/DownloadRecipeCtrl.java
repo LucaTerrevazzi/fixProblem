@@ -24,8 +24,12 @@ public class DownloadRecipeCtrl {
         this.server = server;
     }
 
-    public void setRecipe(Recipe recipe) {
+    public void setRecipeOnUI(Recipe recipe) {
         preview.setText(RecipeUtil.toMarkdown(recipe));
+    }
+
+    public void setRecipe(Recipe r){
+        preview.setText(RecipeUtil.toMarkdown(r));
     }
 
     public void initialize() {
