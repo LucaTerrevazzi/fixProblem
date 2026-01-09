@@ -80,8 +80,5 @@ public class Instruction {
                 && Objects.equals(recipe, that.recipe);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(instructionID, description, recipe, orderNumber);
-    }
+
 }

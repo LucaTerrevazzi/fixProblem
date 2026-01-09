@@ -1,5 +1,6 @@
 package client.scenes;
 
+import commons.Recipe;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -12,16 +13,21 @@ public class FoodPalCtrl {
     private Scene addRecipeScene;
     private Scene ingredientOverviewScene;
     private Scene addIngredientScene;
+    private Scene editRecipeScene;
+    private EditRecipeCtrl editRecipeCtrl;
+
     private RecipeOverviewCtrl recipeOverviewCtrl;
     public void init(Stage primaryStage, Pair<RecipeOverviewCtrl, Parent> overview,
                      Pair<AddRecipeCtrl, Parent> addRecipe,
                      Pair<IngredientOverviewCtrl, Parent> ingredientOverview,
-                     Pair<AddIngredientCtrl, Parent> addIngredient) {
+                     Pair<AddIngredientCtrl, Parent> addIngredient, Pair<EditRecipeCtrl, Parent> editRecipe)  {
         this.primaryStage = primaryStage;
+        this.editRecipeCtrl = editRecipe.getKey();
         this.recipeOverviewScene = new Scene(overview.getValue());
         this.addRecipeScene = new Scene(addRecipe.getValue());
         this.ingredientOverviewScene = new Scene(ingredientOverview.getValue());
         this.addIngredientScene = new Scene(addIngredient.getValue());
+        this.editRecipeScene = new Scene(editRecipe.getValue());
         showRecipeOverview();
         primaryStage.show();
     }
@@ -44,6 +50,12 @@ public class FoodPalCtrl {
     public void showAddIngredient() {
         primaryStage.setTitle("Add Ingredient");
         primaryStage.setScene(addIngredientScene);
+    }
+
+    public void showEditRecipe(Recipe recipe) {
+        editRecipeCtrl.setRecipeToEdit(recipe);
+        primaryStage.setTitle("Edit Recipe");
+        primaryStage.setScene(editRecipeScene);
     }
 }
 
