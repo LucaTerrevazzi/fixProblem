@@ -51,7 +51,9 @@ public class AddIngredientCtrl {
             ingredient.setFat(f);
             ingredient.setProtein(p);
             ingredient.setCarbs(c);
+            ingredient.setIngredientLanguage("EN");
             ServerUtils.addIngredient(ingredient);
+            goBack();
         }
         catch (NumberFormatException e) {
             errorLabel.setText("Please make sure all numbers are formatted properly (e.g. 0.0 instead of 0,0).");

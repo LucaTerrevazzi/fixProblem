@@ -67,6 +67,12 @@ public class AddRecipeCtrl {
     }
 
     @FXML
+    public void updateIngredients() {
+        ingredientCombo.getItems().setAll(server.getIngredients());
+        System.out.println("updated ingredients");
+    }
+
+    @FXML
     public void addIngredient() {
         errorLabel.setText("");
 
