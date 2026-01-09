@@ -16,7 +16,7 @@
       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
           <Button fx:id="addRecipeButton" mnemonicParsing="false" onAction="#goToAddScene" text="Add recipe" />
-            <Button fx:id="deleteRecipeButton" mnemonicParsing="false" onAction="#goToDeleteScene" text="Delete recipe" />
+            <Button fx:id="deleteRecipeButton" mnemonicParsing="false" onAction="#deleteRecipeWarning" text="Delete recipe" />
             <Button fx:id="editRecipeButton" mnemonicParsing="false" onAction="#goToEditScene" text="Edit recipe" />
         </items>
       </ToolBar>
