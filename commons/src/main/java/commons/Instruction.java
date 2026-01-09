@@ -1,5 +1,6 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -17,6 +18,7 @@ public class Instruction {
     // In order for the instruction and recipe to be linked JPA needs a recipe attribute
     @ManyToOne(optional = false)
     @JoinColumn(name = "recipeID")
+    @JsonIgnore
     private Recipe recipe;
 
     @Column(nullable = false)
@@ -72,7 +74,10 @@ public class Instruction {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Instruction that = (Instruction) o;
-        return instructionID == that.instructionID && orderNumber == that.orderNumber && Objects.equals(description, that.description) && Objects.equals(recipe, that.recipe);
+        return Objects.equals(instructionID, that.instructionID)
+                && orderNumber == that.orderNumber
+                && Objects.equals(description, that.description)
+                && Objects.equals(recipe, that.recipe);
     }
 
     @Override

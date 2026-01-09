@@ -8,7 +8,7 @@ import server.service.RecipeService;
 public class TestRecipeService extends RecipeService {
 
     public TestRecipeService() {
-        super(null,null,null);
+        super(null, null, null, null);
     }
 
     @Override

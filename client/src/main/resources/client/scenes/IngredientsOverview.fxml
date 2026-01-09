@@ -11,44 +11,30 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.RecipeOverviewCtrl">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.IngredientOverviewCtrl">
    <bottom>
       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
-          <Button fx:id="addRecipeButton" mnemonicParsing="false" onAction="#goToAddScene" text="Add recipe" />
-            <Button fx:id="deleteRecipeButton" mnemonicParsing="false" onAction="#goToDeleteScene" text="Delete recipe" />
+          <Button fx:id="addIngredientButton" mnemonicParsing="false" onAction="#goToAddIngredientScene" text="Add ingredient" />
+            <Button fx:id="deleteIngredientButton" mnemonicParsing="false" onAction="#goToDeleteIngredientScene" text="Delete ingredient" />
         </items>
       </ToolBar>
    </bottom>
    <center>
-       <VBox spacing="8">
-           <padding>
-               <Insets top="10" right="10" bottom="10" left="10"/>
-           </padding>
-           <Label fx:id="recipeName">
-               <font>
-                   <Font size="18"/>
-               </font>
-           </Label>
-
-           <Label text="Ingredients"/>
-           <ListView fx:id="ingredientsList" prefHeight="120"/>
-
-           <Label text="Instructions"/>
-           <ListView fx:id="instructionsList" prefHeight="120"/>
-
-           <Label fx:id="recipeLanguage"/>
-       </VBox>
+      <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="ingredientName" layoutX="172.0" layoutY="6.0" />
+         </children></Pane>
    </center>
    <top>
       <HBox prefHeight="35.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
             <Pane prefHeight="37.0" prefWidth="275.0" HBox.hgrow="ALWAYS">
                <children>
-                  <ToolBar layoutY="-2.0" prefHeight="40.0" prefWidth="164.0">
+                  <ToolBar layoutY="-2.0" prefHeight="40.0" prefWidth="158.0">
                     <items>
                         <Button fx:id="favoritesButton" mnemonicParsing="false" onAction="#goToFavorites" text="Favorites" />
-                        <Button fx:id="ingredientsButton" mnemonicParsing="false" onAction="#goToIngredients" text="Ingredients" />
+                        <Button fx:id="recipesButton" mnemonicParsing="false" onAction="#goToRecipes" prefHeight="26.0" prefWidth="70.0" text="Recipes" />
                     </items>
                   </ToolBar>
                </children></Pane>
@@ -69,14 +55,11 @@
    <left>
       <VBox prefWidth="160.0" BorderPane.alignment="CENTER">
          <children>
-            <Label prefHeight="18.0" prefWidth="150.0" text="All Recipes">
+            <Label prefHeight="18.0" prefWidth="150.0" text="All Ingredients">
                <font>
                   <Font size="14.0" />
                </font>
-            </Label> <ListView
-                 fx:id="recipeListView"
-                 VBox.vgrow="ALWAYS"
-                 prefWidth="138.0"/>
+            </Label> <ListView fx:id="ingredientListView" prefWidth="138.0" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
    </left>

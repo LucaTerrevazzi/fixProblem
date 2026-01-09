@@ -7,14 +7,14 @@ import java.io.File;
 import java.io.IOException;
 
 public class LanguageUtil {
-    private static String FILE_PATH = "src/main/resources/Language.json";
+    private static String filePath = "src/main/resources/Language.json";
 
     /**
      * function to change the path of the Language file for testing purposes
      * @param path path to set the path to
      */
     public static void setFilePath(String path) {
-        FILE_PATH = path;
+        filePath = path;
     }
 
     /**
@@ -23,8 +23,9 @@ public class LanguageUtil {
      * @throws IOException can throw an IOException
      */
     public static LanguageData loadJson() throws IOException {
-        File file = new File(FILE_PATH);
+        File file = new File(filePath);
         ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
         if (!file.exists()) {
             LanguageData data = new LanguageData();
@@ -42,7 +43,7 @@ public class LanguageUtil {
      */
     protected static void saveJson(LanguageData data) throws IOException {
         ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-        mapper.writeValue(new File(FILE_PATH), data);
+        mapper.writeValue(new File(filePath), data);
     }
 
     /**
@@ -65,5 +66,5 @@ public class LanguageUtil {
         LanguageData data = loadJson();
         data.getLanguages().remove(l);
         saveJson(data);
-        }
+    }
 }
