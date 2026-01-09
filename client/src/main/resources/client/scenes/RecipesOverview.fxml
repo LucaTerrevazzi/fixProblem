@@ -26,11 +26,11 @@
            <padding>
                <Insets bottom="10" left="10" right="10" top="10" />
            </padding>
-           <Label fx:id="recipeName">
-               <font>
-                   <Font size="18" />
-               </font>
-           </Label>
+         <HBox alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="419.0">
+            <children>
+               <Button fx:id="downloadRecipeButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#goToDownloadRecipe" text="Download" textAlignment="RIGHT" />
+            </children>
+         </HBox>
 
            <Label text="Ingredients" />
            <ListView fx:id="ingredientsList" prefHeight="120" />
