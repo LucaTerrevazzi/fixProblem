@@ -44,7 +44,7 @@ public class RecipeTest {
         assertEquals("Test", r.getRecipeName());
         assertEquals(instr, r.getSteps());
         assertEquals(ingr, r.getIngredients());
-        assertEquals("English", r.getRecipeLanguage());
+        assertEquals(Language.EN, r.getRecipeLanguage());
     }
 
     @Test
@@ -86,7 +86,7 @@ public class RecipeTest {
     public void testSetRecipeLanguage() {
         Recipe r = new Recipe();
         r.setRecipeLanguage(Language.EN);
-        assertEquals("English", r.getRecipeLanguage());
+        assertEquals(Language.EN, r.getRecipeLanguage());
     }
 
     @Test
