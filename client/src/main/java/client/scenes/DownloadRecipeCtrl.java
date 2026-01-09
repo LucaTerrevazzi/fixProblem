@@ -7,13 +7,18 @@ import commons.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DownloadRecipeCtrl {
 
     @FXML private Text preview;
+    private Recipe recipe;
 
     private final FoodPalCtrl pc;
     private final ServerUtils server;
@@ -29,6 +34,7 @@ public class DownloadRecipeCtrl {
     }
 
     public void setRecipe(Recipe r){
+        recipe = r;
         preview.setText(RecipeUtil.toMarkdown(r));
     }
 
@@ -40,8 +46,20 @@ public class DownloadRecipeCtrl {
         pc.showRecipeOverview();
     }
 
+    /**
+     * Downloads the Markdown version of the Recipe.
+     */
     @FXML
     public void downloadRecipe() {
         System.out.println("Downloading...");
+        File file = new File(recipe.getRecipeName()+".md");
+
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(RecipeUtil.toMarkdown(recipe));
+            System.out.println("File created : " + file.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
