@@ -82,6 +82,22 @@ public class ServerUtils {
                 .post(Entity.entity(recipe, MediaType.APPLICATION_JSON),
                         Recipe.class);
     }
+    public static Recipe editRecipe(long id, Recipe recipe) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+
+        String json = mapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(recipe);
+
+        System.out.println("JSON being sent:");
+        System.out.println(json);
+
+        return ClientBuilder.newClient()
+                .target(SERVER)
+                .path("recipes/" + id)
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.entity(recipe, MediaType.APPLICATION_JSON), Recipe.class);
+    }
 
 
 
