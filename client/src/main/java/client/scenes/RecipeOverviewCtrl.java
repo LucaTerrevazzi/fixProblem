@@ -16,13 +16,15 @@ import java.util.ResourceBundle;
 public class RecipeOverviewCtrl implements Initializable {
 
     @FXML
-    private Button addRecipeButton;
-    @FXML
     private Button favoritesButton;
     @FXML
     private Button ingredientsButton;
     @FXML
+    private Button addRecipeButton;
+    @FXML
     private Button deleteRecipeButton;
+    @FXML
+    private Button cloneRecipeButton;
     @FXML
     private Button refreshButton;
     @Inject
@@ -52,7 +54,6 @@ public class RecipeOverviewCtrl implements Initializable {
         this.pc = p;
         this.server = server;
     }
-
 
 
     public void goToAddScene() {
@@ -90,13 +91,28 @@ public class RecipeOverviewCtrl implements Initializable {
 
                     System.out.println("Recipe " + selectedRecipe.getRecipeName() + " deleted");
                 });
+
+        refresh();
+    }
+
+    public void cloneRecipe() {
+        System.out.println("Cloning recipe");
+
+        Recipe selectedRecipe = recipeListView.getSelectionModel().getSelectedItem();
+
+        goToAddScene();
     }
 
     public void refresh(){
         System.out.println("Refresh button clicked!");
         recipes.clear();
         recipes.addAll(server.getRecipes());
-        deleteRecipeButton.setDisable(true);
+
+        if (recipeListView.getSelectionModel().getSelectedItem() == null) {
+            deleteRecipeButton.setDisable(true);
+        } else {
+            deleteRecipeButton.setDisable(false);
+        }
     }
 
     @Override
@@ -128,13 +144,7 @@ public class RecipeOverviewCtrl implements Initializable {
                                 server.getRecipeById(selectedRecipe.getRecipeID());
                         showRecipeDetails(fullRecipe);
                     }
-
-                    deleteRecipeButton.setDisable(false);
                 });
-
-        if (recipeListView.getSelectionModel().getSelectedItem() == null) {
-            deleteRecipeButton.setDisable(true);
-        }
 
         refresh();
     }

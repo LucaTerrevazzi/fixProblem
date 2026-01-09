@@ -59,10 +59,8 @@ public class RecipeController {
     public ResponseEntity<String> delete(@PathVariable long id){
         try {
             recipeService.deleteById(id);
-            System.out.println("Recipe deleted successfully");
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            System.out.println("Recipe delete failed");
             return ResponseEntity.badRequest().build();
         }
     }
