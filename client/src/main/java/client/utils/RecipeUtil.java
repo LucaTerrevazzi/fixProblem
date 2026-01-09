@@ -94,6 +94,10 @@ public class RecipeUtil {
     public static String toMarkdown(Recipe recipe) {
         String result = "";
 
+        if(recipe == null){
+            return result;
+        }
+
         if (recipe.getRecipeName() != null) {
             result += "### ";
             result += recipe.getRecipeName();

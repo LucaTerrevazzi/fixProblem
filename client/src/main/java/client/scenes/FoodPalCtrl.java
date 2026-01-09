@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.RecipeUtil;
 import commons.Recipe;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,6 +15,7 @@ public class FoodPalCtrl {
     private Scene ingredientOverviewScene;
     private Scene addIngredientScene;
     private Scene downloadRecipeScene;
+    private DownloadRecipeCtrl downloadRecipeCtrl;
     private RecipeOverviewCtrl recipeOverviewCtrl;
     public void init(Stage primaryStage, Pair<RecipeOverviewCtrl, Parent> overview,
                      Pair<AddRecipeCtrl, Parent> addRecipe,
@@ -26,6 +28,7 @@ public class FoodPalCtrl {
         this.ingredientOverviewScene = new Scene(ingredientOverview.getValue());
         this.addIngredientScene = new Scene(addIngredient.getValue());
         this.downloadRecipeScene = new Scene(downloadRecipe.getValue());
+        this.downloadRecipeCtrl = downloadRecipe.getKey();
         showRecipeOverview();
         primaryStage.show();
     }
@@ -41,6 +44,8 @@ public class FoodPalCtrl {
     }
 
     public void showDownloadRecipe(Recipe recipe) {
+        System.out.println("1" + RecipeUtil.toMarkdown(recipe));
+        downloadRecipeCtrl.setRecipe(recipe);
         primaryStage.setTitle("Download Recipe");
         primaryStage.setScene(downloadRecipeScene);
     }
