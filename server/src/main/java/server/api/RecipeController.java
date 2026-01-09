@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import server.service.RecipeService;
 
+
 import java.util.List;
 
 @RestController
@@ -24,7 +25,7 @@ public class RecipeController {
 
     /**
      * GET /recipes
-     * returns all of the recipes
+     * returns all the recipes
      */
     @GetMapping
     public List<Recipe> getAllRecipes() {
@@ -44,7 +45,7 @@ public class RecipeController {
      * POST /recipes
      * creates a new recipe
      * @param recipe recipe to create
-     * @return persisted recipe
+     * @return recipe
      */
     @PostMapping
     public Recipe createRecipe(@RequestBody Recipe recipe) {
@@ -77,7 +78,6 @@ public class RecipeController {
      * DELETE /recipes/{id}
      * deletes a recipe by its id
      * @param id id of the recipe to delete
-     * @return 204 if deleted, 404 if the recipe does not exist
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
