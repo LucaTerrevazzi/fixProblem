@@ -29,7 +29,7 @@ public class SearchUtil {
             if (!w.isBlank()){
                 for (int i = 0; i<recipes.size(); i++) {
                     Recipe recipe = recipes.get(i);
-                    if (recipe.getRecipeName().contains(w) || recipe.getRecipeLanguage().contains(w)) {
+                    if (recipe.getRecipeName().contains(w) || recipe.getRecipeLanguage().toString().contains(w)) {
                         scores[i] += 200;
                     }
                     for (RecipeIngredient ing : recipe.getIngredients()) {
