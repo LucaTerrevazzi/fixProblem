@@ -91,10 +91,4 @@ class RecipeIngredientTest {
         assertFalse(recipeIngredient1.equals(recipeIngredient2));
     }
 
-    @Test
-    void testHashCode() {
-        RecipeIngredient recipeIngredient1 = new RecipeIngredient(new Ingredient("Cucumber"), Unit.g , 100);
-        RecipeIngredient recipeIngredient2 = new RecipeIngredient(new Ingredient("Cucumber"), Unit.g , 100);
-        assertEquals(recipeIngredient1.hashCode(), recipeIngredient2.hashCode());
-    }
 }

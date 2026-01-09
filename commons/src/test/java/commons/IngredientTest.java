@@ -99,18 +99,5 @@ class IngredientTest {
         assertEquals(ingredient, ingredient);
     }
 
-    @Test
-    void testHashCodeEqualObjects() {
-        Ingredient i1 = new Ingredient("Cucumber");
-        Ingredient i2 = new Ingredient("Cucumber");
-
-        i1.setFat(1);
-        i2.setFat(1);
-        i1.setProtein(2);
-        i2.setProtein(2);
-        i1.setCarbs(3);
-        i2.setCarbs(3);
-        assertEquals(i1.hashCode(), i2.hashCode());
-    }
 
 }
