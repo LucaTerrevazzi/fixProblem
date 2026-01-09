@@ -124,12 +124,4 @@ public class Recipe {
 
 
 
-    @Override
-    public int hashCode() {
-        if (recipeID != null) {
-            return Objects.hash(recipeID);
-        }
-        return Objects.hash(recipeName, recipeLanguage, steps, ingredients);
-    }
-
 }
