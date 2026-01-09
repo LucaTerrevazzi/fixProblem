@@ -8,10 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -77,7 +74,7 @@ public class RecipeOverviewCtrl implements Initializable {
     }
 
     public void goToAddScene() {
-        System.out.println(" Go to add scene ");
+        System.out.println("Go to add scene");
         pc.showAddRecipe();
     }
 
@@ -99,14 +96,34 @@ public class RecipeOverviewCtrl implements Initializable {
         pc.showIngredientOverview();
     }
 
-    public void goToDeleteScene(){
-        System.out.println("Go to the Delete recipe scene *not functional yet*");
+    public void deleteRecipeWarning(){
+        System.out.println("Go to the Delete recipe warning");
+
+        Recipe selectedRecipe = recipeListView.getSelectionModel().getSelectedItem();
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Recipe deletion");
+        alert.setContentText("Are you sure you want to delete the recipe " + selectedRecipe.getRecipeName() + "?\n" +
+                "This action cannot be undone");
+
+        alert.showAndWait()
+                .filter(response -> response == ButtonType.OK)
+                .ifPresent(response -> {
+                    try {
+                        server.deleteRecipe(selectedRecipe);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    System.out.println("Recipe " + selectedRecipe.getRecipeName() + " deleted");
+                });
     }
 
     public void refresh(){
         System.out.println("Refresh ! (Refresh button clicked or else)");
         recipes.clear();
         recipes.addAll(server.getRecipes());
+        deleteRecipeButton.setDisable(true);
     }
 
     @Override
@@ -114,6 +131,8 @@ public class RecipeOverviewCtrl implements Initializable {
         System.out.println("RecipeOverviewCtrl initialized");
 
         recipeListView.setItems(recipes);
+
+        deleteRecipeButton.setDisable(true);
 
         recipeListView.setCellFactory(list -> new ListCell<>() {
             @Override
@@ -130,13 +149,19 @@ public class RecipeOverviewCtrl implements Initializable {
         recipeListView.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((obs, oldRecipe, selectedRecipe) -> {
+
                     if (selectedRecipe != null) {
                         Recipe fullRecipe =
                                 server.getRecipeById(selectedRecipe.getRecipeID());
                         showRecipeDetails(fullRecipe);
                     }
+
+                    deleteRecipeButton.setDisable(false);
                 });
 
+        if (recipeListView.getSelectionModel().getSelectedItem() == null) {
+            deleteRecipeButton.setDisable(true);
+        }
 
         refresh();
     }

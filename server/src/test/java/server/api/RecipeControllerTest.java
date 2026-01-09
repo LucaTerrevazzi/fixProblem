@@ -135,7 +135,7 @@ public class RecipeControllerTest {
         assertDoesNotThrow(() -> controller.deleteRecipe(id));
 
         verify(recipeService).findById(id);
-        verify(recipeService).delete(id);
+        verify(recipeService).deleteById(id);
         verifyNoMoreInteractions(recipeService);
     }
 
@@ -154,7 +154,7 @@ public class RecipeControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
 
         verify(recipeService).findById(id);
-        verify(recipeService, never()).delete(anyLong());
+        verify(recipeService, never()).deleteById(anyLong());
         verifyNoMoreInteractions(recipeService);
     }
 
