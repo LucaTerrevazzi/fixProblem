@@ -90,6 +90,29 @@ public class AddRecipeCtrl {
         ingredientCombo.getItems().setAll(server.getIngredients());
     }
 
+    public void cloneRecipe() {
+        System.out.println("Getting recipe properties for cloning");
+
+        RecipeHolder holder = RecipeHolder.getInstance();
+        Recipe r = holder.getRecipe();
+
+        if (r != null) {
+            nameField.setText(r.getRecipeName());
+            languageCombo.setValue(r.getRecipeLanguage());
+
+            ingredientsList.getItems().clear();
+            for (RecipeIngredient ri : r.getIngredients()) {
+                ingredientsList.getItems().add(ri);
+            }
+
+            instructionsList.getItems().clear();
+            for (Instruction i : r.getSteps()) {
+                instructionsList.getItems().add(i.getDescription());
+            }
+
+        }
+    }
+
     private void clear(){
         nameField.setText("");
         languageCombo.setValue(Language.EN);
