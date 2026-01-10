@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.web.WebView?>
 <?import javafx.scene.text.TextFlow?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.DownloadRecipeCtrl">
@@ -19,12 +19,11 @@
       </Label>
    </top>
    <center>
-      <TextFlow prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-       <Text fx:id="preview" text="Here should appear the printable version of the Recipe..." />
-         <BorderPane.margin>
-            <Insets left="20.0" right="20.0" top="10.0" />
-         </BorderPane.margin>
-      </TextFlow>
+         <WebView fx:id="preview" BorderPane.alignment="CENTER">
+            <BorderPane.margin>
+               <Insets left="20.0" right="20.0" top="10.0" />
+            </BorderPane.margin>
+         </WebView>
    </center>
    <bottom>
       <HBox alignment="CENTER" prefHeight="60.0" prefWidth="600.0" BorderPane.alignment="CENTER">

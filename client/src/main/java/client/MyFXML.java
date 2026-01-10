@@ -48,8 +48,8 @@ public class MyFXML {
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
-            alert.setHeaderText("Probably Incompatible database");
-            alert.setContentText("Please delete all the .db files in the project and try again.");
+            alert.setHeaderText("An element could not be loaded. ");
+            alert.setContentText("Possibly incompatible database. \nPlease delete all the .db files in the project and try again.");
             alert.showAndWait();
             throw new RuntimeException(e);
         }
