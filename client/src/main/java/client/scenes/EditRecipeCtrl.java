@@ -210,20 +210,20 @@ public class EditRecipeCtrl {
     }
 
 
-    private String codeToLanguage(String code) {
+    private Language codeToLanguage(String code) {
         return switch (code) {
-            case "EN" -> "English";
-            case "NL" -> "Dutch";
-            case "GR" -> "Greek";
-            default -> "English";
+            case "EN" -> Language.EN;
+            case "NL" -> Language.NL;
+            case "GR" -> Language.GR;
+            default -> Language.EN;
         };
     }
 
-    private String languageToCode(String lang) {
+    private String languageToCode(Language lang) {
         return switch (lang) {
-            case "English" -> "EN";
-            case "Dutch" -> "NL";
-            case "Greek" -> "GR";
+            case Language.EN -> "EN";
+            case Language.NL -> "NL";
+            case Language.GR -> "GR";
             default -> "EN";
         };
     }

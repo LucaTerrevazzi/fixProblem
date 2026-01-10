@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Ingredient;
+import commons.Language;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -51,7 +52,7 @@ public class AddIngredientCtrl {
             ingredient.setFat(f);
             ingredient.setProtein(p);
             ingredient.setCarbs(c);
-            ingredient.setIngredientLanguage("EN");
+            ingredient.setIngredientLanguage(Language.EN);
             ServerUtils.addIngredient(ingredient);
             goBack();
         }
