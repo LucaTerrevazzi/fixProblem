@@ -13,8 +13,10 @@ public class Recipe {
     private Long recipeID;
     @Column(nullable = false)
     private String recipeName;
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String recipeLanguage;
+    private Language recipeLanguage;
 
     // One recipe - many instructions => One to Many
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -79,14 +81,14 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
-    public String getRecipeLanguage() {
+    public Language getRecipeLanguage() {
         if (recipeLanguage == null) {
-            recipeLanguage = "EN";
+            recipeLanguage = Language.EN;
         }
         return recipeLanguage;
     }
 
-    public void setRecipeLanguage(String recipeLanguage) {
+    public void setRecipeLanguage(Language recipeLanguage) {
         this.recipeLanguage = recipeLanguage;
     }
 

@@ -22,14 +22,14 @@ class IngredientTest {
     @Test
     void getIngredientLanguage() {
         Ingredient ingredient = new Ingredient("Cucumber");
-        assertEquals( "No language specified", ingredient.getIngredientLanguage());
+        assertEquals(Language.EN, ingredient.getIngredientLanguage());
     }
 
     @Test
     void setIngredientLanguage() {
         Ingredient ingredient = new Ingredient("Cucumber");
-        ingredient.setIngredientLanguage("English");
-        assertEquals("English", ingredient.getIngredientLanguage());
+        ingredient.setIngredientLanguage(Language.EN);
+        assertEquals(Language.EN, ingredient.getIngredientLanguage());
     }
 
     @Test

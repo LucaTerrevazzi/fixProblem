@@ -64,7 +64,7 @@ public class IngredientController {
     public ResponseEntity<Ingredient> add(@RequestBody Ingredient ingredient) {
 
         if (isNullOrEmpty(ingredient.getIngredientName())
-                || isNullOrEmpty(ingredient.getIngredientLanguage())) {
+                || ingredient.getIngredientLanguage() == null) {
             return ResponseEntity.badRequest().build();
         }
 

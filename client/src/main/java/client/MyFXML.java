@@ -24,6 +24,7 @@ import com.google.inject.Injector;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.util.Builder;
 import javafx.util.BuilderFactory;
 import javafx.util.Callback;
@@ -45,6 +46,11 @@ public class MyFXML {
             T ctrl = loader.getController();
             return new Pair<>(ctrl, parent);
         } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Probably Incompatible database");
+            alert.setContentText("Please delete all the .db files in the project and try again.");
+            alert.showAndWait();
             throw new RuntimeException(e);
         }
     }
