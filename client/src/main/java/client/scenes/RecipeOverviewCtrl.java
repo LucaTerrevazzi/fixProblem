@@ -136,8 +136,10 @@ public class RecipeOverviewCtrl implements Initializable {
 
         if (recipeListView.getSelectionModel().getSelectedItem() == null) {
             deleteRecipeButton.setDisable(true);
+            editRecipeButton.setDisable(true);
         } else {
             deleteRecipeButton.setDisable(false);
+            editRecipeButton.setDisable(false);
         }
     }
 
