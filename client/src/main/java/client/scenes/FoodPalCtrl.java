@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.RecipeUtil;
 import commons.Recipe;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,6 +14,8 @@ public class FoodPalCtrl {
     private Scene addRecipeScene;
     private Scene ingredientOverviewScene;
     private Scene addIngredientScene;
+    private Scene downloadRecipeScene;
+    private DownloadRecipeCtrl downloadRecipeCtrl;
     private Scene editRecipeScene;
     private EditRecipeCtrl editRecipeCtrl;
 
@@ -20,13 +23,17 @@ public class FoodPalCtrl {
     public void init(Stage primaryStage, Pair<RecipeOverviewCtrl, Parent> overview,
                      Pair<AddRecipeCtrl, Parent> addRecipe,
                      Pair<IngredientOverviewCtrl, Parent> ingredientOverview,
-                     Pair<AddIngredientCtrl, Parent> addIngredient, Pair<EditRecipeCtrl, Parent> editRecipe)  {
+                     Pair<AddIngredientCtrl, Parent> addIngredient,
+                     Pair<EditRecipeCtrl, Parent> editRecipe,
+                     Pair<DownloadRecipeCtrl, Parent> downloadRecipe) {
         this.primaryStage = primaryStage;
         this.editRecipeCtrl = editRecipe.getKey();
         this.recipeOverviewScene = new Scene(overview.getValue());
         this.addRecipeScene = new Scene(addRecipe.getValue());
         this.ingredientOverviewScene = new Scene(ingredientOverview.getValue());
         this.addIngredientScene = new Scene(addIngredient.getValue());
+        this.downloadRecipeScene = new Scene(downloadRecipe.getValue());
+        this.downloadRecipeCtrl = downloadRecipe.getKey();
         this.editRecipeScene = new Scene(editRecipe.getValue());
         showRecipeOverview();
         primaryStage.show();
@@ -40,6 +47,13 @@ public class FoodPalCtrl {
     public void showAddRecipe() {
         primaryStage.setTitle("Add Recipe");
         primaryStage.setScene(addRecipeScene);
+    }
+
+    public void showDownloadRecipe(Recipe recipe) {
+        System.out.println(RecipeUtil.toMarkdown(recipe));
+        downloadRecipeCtrl.setRecipe(recipe);
+        primaryStage.setTitle("Download Recipe");
+        primaryStage.setScene(downloadRecipeScene);
     }
 
     public void showIngredientOverview() {
