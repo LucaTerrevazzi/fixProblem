@@ -4,7 +4,17 @@ package commons;
  * The Language a Recipe can have
  */
 public enum Language {
-    EN,
-    NL,
-    GR
+    EN("English"),
+    NL("Dutch"),
+    GR("German");
+
+    private final String expandedForm;
+
+    Language(String expandedForm) {
+        this.expandedForm = expandedForm;
+    }
+
+    public String getExpandedForm() {
+        return expandedForm;
+    }
 }
