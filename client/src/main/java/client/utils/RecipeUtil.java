@@ -111,7 +111,7 @@ public class RecipeUtil {
                 result += i.getUnit().name();
                 result += " of ";
                 result += i.getIngredient().getIngredientName();
-                result += ";";
+                result += ";\n";
             }
         }
 

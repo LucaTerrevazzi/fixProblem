@@ -1,62 +1,143 @@
 package client.scenes;
 
 import client.utils.RecipeUtil;
-import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
+import javafx.scene.web.WebView;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DownloadRecipeCtrl {
 
-    @FXML private Text preview;
+    /**
+     * The Recipe that is currently shown as a preview to download.
+     * This Recipe will be downloaded if we press the download button.
+     */
     private Recipe recipe;
 
+    /**
+     * This is a FXML-component that contains the Recipe preview.
+     * This allows to use HTML to format the MD in a nice way.
+     */
+    @FXML
+    private WebView preview;
+
+    /**
+     * This label will show information to the user .
+     * e.g. "Downloading..."
+     */
+    @FXML private Label status;
+
+    /**
+     * Parser for converting Markdown to HTML.
+     */
+    private final Parser mdParser = Parser.builder().build();
+
+    /**
+     * Renderer to convert parsed Markdown into HTML.
+     */
+    private final HtmlRenderer htmlRenderer = HtmlRenderer.builder().build();
+
+    /**
+     * Reference to the main controller for navigation.
+     */
     private final FoodPalCtrl pc;
-    private final ServerUtils server;
 
+    /**
+     * Constructor with dependency injection.
+     * @param pc main controller for navigation.
+     */
     @Inject
-    public DownloadRecipeCtrl(FoodPalCtrl pc, ServerUtils server) {
+    public DownloadRecipeCtrl(FoodPalCtrl pc) {
         this.pc = pc;
-        this.server = server;
     }
 
+    /**
+     * Sets the Recipe on the UI for preview.
+     * Converts the Recipe to Markdown and then to HTML for WebView.
+     * @param recipe the Recipe to display
+     */
     public void setRecipeOnUI(Recipe recipe) {
-        preview.setText(RecipeUtil.toMarkdown(recipe));
+        if (recipe == null) {
+            preview.getEngine().loadContent("<i>No recipe to display</i>");
+            return;
+        }
+
+        String markdown = RecipeUtil.toMarkdown(recipe);
+
+        Node doc = mdParser.parse(markdown);
+        String htmlBody = htmlRenderer.render(doc);
+
+        String html = """
+            <html>
+              <head>
+                <style>
+                  body {
+                    font-family: Arial, sans-serif;
+                    padding: 10px;
+                    line-height: 1.5;
+                  }
+                  h2, h3 { color: #333; }
+                  ul { margin-left: 20px; }
+                  em { color: #555; }
+                </style>
+              </head>
+              <body>
+            """ + htmlBody + """
+              </body>
+            </html>
+            """;
+
+        preview.getEngine().loadContent(html);
     }
 
+    /**
+     * Sets the Recipe internally and updates the UI.
+     * @param r the Recipe to set
+     */
     public void setRecipe(Recipe r){
         recipe = r;
-        preview.setText(RecipeUtil.toMarkdown(r));
+        setRecipeOnUI(r);
     }
 
+    /**
+     * Initialize method called after FXML loading.
+     */
     public void initialize() {
     }
 
+    /**
+     * Navigates back to the Recipe overview scene.
+     */
     @FXML
     public void goBack() {
+        status.setText("");
         pc.showRecipeOverview();
     }
 
     /**
      * Downloads the Markdown version of the Recipe.
+     * Creates a .md file with the Recipe's name.
+     * Updates the status label on success or failure.
      */
     @FXML
     public void downloadRecipe() {
         System.out.println("Downloading...");
+        status.setText("Downloading...");
         File file = new File(recipe.getRecipeName()+".md");
 
         try (FileWriter writer = new FileWriter(file)) {
             writer.write(RecipeUtil.toMarkdown(recipe));
-            System.out.println("File created : " + file.getAbsolutePath());
+            String message = "File created : " + file.getAbsolutePath();
+            System.out.println(message);
+            status.setText(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
