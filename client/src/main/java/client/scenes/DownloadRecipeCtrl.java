@@ -84,6 +84,7 @@ public class DownloadRecipeCtrl {
 
     @FXML
     public void goBack() {
+        status.setText("");
         pc.showRecipeOverview();
     }
 
