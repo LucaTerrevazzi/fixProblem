@@ -71,6 +71,7 @@ public class RecipeUtilTest {
                 ## Ingredients:
                 - 200g of Carrot;
                 
+                
                 ## Instructions:
                 1) Heat water
                 2) Add vegetables
@@ -106,7 +107,8 @@ public class RecipeUtilTest {
                 ### Soup
 
                 ## Ingredients:
-                - 100g of Carrot;""", RecipeUtil.toMarkdown(r));
+                - 100g of Carrot;
+                """, RecipeUtil.toMarkdown(r));
     }
 
     @Test
@@ -130,6 +132,7 @@ public class RecipeUtilTest {
 
                 ## Ingredients:
                 - 2pinch of Carrot;
+                
 
                 ## Instructions:
                 1) Heat water
