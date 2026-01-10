@@ -25,6 +25,9 @@ public class DownloadRecipeCtrl {
 
     @FXML
     private WebView preview;
+
+    @FXML private Label status;
+
     private final Parser mdParser = Parser.builder().build();
     private final HtmlRenderer htmlRenderer = HtmlRenderer.builder().build();
 
@@ -90,11 +93,14 @@ public class DownloadRecipeCtrl {
     @FXML
     public void downloadRecipe() {
         System.out.println("Downloading...");
+        status.setText("Downloading...");
         File file = new File(recipe.getRecipeName()+".md");
 
         try (FileWriter writer = new FileWriter(file)) {
             writer.write(RecipeUtil.toMarkdown(recipe));
-            System.out.println("File created : " + file.getAbsolutePath());
+            String message = "File created : " + file.getAbsolutePath();
+            System.out.println(message);
+            status.setText(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
