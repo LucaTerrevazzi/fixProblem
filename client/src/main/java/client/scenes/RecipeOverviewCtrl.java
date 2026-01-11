@@ -104,7 +104,7 @@ public class RecipeOverviewCtrl implements Initializable {
     }
 
     public void refresh(){
-        System.out.println("Refresh button clicked!");
+        System.out.println("Refresh ! (Refresh button clicked or else)");
         recipes.clear();
         recipes.addAll(server.getRecipes());
     }
