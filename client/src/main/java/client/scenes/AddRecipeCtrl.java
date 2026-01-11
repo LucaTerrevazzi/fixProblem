@@ -39,6 +39,25 @@ public class AddRecipeCtrl {
         languageCombo.setValue(Language.EN);
 
         unitCombo.getItems().setAll(Unit.values());
+        unitCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Unit u, boolean empty) {
+                super.updateItem(u, empty);
+
+                if (empty || u == null) {
+                    setText("Unit");   // ton prompt visuel
+                } else {
+                    setText(u.name());   // ou u.toString()
+                }
+            }
+        });
+        unitCombo.setCellFactory(cb -> new ListCell<>() {
+            @Override
+            protected void updateItem(Unit u, boolean empty) {
+                super.updateItem(u, empty);
+                setText(empty || u == null ? "" : u.name());
+            }
+        });
 
         ingredientCombo.setCellFactory(cb -> new ListCell<>() {
             @Override
@@ -51,7 +70,11 @@ public class AddRecipeCtrl {
             @Override
             protected void updateItem(Ingredient i, boolean empty) {
                 super.updateItem(i, empty);
-                setText(empty || i == null ? "" : i.getIngredientName());
+                if (empty || i == null) {
+                    setText("Ingredient");   // ← ton prompt visuel
+                } else {
+                    setText(i.getIngredientName());
+                }
             }
         });
 
@@ -65,6 +88,21 @@ public class AddRecipeCtrl {
         });
 
         ingredientCombo.getItems().setAll(server.getIngredients());
+    }
+
+    private void clear(){
+        nameField.setText("");
+        languageCombo.setValue(Language.EN);
+        ingredientAmountField.setText("");
+        ingredientCombo.getSelectionModel().clearSelection();
+        ingredientCombo.setValue(null);
+        unitCombo.getSelectionModel().clearSelection();
+        unitCombo.setValue(null);
+        clearIngredients();
+        instructionArea.clear();
+        clearInstructions();
+        errorLabel.setText("");
+        System.out.println("Clear Recipe name, ingredient and instructions");
     }
 
     @FXML
@@ -149,10 +187,13 @@ public class AddRecipeCtrl {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        clear();
         pc.showRecipeOverview();
     }
+
     @FXML
     public void goBack() {
+        clear();
         pc.showRecipeOverview();
     }
 
