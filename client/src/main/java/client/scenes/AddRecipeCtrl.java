@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.*;
+import commons.Language;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public class AddRecipeCtrl {
 
     @FXML private TextField nameField;
-    @FXML private ComboBox<String> languageCombo;
+    @FXML private ComboBox<Language> languageCombo;
 
     @FXML private ComboBox<Ingredient> ingredientCombo;
     @FXML private TextField ingredientAmountField;
@@ -34,8 +35,8 @@ public class AddRecipeCtrl {
     }
 
     public void initialize() {
-        languageCombo.getItems().setAll("EN", "NL", "GR");
-        languageCombo.setValue("EN");
+        languageCombo.getItems().setAll(Language.values());
+        languageCombo.setValue(Language.EN);
 
         unitCombo.getItems().setAll(Unit.values());
 
@@ -124,7 +125,7 @@ public class AddRecipeCtrl {
         }
 
         Recipe recipe = new Recipe(name);
-        recipe.setRecipeLanguage(codeToLanguage(languageCombo.getValue()));
+        recipe.setRecipeLanguage(languageCombo.getValue());
 
 
         List<Instruction> steps = new ArrayList<>();
@@ -197,13 +198,4 @@ public class AddRecipeCtrl {
         instructionsList.getItems().clear();
     }
 
-
-    private Language codeToLanguage(String code) {
-        return switch (code) {
-            case "EN" -> Language.EN;
-            case "NL" -> Language.NL;
-            case "GR" -> Language.GR;
-            default -> Language.EN;
-        };
-    }
 }
