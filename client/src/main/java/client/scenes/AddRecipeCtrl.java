@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.*;
+import commons.Language;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public class AddRecipeCtrl {
 
     @FXML private TextField nameField;
-    @FXML private ComboBox<String> languageCombo;
+    @FXML private ComboBox<Language> languageCombo;
 
     @FXML private ComboBox<Ingredient> ingredientCombo;
     @FXML private TextField ingredientAmountField;
@@ -34,10 +35,29 @@ public class AddRecipeCtrl {
     }
 
     public void initialize() {
-        languageCombo.getItems().setAll("EN", "NL", "GR");
-        languageCombo.setValue("EN");
+        languageCombo.getItems().setAll(Language.values());
+        languageCombo.setValue(Language.EN);
 
         unitCombo.getItems().setAll(Unit.values());
+        unitCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Unit u, boolean empty) {
+                super.updateItem(u, empty);
+
+                if (empty || u == null) {
+                    setText("Unit");   // ton prompt visuel
+                } else {
+                    setText(u.name());   // ou u.toString()
+                }
+            }
+        });
+        unitCombo.setCellFactory(cb -> new ListCell<>() {
+            @Override
+            protected void updateItem(Unit u, boolean empty) {
+                super.updateItem(u, empty);
+                setText(empty || u == null ? "" : u.name());
+            }
+        });
 
         ingredientCombo.setCellFactory(cb -> new ListCell<>() {
             @Override
@@ -50,7 +70,11 @@ public class AddRecipeCtrl {
             @Override
             protected void updateItem(Ingredient i, boolean empty) {
                 super.updateItem(i, empty);
-                setText(empty || i == null ? "" : i.getIngredientName());
+                if (empty || i == null) {
+                    setText("Ingredient");   // ← ton prompt visuel
+                } else {
+                    setText(i.getIngredientName());
+                }
             }
         });
 
@@ -64,6 +88,21 @@ public class AddRecipeCtrl {
         });
 
         ingredientCombo.getItems().setAll(server.getIngredients());
+    }
+
+    private void clear(){
+        nameField.setText("");
+        languageCombo.setValue(Language.EN);
+        ingredientAmountField.setText("");
+        ingredientCombo.getSelectionModel().clearSelection();
+        ingredientCombo.setValue(null);
+        unitCombo.getSelectionModel().clearSelection();
+        unitCombo.setValue(null);
+        clearIngredients();
+        instructionArea.clear();
+        clearInstructions();
+        errorLabel.setText("");
+        System.out.println("Clear Recipe name, ingredient and instructions");
     }
 
     @FXML
@@ -124,7 +163,7 @@ public class AddRecipeCtrl {
         }
 
         Recipe recipe = new Recipe(name);
-        recipe.setRecipeLanguage(codeToLanguage(languageCombo.getValue()));
+        recipe.setRecipeLanguage(languageCombo.getValue());
 
 
         List<Instruction> steps = new ArrayList<>();
@@ -148,10 +187,13 @@ public class AddRecipeCtrl {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        clear();
         pc.showRecipeOverview();
     }
+
     @FXML
     public void goBack() {
+        clear();
         pc.showRecipeOverview();
     }
 
@@ -197,13 +239,4 @@ public class AddRecipeCtrl {
         instructionsList.getItems().clear();
     }
 
-
-    private Language codeToLanguage(String code) {
-        return switch (code) {
-            case "EN" -> Language.EN;
-            case "NL" -> Language.NL;
-            case "GR" -> Language.GR;
-            default -> Language.EN;
-        };
-    }
 }
