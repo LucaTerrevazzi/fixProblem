@@ -7,13 +7,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import java.util.Optional;
 
 public class IngredientOverviewCtrl implements Initializable {
 
@@ -64,9 +64,47 @@ public class IngredientOverviewCtrl implements Initializable {
         System.out.println("Go to the Recipes scene");
         pc.showRecipeOverview();
     }
-    public void goToDeleteIngredientScene(){
-        System.out.println("Go to the delete ingredient scene *not functional yet*");
+    public void deleteIngredient() {
+        Ingredient selected = ingredientListView.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+            a.setTitle("No selection");
+            a.setHeaderText(null);
+            a.setContentText("Select an ingredient first.");
+            a.showAndWait();
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Delete ingredient");
+        confirm.setHeaderText("Delete \"" + selected.getIngredientName() + "\"?");
+        confirm.setContentText("This cannot be undone.");
+
+        Optional<ButtonType> res = confirm.showAndWait();
+        if (res.isEmpty() || res.get() != ButtonType.OK) {
+            return;
+        }
+
+        boolean success = server.deleteIngredient(
+                selected.getIngredientID().longValue()
+        );
+
+        if (!success) {
+            Alert err = new Alert(Alert.AlertType.ERROR);
+            err.setTitle("Delete failed");
+            err.setHeaderText("Could not delete ingredient.");
+            err.setContentText("It may be used in a recipe or the server rejected the request.");
+            err.showAndWait();
+            return;
+        }
+
+        refresh();
+        ingredientListView.getSelectionModel().clearSelection();
+        ingredientName.setText("");
     }
+
+
 
     public void refresh() {
         System.out.println("Refresh button clicked!");
@@ -136,6 +174,14 @@ public class IngredientOverviewCtrl implements Initializable {
         carbsLabel.setText(String.format("%.1fg", ing.getCarbs()));
         kcalLabel.setText(String.format("%.0f kcal", ing.getKcal()));
     }
+    private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 
 
 }

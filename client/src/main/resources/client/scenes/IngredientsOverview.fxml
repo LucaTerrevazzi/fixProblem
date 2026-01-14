@@ -18,7 +18,9 @@
       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
           <Button fx:id="addIngredientButton" mnemonicParsing="false" onAction="#goToAddIngredientScene" text="Add ingredient" />
-            <Button fx:id="deleteIngredientButton" mnemonicParsing="false" onAction="#goToDeleteIngredientScene" text="Delete ingredient" />
+            <Button fx:id="deleteIngredientButton"
+                    onAction="#deleteIngredient"
+                    text="Delete ingredient" />
         </items>
       </ToolBar>
    </bottom>
@@ -28,7 +30,6 @@
                 <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
 
-            <!-- Header row: name left, language right -->
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <Label fx:id="ingredientName">
                     <font>
@@ -39,7 +40,6 @@
                 <Label fx:id="ingredientLanguage" textFill="#777777" />
             </HBox>
 
-            <!-- Nutritional card -->
             <VBox minWidth="220.0" prefWidth="260.0" spacing="5.0" styleClass="card">
                 <padding>
                     <Insets bottom="10" left="10" right="10" top="10" />
