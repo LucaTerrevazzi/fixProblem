@@ -126,4 +126,12 @@ public class ServerUtils {
         return r.getStatus() >= 200 && r.getStatus() < 300;
     }
 
+    public void deleteRecipe(Recipe recipe) throws Exception {
+        client.target(SERVER)
+                .path("recipes/" + recipe.getRecipeID())
+                .request(APPLICATION_JSON)
+                .delete(Recipe.class);
+    }
+
+
 }

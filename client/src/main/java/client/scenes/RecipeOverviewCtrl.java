@@ -166,6 +166,7 @@ public class RecipeOverviewCtrl implements Initializable {
         deleteRecipeButton.setDisable(!hasSelection);
         editRecipeButton.setDisable(!hasSelection);
         downloadButton.setDisable(!hasSelection);
+        cloneRecipeButton.setDisable(!hasSelection);
     }
 
 
@@ -175,8 +176,6 @@ public class RecipeOverviewCtrl implements Initializable {
         System.out.println("RecipeOverviewCtrl initialized");
 
         recipeListView.setItems(recipes);
-
-        deleteRecipeButton.setDisable(true);
 
         recipeListView.setCellFactory(list -> new ListCell<>() {
             @Override
@@ -197,6 +196,8 @@ public class RecipeOverviewCtrl implements Initializable {
                     boolean hasSelection = newRecipe != null;
                     deleteRecipeButton.setDisable(!hasSelection);
                     editRecipeButton.setDisable(!hasSelection);
+                    downloadButton.setDisable(!hasSelection);
+                    cloneRecipeButton.setDisable(!hasSelection);
 
                     if (newRecipe != null) {
                         Recipe fullRecipe = server.getRecipeById(newRecipe.getRecipeID());
@@ -208,8 +209,6 @@ public class RecipeOverviewCtrl implements Initializable {
                         instructionsList.setItems(FXCollections.observableArrayList());
                         recipeLanguage.setText("");
                     }
-
-                    deleteRecipeButton.setDisable(false);
                 });
 
         refresh();
