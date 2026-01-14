@@ -104,8 +104,6 @@ public class RecipeOverviewCtrl implements Initializable {
     public void deleteRecipeWarning(){
         System.out.println("Go to the Delete recipe warning");
 
-        Recipe selectedRecipe = recipeListView.getSelectionModel().getSelectedItem();
-
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Recipe deletion");
         alert.setContentText("Are you sure you want to delete the recipe " + selectedRecipe.getRecipeName() + "?\n" +
@@ -128,7 +126,6 @@ public class RecipeOverviewCtrl implements Initializable {
 
     public void cloneRecipe() {
         // storing properties of selected recipes (for cloning)
-        Recipe selectedRecipe = recipeListView.getSelectionModel().getSelectedItem();
         if (selectedRecipe != null) {
             RecipeHolder holder = RecipeHolder.getInstance();
             holder.setRecipe(selectedRecipe);

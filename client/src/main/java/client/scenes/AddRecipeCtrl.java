@@ -99,7 +99,7 @@ public class AddRecipeCtrl {
         RecipeHolder holder = RecipeHolder.getInstance();
 
         if (holder.getRecipe() != null) {
-            Recipe r = RecipeUtil.deepCopy("New Recipe", holder.getRecipe());
+            Recipe r = RecipeUtil.deepCopy(holder.getRecipe().getRecipeName() + " copy", holder.getRecipe());
             nameField.setText(r.getRecipeName());
             languageCombo.setValue(r.getRecipeLanguage());
 
@@ -131,6 +131,7 @@ public class AddRecipeCtrl {
         instructionArea.clear();
         clearInstructions();
         errorLabel.setText("");
+        RecipeHolder.getInstance().setRecipe(null);
         System.out.println("Clear Recipe name, ingredient and instructions");
     }
 
@@ -218,7 +219,6 @@ public class AddRecipeCtrl {
         }
 
         clear();
-        RecipeHolder.getInstance().setRecipe(null);
         pc.showRecipeOverview();
     }
 
