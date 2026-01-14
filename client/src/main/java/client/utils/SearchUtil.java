@@ -27,18 +27,19 @@ public class SearchUtil {
         int[] scores = new int[recipes.size()];
         for (String w: words){
             if (!w.isBlank()){
+                w = w.toLowerCase();
                 for (int i = 0; i<recipes.size(); i++) {
                     Recipe recipe = recipes.get(i);
-                    if (recipe.getRecipeName().contains(w) || recipe.getRecipeLanguage().toString().contains(w)) {
+                    if (recipe.getRecipeName().toLowerCase().contains(w) || recipe.getRecipeLanguage().toString().toLowerCase().contains(w)) {
                         scores[i] += 200;
                     }
                     for (RecipeIngredient ing : recipe.getIngredients()) {
-                        if (ing.getIngredient().getIngredientName().contains(w)) {
+                        if (ing.getIngredient().getIngredientName().toLowerCase().contains(w)) {
                             scores[i] += 2;
                         }
                     }
                     for (Instruction instr : recipe.getSteps()) {
-                        if (instr.getDescription().contains(w)) {
+                        if (instr.getDescription().toLowerCase().contains(w)) {
                             scores[i] += 1;
                         }
                     }
