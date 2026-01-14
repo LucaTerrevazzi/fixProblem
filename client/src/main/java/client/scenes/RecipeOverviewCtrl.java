@@ -103,11 +103,41 @@ public class RecipeOverviewCtrl implements Initializable {
         System.out.println("Go to the Delete recipe scene *not functional yet*");
     }
 
-    public void refresh(){
+    public void refresh() {
         System.out.println("Refresh ! (Refresh button clicked or else)");
-        recipes.clear();
-        recipes.addAll(server.getRecipes());
+
+        Recipe previouslySelected = recipeListView.getSelectionModel().getSelectedItem();
+        Long prevId = previouslySelected != null ? previouslySelected.getRecipeID() : null;
+
+        recipes.setAll(
+                server.getRecipes().stream()
+                        .sorted(java.util.Comparator.comparing(
+                                r -> r.getRecipeName().toLowerCase()
+                        ))
+                        .toList()
+        );
+
+        if (prevId != null) {
+            for (Recipe r : recipes) {
+                if (prevId.equals(r.getRecipeID())) {
+                    recipeListView.getSelectionModel().select(r);
+                    break;
+                }
+            }
+        }
+
+        // Auto-select first recipe if nothing selected
+        if (recipeListView.getSelectionModel().getSelectedItem() == null && !recipes.isEmpty()) {
+            recipeListView.getSelectionModel().selectFirst();
+        }
+
+        boolean hasSelection = recipeListView.getSelectionModel().getSelectedItem() != null;
+        deleteRecipeButton.setDisable(!hasSelection);
+        editRecipeButton.setDisable(!hasSelection);
+        downloadButton.setDisable(!hasSelection);
     }
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -129,14 +159,23 @@ public class RecipeOverviewCtrl implements Initializable {
 
         recipeListView.getSelectionModel()
                 .selectedItemProperty()
-                .addListener((obs, oldRecipe, selectedRecipe) -> {
-                    if (selectedRecipe != null) {
-                        Recipe fullRecipe =
-                                server.getRecipeById(selectedRecipe.getRecipeID());
+                .addListener((obs, oldRecipe, newRecipe) -> {
+
+                    boolean hasSelection = newRecipe != null;
+                    deleteRecipeButton.setDisable(!hasSelection);
+                    editRecipeButton.setDisable(!hasSelection);
+
+                    if (newRecipe != null) {
+                        Recipe fullRecipe = server.getRecipeById(newRecipe.getRecipeID());
                         showRecipeDetails(fullRecipe);
+                    } else {
+                        selectedRecipe = null;
+                        recipeName.setText("");
+                        ingredientsList.setItems(FXCollections.observableArrayList());
+                        instructionsList.setItems(FXCollections.observableArrayList());
+                        recipeLanguage.setText("");
                     }
                 });
-
 
         refresh();
     }

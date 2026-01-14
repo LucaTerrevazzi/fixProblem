@@ -112,7 +112,13 @@ public class IngredientOverviewCtrl implements Initializable {
         Ingredient previouslySelected = ingredientListView.getSelectionModel().getSelectedItem();
         Long prevId = previouslySelected != null ? previouslySelected.getIngredientID() : null;
 
-        ingredients.setAll(server.getIngredients());
+        ingredients.setAll(
+                server.getIngredients().stream()
+                        .sorted(java.util.Comparator.comparing(
+                                i -> i.getIngredientName().toLowerCase()
+                        ))
+                        .toList()
+        );
 
         if (prevId != null) {
             for (Ingredient ing : ingredients) {
@@ -129,6 +135,7 @@ public class IngredientOverviewCtrl implements Initializable {
 
         showIngredientDetails(ingredientListView.getSelectionModel().getSelectedItem());
     }
+
 
 
     @Override
