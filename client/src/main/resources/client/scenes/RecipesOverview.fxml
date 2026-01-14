@@ -50,7 +50,7 @@
                   </GridPane.margin>
                </Label>
                <Button fx:id="downloadButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#goToDownloadRecipe" text="Download" textAlignment="RIGHT" GridPane.columnIndex="1" />
-               <TextField fx:id="searchBar" onAction="#applyFilters" prefWidth="323.0" promptText="Search for Recipes">
+               <TextField fx:id="searchBar" onAction="#applyFilters" prefHeight="26.0" prefWidth="103.0" promptText="Search for Recipes">
                   <GridPane.margin>
                      <Insets right="20.0" />
                   </GridPane.margin>
