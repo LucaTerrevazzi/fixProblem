@@ -41,7 +41,7 @@
                </AnchorPane>
              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="69.0" prefWidth="217.0">
                   <children>
-                     <Button fx:id="downloadRecipeButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="14.0" layoutY="11.0" mnemonicParsing="false" onAction="#goToDownloadRecipe" text="Download" textAlignment="RIGHT" />
+                     <Button fx:id="downloadButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="14.0" layoutY="11.0" mnemonicParsing="false" onAction="#goToDownloadRecipe" text="Download" textAlignment="RIGHT" />
                   </children>
                </AnchorPane>
            </items>
