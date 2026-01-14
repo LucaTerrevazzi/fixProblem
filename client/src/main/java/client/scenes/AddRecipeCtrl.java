@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.RecipeUtil;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.*;
@@ -96,23 +97,21 @@ public class AddRecipeCtrl {
         System.out.println("Getting recipe properties for cloning");
 
         RecipeHolder holder = RecipeHolder.getInstance();
-        Recipe r = holder.getRecipe();
+        Recipe r = RecipeUtil.deepCopy("New Recipe", holder.getRecipe());
 
-        if (r != null) {
-            nameField.setText(r.getRecipeName());
-            languageCombo.setValue(r.getRecipeLanguage());
+        nameField.setText(r.getRecipeName());
+        languageCombo.setValue(r.getRecipeLanguage());
 
-            ingredientsList.getItems().clear();
-            for (RecipeIngredient ri : r.getIngredients()) {
-                ingredientsList.getItems().add(ri);
-            }
-
-            instructionsList.getItems().clear();
-            for (Instruction i : r.getSteps()) {
-                instructionsList.getItems().add(i.getDescription());
-            }
-
+        ingredientsList.getItems().clear();
+        for (RecipeIngredient ri : r.getIngredients()) {
+            ingredientsList.getItems().add(ri);
         }
+
+        instructionsList.getItems().clear();
+        for (Instruction i : r.getSteps()) {
+            instructionsList.getItems().add(i.getDescription());
+        }
+
     }
 
     private void clear(){
