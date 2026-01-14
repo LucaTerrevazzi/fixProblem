@@ -6,6 +6,8 @@ import commons.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.web.WebView;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -131,7 +133,19 @@ public class DownloadRecipeCtrl {
     public void downloadRecipe() {
         System.out.println("Downloading...");
         status.setText("Downloading...");
-        File file = new File(recipe.getRecipeName()+".md");
+
+        DirectoryChooser chooser = new DirectoryChooser();
+        chooser.setTitle("Choose a folder to save the recipe");
+
+        Stage stage = (Stage) status.getScene().getWindow();
+        File selectedDir = chooser.showDialog(stage);
+
+        if (selectedDir == null) {
+            status.setText("Download cancelled.");
+            return;
+        }
+
+        File file = new File(selectedDir, recipe.getRecipeName() + ".md");
 
         try (FileWriter writer = new FileWriter(file)) {
             writer.write(RecipeUtil.toMarkdown(recipe));
@@ -140,6 +154,7 @@ public class DownloadRecipeCtrl {
             status.setText(message);
         } catch (IOException e) {
             e.printStackTrace();
+            status.setText("Error while saving file.");
         }
 
     }
