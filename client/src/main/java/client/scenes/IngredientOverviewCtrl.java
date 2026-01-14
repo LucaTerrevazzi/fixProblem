@@ -31,6 +31,12 @@ public class IngredientOverviewCtrl implements Initializable {
     private ServerUtils server;
     @Inject
     private FoodPalCtrl pc ;
+    @FXML private Label ingredientLanguage;
+    @FXML private Label fatLabel;
+    @FXML private Label proteinLabel;
+    @FXML private Label carbsLabel;
+    @FXML private Label kcalLabel;
+
 
     @FXML
     private ListView<Ingredient> ingredientListView;
@@ -62,11 +68,30 @@ public class IngredientOverviewCtrl implements Initializable {
         System.out.println("Go to the delete ingredient scene *not functional yet*");
     }
 
-    public void refresh(){
+    public void refresh() {
         System.out.println("Refresh button clicked!");
-        ingredients.clear();
-        ingredients.addAll(server.getIngredients());
+
+        Ingredient previouslySelected = ingredientListView.getSelectionModel().getSelectedItem();
+        Long prevId = previouslySelected != null ? previouslySelected.getIngredientID() : null;
+
+        ingredients.setAll(server.getIngredients());
+
+        if (prevId != null) {
+            for (Ingredient ing : ingredients) {
+                if (prevId.equals(ing.getIngredientID())) {
+                    ingredientListView.getSelectionModel().select(ing);
+                    break;
+                }
+            }
+        }
+
+        if (ingredientListView.getSelectionModel().getSelectedItem() == null && !ingredients.isEmpty()) {
+            ingredientListView.getSelectionModel().selectFirst();
+        }
+
+        showIngredientDetails(ingredientListView.getSelectionModel().getSelectedItem());
     }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -88,12 +113,29 @@ public class IngredientOverviewCtrl implements Initializable {
 
         ingredientListView.getSelectionModel()
                 .selectedItemProperty()
-                .addListener((obs, oldRecipe, selectedRecipe) -> {
-                    if (selectedRecipe != null) {
-                        ingredientName.setText(selectedRecipe.getIngredientName());
-                    }
-                });
+                .addListener((obs, oldIng, selectedIng) -> showIngredientDetails(selectedIng));
 
         refresh();
     }
+    private void showIngredientDetails(Ingredient ing) {
+        if (ing == null) {
+            ingredientName.setText("");
+            ingredientLanguage.setText("");
+            proteinLabel.setText("0g");
+            fatLabel.setText("0g");
+            carbsLabel.setText("0g");
+            kcalLabel.setText("0 kcal");
+            return;
+        }
+
+        ingredientName.setText(ing.getIngredientName());
+        ingredientLanguage.setText(String.valueOf(ing.getIngredientLanguage()));
+
+        proteinLabel.setText(String.format("%.1fg", ing.getProtein()));
+        fatLabel.setText(String.format("%.1fg", ing.getFat()));
+        carbsLabel.setText(String.format("%.1fg", ing.getCarbs()));
+        kcalLabel.setText(String.format("%.0f kcal", ing.getKcal()));
+    }
+
+
 }

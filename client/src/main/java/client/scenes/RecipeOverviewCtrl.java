@@ -143,8 +143,6 @@ public class RecipeOverviewCtrl implements Initializable {
 
     private void showRecipeDetails(Recipe recipe) {
         selectedRecipe = recipe;
-
-        refresh();
         System.out.println(
                 "DEBUG → recipe id=" + recipe.getRecipeID()
                         + " steps=" + (recipe.getSteps() == null ? "NULL" : recipe.getSteps().size())
