@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.RecipeHolder;
+import client.utils.SearchUtil;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Instruction;
@@ -36,10 +37,9 @@ public class RecipeOverviewCtrl implements Initializable {
     private Button refreshButton;
     @FXML
     private Button downloadButton;
-    @Inject
-    private ServerUtils server;
-    @Inject
-    private FoodPalCtrl pc ;
+
+    @FXML
+    private TextField searchBar;
 
     @FXML
     private ListView<String> ingredientsList;
@@ -59,9 +59,23 @@ public class RecipeOverviewCtrl implements Initializable {
             FXCollections.observableArrayList();
 
     @Inject
+    private ServerUtils server;
+    @Inject
+    private FoodPalCtrl pc ;
+
+    @Inject
     public RecipeOverviewCtrl(FoodPalCtrl p, ServerUtils server) {
         this.pc = p;
         this.server = server;
+    }
+
+    public void applyFilters(){
+        String query = searchBar.getText();
+        if(!query.isBlank()){
+            recipes.setAll(
+                    SearchUtil.search(server.getRecipes(), query)
+            );
+        }
     }
 
     public void goToEditScene(){
