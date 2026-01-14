@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.RecipeHolder;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Instruction;
@@ -8,10 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -21,15 +19,19 @@ public class RecipeOverviewCtrl implements Initializable {
     private Recipe selectedRecipe = null;
 
     @FXML
-    private Button addRecipeButton;
-    @FXML
     private Button favoritesButton;
     @FXML
     private Button ingredientsButton;
     @FXML
+    private Button downloadRecipeButton;
+    @FXML
+    private Button addRecipeButton;
+    @FXML
     private Button deleteRecipeButton;
     @FXML
     private Button editRecipeButton;
+    @FXML
+    private Button cloneRecipeButton;
     @FXML
     private Button refreshButton;
     @FXML
@@ -77,7 +79,7 @@ public class RecipeOverviewCtrl implements Initializable {
     }
 
     public void goToAddScene() {
-        System.out.println(" Go to add scene ");
+        System.out.println("Go to add scene");
         pc.showAddRecipe();
     }
 
@@ -99,8 +101,37 @@ public class RecipeOverviewCtrl implements Initializable {
         pc.showIngredientOverview();
     }
 
-    public void goToDeleteScene(){
-        System.out.println("Go to the Delete recipe scene *not functional yet*");
+    public void deleteRecipeWarning(){
+        System.out.println("Go to the Delete recipe warning");
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Recipe deletion");
+        alert.setContentText("Are you sure you want to delete the recipe " + selectedRecipe.getRecipeName() + "?\n" +
+                "This action cannot be undone");
+
+        alert.showAndWait()
+                .filter(response -> response == ButtonType.OK)
+                .ifPresent(response -> {
+                    try {
+                        server.deleteRecipe(selectedRecipe);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    System.out.println("Recipe " + selectedRecipe.getRecipeName() + " deleted");
+                });
+
+        refresh();
+    }
+
+    public void cloneRecipe() {
+        // storing properties of selected recipes (for cloning)
+        if (selectedRecipe != null) {
+            RecipeHolder holder = RecipeHolder.getInstance();
+            holder.setRecipe(selectedRecipe);
+        }
+
+        goToAddScene();
     }
 
     public void refresh() {
@@ -135,6 +166,7 @@ public class RecipeOverviewCtrl implements Initializable {
         deleteRecipeButton.setDisable(!hasSelection);
         editRecipeButton.setDisable(!hasSelection);
         downloadButton.setDisable(!hasSelection);
+        cloneRecipeButton.setDisable(!hasSelection);
     }
 
 
@@ -164,6 +196,8 @@ public class RecipeOverviewCtrl implements Initializable {
                     boolean hasSelection = newRecipe != null;
                     deleteRecipeButton.setDisable(!hasSelection);
                     editRecipeButton.setDisable(!hasSelection);
+                    downloadButton.setDisable(!hasSelection);
+                    cloneRecipeButton.setDisable(!hasSelection);
 
                     if (newRecipe != null) {
                         Recipe fullRecipe = server.getRecipeById(newRecipe.getRecipeID());

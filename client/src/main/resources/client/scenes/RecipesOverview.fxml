@@ -13,13 +13,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.RecipeOverviewCtrl">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.RecipeOverviewCtrl">
    <bottom>
       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
           <Button fx:id="addRecipeButton" mnemonicParsing="false" onAction="#goToAddScene" text="Add recipe" />
-            <Button fx:id="deleteRecipeButton" mnemonicParsing="false" onAction="#goToDeleteScene" text="Delete recipe" />
+            <Button fx:id="deleteRecipeButton" mnemonicParsing="false" onAction="#deleteRecipeWarning" text="Delete recipe" />
             <Button fx:id="editRecipeButton" mnemonicParsing="false" onAction="#goToEditScene" text="Edit recipe" />
+            <Button fx:id="cloneRecipeButton" mnemonicParsing="false" onAction="#cloneRecipe" text="Clone recipe" />
         </items>
       </ToolBar>
    </bottom>
@@ -32,7 +33,7 @@
            <items>
              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                   <children>
-                     <Label fx:id="recipeName" layoutX="14.0" layoutY="10.0" >
+                     <Label fx:id="recipeName" layoutX="14.0" layoutY="10.0">
                         <font>
                            <Font size="18.0" />
                         </font>

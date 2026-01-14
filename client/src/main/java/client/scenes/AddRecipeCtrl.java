@@ -1,5 +1,7 @@
 package client.scenes;
 
+import client.utils.RecipeHolder;
+import client.utils.RecipeUtil;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.*;
@@ -90,6 +92,33 @@ public class AddRecipeCtrl {
         ingredientCombo.getItems().setAll(server.getIngredients());
     }
 
+    public void cloneRecipe() {
+        System.out.println("Checking for clonable recipe...");
+
+        // checking if a recipe was selected prior
+        RecipeHolder holder = RecipeHolder.getInstance();
+
+        if (holder.getRecipe() != null) {
+            Recipe r = RecipeUtil.deepCopy(holder.getRecipe().getRecipeName() + " copy", holder.getRecipe());
+            nameField.setText(r.getRecipeName());
+            languageCombo.setValue(r.getRecipeLanguage());
+
+            ingredientsList.getItems().clear();
+            for (RecipeIngredient ri : r.getIngredients()) {
+                ingredientsList.getItems().add(ri);
+            }
+
+            instructionsList.getItems().clear();
+            for (Instruction i : r.getSteps()) {
+                instructionsList.getItems().add(i.getDescription());
+            }
+
+            System.out.println("Cloned recipe " + holder.getRecipe().getRecipeName());
+        } else {
+            System.out.println("No recipe to clone");
+        }
+    }
+
     private void clear(){
         nameField.setText("");
         languageCombo.setValue(Language.EN);
@@ -102,6 +131,7 @@ public class AddRecipeCtrl {
         instructionArea.clear();
         clearInstructions();
         errorLabel.setText("");
+        RecipeHolder.getInstance().setRecipe(null);
         System.out.println("Clear Recipe name, ingredient and instructions");
     }
 
@@ -187,6 +217,7 @@ public class AddRecipeCtrl {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
         clear();
         pc.showRecipeOverview();
     }

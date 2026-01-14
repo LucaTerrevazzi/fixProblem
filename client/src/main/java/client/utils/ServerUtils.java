@@ -36,6 +36,7 @@ import jakarta.ws.rs.core.GenericType;
 
 
 public class ServerUtils {
+
     private static final String SERVER = "http://localhost:8080/";
     private static final Client client = ClientBuilder.newClient(new ClientConfig());
 
@@ -125,5 +126,12 @@ public class ServerUtils {
         return r.getStatus() >= 200 && r.getStatus() < 300;
     }
 
-}
+    public void deleteRecipe(Recipe recipe) throws Exception {
+        client.target(SERVER)
+                .path("recipes/" + recipe.getRecipeID())
+                .request(APPLICATION_JSON)
+                .delete(Recipe.class);
+    }
 
+
+}
