@@ -100,14 +100,6 @@ public class ServerUtils {
                 .put(Entity.entity(recipe, MediaType.APPLICATION_JSON), Recipe.class);
     }
 
-    public void deleteRecipe(Recipe recipe) throws Exception {
-        ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER)
-                .path("recipes/" + recipe.getRecipeID())
-                .request(APPLICATION_JSON)
-                .delete(Recipe.class);
-    }
-
     public static Ingredient addIngredient(Ingredient ingredient) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);

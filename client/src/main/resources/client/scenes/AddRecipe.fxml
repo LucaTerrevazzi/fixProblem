@@ -34,7 +34,10 @@
                 <font><Font size="20" /></font>
             </Label>
 
-            <Pane HBox.hgrow="ALWAYS" />
+            <Pane HBox.hgrow="ALWAYS">
+                <children>
+                    <Button fx:id="cloneRecipeButton" layoutX="614.0" layoutY="2.0" mnemonicParsing="false" onAction="#cloneRecipe" text="Clone recipe" />
+                </children></Pane>
         </HBox>
     </top>
 
