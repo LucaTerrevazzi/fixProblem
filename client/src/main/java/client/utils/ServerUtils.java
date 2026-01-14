@@ -31,7 +31,9 @@ import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.GenericType;
+
 
 public class ServerUtils {
 
@@ -54,13 +56,15 @@ public class ServerUtils {
     public List<Recipe> getRecipes() {
         return client.target(SERVER).path("recipes")
                 .request(APPLICATION_JSON)
-                .get(new GenericType<List<Recipe>>() {});
+                .get(new GenericType<List<Recipe>>() {
+                });
     }
 
     public List<Ingredient> getIngredients() {
         return client.target(SERVER).path("api/ingredients") //
                 .request(APPLICATION_JSON)
-                .get(new GenericType<List<Ingredient>>() {});
+                .get(new GenericType<List<Ingredient>>() {
+                });
     }
 
     public Recipe getRecipeById(long id) {
@@ -113,12 +117,13 @@ public class ServerUtils {
                 .post(Entity.entity(ingredient, MediaType.APPLICATION_JSON),
                         Ingredient.class);
     }
-
-    public void deleteRecipe(Recipe recipe) throws Exception {
-        client.target(SERVER)
-                .path("recipes/" + recipe.getRecipeID())
+    public boolean deleteIngredient(long id) {
+        Response r = client.target(SERVER)
+                .path("api/ingredients/" + id)
                 .request(APPLICATION_JSON)
-                .delete(Recipe.class);
+                .delete();
+
+        return r.getStatus() >= 200 && r.getStatus() < 300;
     }
 
 }
