@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.RecipeHolder;
 import client.utils.RecipeUtil;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
@@ -15,8 +16,6 @@ public class AddRecipeCtrl {
 
     @FXML private TextField nameField;
     @FXML private ComboBox<Language> languageCombo;
-
-    @FXML private Button cloneRecipeButton;
 
     @FXML private ComboBox<Ingredient> ingredientCombo;
     @FXML private TextField ingredientAmountField;
@@ -94,24 +93,30 @@ public class AddRecipeCtrl {
     }
 
     public void cloneRecipe() {
-        System.out.println("Getting recipe properties for cloning");
+        System.out.println("Checking for clonable recipe...");
 
+        // checking if a recipe was selected prior
         RecipeHolder holder = RecipeHolder.getInstance();
-        Recipe r = RecipeUtil.deepCopy("New Recipe", holder.getRecipe());
 
-        nameField.setText(r.getRecipeName());
-        languageCombo.setValue(r.getRecipeLanguage());
+        if (holder.getRecipe() != null) {
+            Recipe r = RecipeUtil.deepCopy("New Recipe", holder.getRecipe());
+            nameField.setText(r.getRecipeName());
+            languageCombo.setValue(r.getRecipeLanguage());
 
-        ingredientsList.getItems().clear();
-        for (RecipeIngredient ri : r.getIngredients()) {
-            ingredientsList.getItems().add(ri);
+            ingredientsList.getItems().clear();
+            for (RecipeIngredient ri : r.getIngredients()) {
+                ingredientsList.getItems().add(ri);
+            }
+
+            instructionsList.getItems().clear();
+            for (Instruction i : r.getSteps()) {
+                instructionsList.getItems().add(i.getDescription());
+            }
+
+            System.out.println("Cloned recipe " + holder.getRecipe().getRecipeName());
+        } else {
+            System.out.println("No recipe to clone");
         }
-
-        instructionsList.getItems().clear();
-        for (Instruction i : r.getSteps()) {
-            instructionsList.getItems().add(i.getDescription());
-        }
-
     }
 
     private void clear(){
@@ -211,7 +216,9 @@ public class AddRecipeCtrl {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
         clear();
+        RecipeHolder.getInstance().setRecipe(null);
         pc.showRecipeOverview();
     }
 

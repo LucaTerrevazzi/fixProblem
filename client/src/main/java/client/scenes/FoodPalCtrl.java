@@ -13,6 +13,7 @@ public class FoodPalCtrl {
     private Scene recipeOverviewScene;
     private RecipeOverviewCtrl recipeOverviewCtrl;
     private Scene addRecipeScene;
+    private AddRecipeCtrl addRecipeCtrl;
     private Scene ingredientOverviewScene;
     private Scene addIngredientScene;
     private Scene downloadRecipeScene;
@@ -31,6 +32,7 @@ public class FoodPalCtrl {
         this.recipeOverviewScene = new Scene(overview.getValue());
         this.recipeOverviewCtrl = overview.getKey();
         this.addRecipeScene = new Scene(addRecipe.getValue());
+        this.addRecipeCtrl = addRecipe.getKey();
         this.ingredientOverviewScene = new Scene(ingredientOverview.getValue());
         this.addIngredientScene = new Scene(addIngredient.getValue());
         this.downloadRecipeScene = new Scene(downloadRecipe.getValue());
@@ -47,6 +49,7 @@ public class FoodPalCtrl {
     }
 
     public void showAddRecipe() {
+        addRecipeCtrl.cloneRecipe();
         primaryStage.setTitle("Add Recipe");
         primaryStage.setScene(addRecipeScene);
     }

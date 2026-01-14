@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.RecipeHolder;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Instruction;
@@ -18,15 +19,19 @@ public class RecipeOverviewCtrl implements Initializable {
     private Recipe selectedRecipe = null;
 
     @FXML
-    private Button addRecipeButton;
-    @FXML
     private Button favoritesButton;
     @FXML
     private Button ingredientsButton;
     @FXML
+    private Button downloadRecipeButton;
+    @FXML
+    private Button addRecipeButton;
+    @FXML
     private Button deleteRecipeButton;
     @FXML
     private Button editRecipeButton;
+    @FXML
+    private Button cloneRecipeButton;
     @FXML
     private Button refreshButton;
     @FXML
@@ -75,14 +80,6 @@ public class RecipeOverviewCtrl implements Initializable {
 
     public void goToAddScene() {
         System.out.println("Go to add scene");
-
-        // stores properties of selected recipes (for cloning)
-        Recipe selectedRecipe = recipeListView.getSelectionModel().getSelectedItem();
-        if (selectedRecipe != null) {
-            RecipeHolder holder = RecipeHolder.getInstance();
-            holder.setRecipe(selectedRecipe);
-        }
-
         pc.showAddRecipe();
     }
 
@@ -129,6 +126,17 @@ public class RecipeOverviewCtrl implements Initializable {
         refresh();
     }
 
+    public void cloneRecipe() {
+        // storing properties of selected recipes (for cloning)
+        Recipe selectedRecipe = recipeListView.getSelectionModel().getSelectedItem();
+        if (selectedRecipe != null) {
+            RecipeHolder holder = RecipeHolder.getInstance();
+            holder.setRecipe(selectedRecipe);
+        }
+
+        goToAddScene();
+    }
+
     public void refresh(){
         System.out.println("Refresh ! (Refresh button clicked or else)");
         recipes.clear();
@@ -137,9 +145,11 @@ public class RecipeOverviewCtrl implements Initializable {
         if (recipeListView.getSelectionModel().getSelectedItem() == null) {
             deleteRecipeButton.setDisable(true);
             editRecipeButton.setDisable(true);
+            cloneRecipeButton.setDisable(true);
         } else {
             deleteRecipeButton.setDisable(false);
             editRecipeButton.setDisable(false);
+            cloneRecipeButton.setDisable(false);
         }
     }
 
