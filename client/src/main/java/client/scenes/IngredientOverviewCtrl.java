@@ -107,7 +107,7 @@ public class IngredientOverviewCtrl implements Initializable {
 
 
     public void refresh() {
-        System.out.println("Refresh button clicked!");
+        System.out.println("Refresh button clicked! (Or refreshed automatically) ");
 
         Ingredient previouslySelected = ingredientListView.getSelectionModel().getSelectedItem();
         Long prevId = previouslySelected != null ? previouslySelected.getIngredientID() : null;
