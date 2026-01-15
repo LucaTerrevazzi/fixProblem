@@ -104,7 +104,7 @@
                     <HBox spacing="8">
                         <!-- Bigger input -->
                         <TextArea fx:id="instructionArea" prefHeight="38.0" prefRowCount="3" prefWidth="95.0" promptText="Write the instruction..." wrapText="true" HBox.hgrow="ALWAYS" />
-                        <Button text="Add" onAction="#addInstruction"/>
+                        <Button fx:id="addInstructionButton" text="Add" onAction="#addInstruction"/>
                     </HBox>
 
                     <ListView fx:id="instructionsList" VBox.vgrow="ALWAYS" />

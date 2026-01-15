@@ -178,11 +178,16 @@ public class RecipeOverviewCtrl implements Initializable {
             recipeListView.getSelectionModel().selectFirst();
         }
 
-        boolean hasSelection = recipeListView.getSelectionModel().getSelectedItem() != null;
+
+        selectedRecipe = ServerUtils.getRecipeById(recipeListView.getSelectionModel().getSelectedItem().getRecipeID());
+        boolean hasSelection = selectedRecipe != null;
         deleteRecipeButton.setDisable(!hasSelection);
         editRecipeButton.setDisable(!hasSelection);
         downloadButton.setDisable(!hasSelection);
         cloneRecipeButton.setDisable(!hasSelection);
+
+        System.out.println(selectedRecipe.toString());
+        showRecipeDetails(selectedRecipe);
     }
 
 
