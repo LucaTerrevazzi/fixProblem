@@ -75,6 +75,8 @@ public class RecipeOverviewCtrl implements Initializable {
             recipes.setAll(
                     SearchUtil.search(server.getRecipes(), query)
             );
+        } else {
+            refresh();
         }
     }
 
