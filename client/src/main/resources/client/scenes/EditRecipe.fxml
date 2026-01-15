@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="900.0"
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="client.scenes.EditRecipeCtrl">
+<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.EditRecipeCtrl">
 
     <top>
         <HBox prefHeight="45.0" spacing="10" BorderPane.alignment="CENTER">
@@ -16,7 +26,7 @@
                 <Insets bottom="8" left="10" right="10" top="8" />
             </padding>
 
-            <Button text="← Back" onAction="#goBack"/>
+            <Button onAction="#goBack" text="← Back" />
             <Label text="Edit Recipe">
                 <font><Font size="20" /></font>
             </Label>
@@ -39,12 +49,14 @@
                 </columnConstraints>
 
                 <Label text="Recipe name:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <TextField fx:id="nameField" promptText="e.g., Pancakes"
-                           GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField fx:id="nameField" promptText="e.g., Pancakes" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
                 <Label text="Language:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                <ComboBox fx:id="languageCombo"
-                          GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <ComboBox fx:id="languageCombo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <rowConstraints>
+               <RowConstraints />
+               <RowConstraints />
+            </rowConstraints>
             </GridPane>
 
             <Separator />
@@ -62,28 +74,22 @@
 
                     <HBox spacing="8">
                         <!-- Ingredient dropdown from server -->
-                        <ComboBox fx:id="ingredientCombo"
-                                  promptText="Ingredient"
-                                  HBox.hgrow="ALWAYS"/>
+                        <ComboBox fx:id="ingredientCombo" promptText="Ingredient" HBox.hgrow="ALWAYS" />
 
                         <!-- Amount -->
-                        <TextField fx:id="ingredientAmountField"
-                                   promptText="Amount"
-                                   prefWidth="90"/>
+                        <TextField fx:id="ingredientAmountField" prefWidth="90" promptText="Amount" />
 
                         <!-- Unit enum dropdown -->
-                        <ComboBox fx:id="unitCombo"
-                                  promptText="Unit"
-                                  prefWidth="120"/>
+                        <ComboBox fx:id="unitCombo" prefWidth="120" promptText="Unit" />
 
-                        <Button text="Add" onAction="#addIngredient"/>
+                        <Button onAction="#addIngredient" text="Add" />
                     </HBox>
 
                     <ListView fx:id="ingredientsList" VBox.vgrow="ALWAYS" />
 
                     <HBox spacing="8">
-                        <Button text="Remove selected" onAction="#removeSelectedIngredient"/>
-                        <Button text="Clear" onAction="#clearIngredients"/>
+                        <Button onAction="#removeSelectedIngredient" text="Remove selected" />
+                        <Button onAction="#clearIngredients" text="Clear" />
                     </HBox>
                 </VBox>
 
@@ -104,10 +110,11 @@
                     <ListView fx:id="instructionsList" VBox.vgrow="ALWAYS" />
 
                     <HBox spacing="8">
-                        <Button text="Move up" onAction="#moveInstructionUp"/>
-                        <Button text="Move down" onAction="#moveInstructionDown"/>
-                        <Button text="Remove selected" onAction="#removeSelectedInstruction"/>
-                        <Button text="Clear" onAction="#clearInstructions"/>
+                        <Button onAction="#moveInstructionUp" text="Move up" />
+                        <Button onAction="#moveInstructionDown" text="Move down" />
+                        <Button onAction="#removeSelectedInstruction" text="Remove selected" />
+                        <Button onAction="#clearInstructions" text="Clear" />
+                  <Button fx:id="editStepButton" mnemonicParsing="false" onAction="#editSelectedInstruction" text="Edit Selected" />
                     </HBox>
                 </VBox>
 
@@ -124,7 +131,7 @@
             </padding>
 
             <Pane HBox.hgrow="ALWAYS" />
-            <Button text="Cancel" onAction="#goBack"/>
+            <Button onAction="#goBack" text="Cancel" />
             <Button defaultButton="true" onAction="#editRecipe" text="Save Changes" />
         </HBox>
     </bottom>
