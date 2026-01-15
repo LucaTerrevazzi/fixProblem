@@ -64,7 +64,10 @@ public class EditRecipeCtrl {
             }
         });
 
-        ingredientCombo.getItems().setAll(server.getIngredients());
+        ingredientCombo.getItems().setAll(server.getIngredients().stream()
+                .sorted(java.util.Comparator.comparing(
+                        i -> i.getIngredientName().toLowerCase()))
+                .toList());
     }
 
     public void setRecipeToEdit(Recipe recipe) {
