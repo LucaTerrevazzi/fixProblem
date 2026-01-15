@@ -25,6 +25,9 @@ public class EditRecipeCtrl {
 
     @FXML private Label errorLabel;
 
+    @FXML private Button editStepButton;
+    @FXML private Button addInstructionButton;
+
     private final FoodPalCtrl pc;
     private final ServerUtils server;
 
@@ -40,6 +43,26 @@ public class EditRecipeCtrl {
 
         unitCombo.getItems().setAll(Unit.values());
 
+        unitCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Unit u, boolean empty) {
+                super.updateItem(u, empty);
+
+                if (empty || u == null) {
+                    setText("Unit");   // ton prompt visuel
+                } else {
+                    setText(u.name());   // ou u.toString()
+                }
+            }
+        });
+        unitCombo.setCellFactory(cb -> new ListCell<>() {
+            @Override
+            protected void updateItem(Unit u, boolean empty) {
+                super.updateItem(u, empty);
+                setText(empty || u == null ? "" : u.name());
+            }
+        });
+
         ingredientCombo.setCellFactory(cb -> new ListCell<>() {
             @Override
             protected void updateItem(Ingredient i, boolean empty) {
@@ -51,7 +74,11 @@ public class EditRecipeCtrl {
             @Override
             protected void updateItem(Ingredient i, boolean empty) {
                 super.updateItem(i, empty);
-                setText(empty || i == null ? "" : i.getIngredientName());
+                if (empty || i == null) {
+                    setText("Ingredient");   // ← ton prompt visuel
+                } else {
+                    setText(i.getIngredientName());
+                }
             }
         });
 
@@ -84,6 +111,15 @@ public class EditRecipeCtrl {
                         .map(Instruction::getDescription)
                         .toList()
         );
+        instructionsList.setDisable(false);
+        instructionArea.setText("");
+        editStepButton.setText("Edit Selected");
+        addInstructionButton.setDisable(false);
+        ingredientAmountField.setText("");
+        ingredientCombo.getSelectionModel().clearSelection();
+        ingredientCombo.setValue(null);
+        unitCombo.getSelectionModel().clearSelection();
+        unitCombo.setValue(null);
     }
 
 
@@ -210,6 +246,27 @@ public class EditRecipeCtrl {
     @FXML
     public void clearInstructions() {
         instructionsList.getItems().clear();
+    }
+
+    @FXML
+    public void editSelectedInstruction() {
+        int idx = instructionsList.getSelectionModel().getSelectedIndex();
+        boolean editingInstruction = false;
+        if (idx >= 0 && editStepButton.getText().equals("Edit Selected")) {
+            editStepButton.setText("Save Changes");
+            instructionArea.setText(instructionsList.getSelectionModel().getSelectedItem());
+            editingInstruction = true;
+        }
+        else if (idx >= 0 && editStepButton.getText().equals("Save Changes")) {
+            editStepButton.setText("Edit Selected");
+            var item = instructionArea.getText();
+            instructionsList.getItems().remove(idx);
+            instructionsList.getItems().add(idx , item);
+            instructionsList.getSelectionModel().select(idx );
+            instructionArea.setText("");
+        }
+        addInstructionButton.setDisable(editingInstruction);
+        instructionsList.setDisable(editingInstruction);
     }
 
 
