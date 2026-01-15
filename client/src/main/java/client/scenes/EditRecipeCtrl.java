@@ -25,6 +25,9 @@ public class EditRecipeCtrl {
 
     @FXML private Label errorLabel;
 
+    @FXML private Button editStepButton;
+    @FXML private Button addInstructionButton;
+
     private final FoodPalCtrl pc;
     private final ServerUtils server;
 
@@ -81,6 +84,10 @@ public class EditRecipeCtrl {
                         .map(Instruction::getDescription)
                         .toList()
         );
+        instructionsList.setDisable(false);
+        instructionArea.setText("");
+        editStepButton.setText("Edit Selected");
+        addInstructionButton.setDisable(false);
     }
 
 
@@ -207,6 +214,27 @@ public class EditRecipeCtrl {
     @FXML
     public void clearInstructions() {
         instructionsList.getItems().clear();
+    }
+
+    @FXML
+    public void editSelectedInstruction() {
+        int idx = instructionsList.getSelectionModel().getSelectedIndex();
+        boolean editingInstruction = false;
+        if (idx >= 0 && editStepButton.getText().equals("Edit Selected")) {
+            editStepButton.setText("Save Changes");
+            instructionArea.setText(instructionsList.getSelectionModel().getSelectedItem());
+            editingInstruction = true;
+        }
+        else if (idx >= 0 && editStepButton.getText().equals("Save Changes")) {
+            editStepButton.setText("Edit Selected");
+            var item = instructionArea.getText();
+            instructionsList.getItems().remove(idx);
+            instructionsList.getItems().add(idx , item);
+            instructionsList.getSelectionModel().select(idx );
+            instructionArea.setText("");
+        }
+        addInstructionButton.setDisable(editingInstruction);
+        instructionsList.setDisable(editingInstruction);
     }
 
 
