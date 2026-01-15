@@ -43,6 +43,26 @@ public class EditRecipeCtrl {
 
         unitCombo.getItems().setAll(Unit.values());
 
+        unitCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Unit u, boolean empty) {
+                super.updateItem(u, empty);
+
+                if (empty || u == null) {
+                    setText("Unit");   // ton prompt visuel
+                } else {
+                    setText(u.name());   // ou u.toString()
+                }
+            }
+        });
+        unitCombo.setCellFactory(cb -> new ListCell<>() {
+            @Override
+            protected void updateItem(Unit u, boolean empty) {
+                super.updateItem(u, empty);
+                setText(empty || u == null ? "" : u.name());
+            }
+        });
+
         ingredientCombo.setCellFactory(cb -> new ListCell<>() {
             @Override
             protected void updateItem(Ingredient i, boolean empty) {
@@ -54,7 +74,11 @@ public class EditRecipeCtrl {
             @Override
             protected void updateItem(Ingredient i, boolean empty) {
                 super.updateItem(i, empty);
-                setText(empty || i == null ? "" : i.getIngredientName());
+                if (empty || i == null) {
+                    setText("Ingredient");   // ← ton prompt visuel
+                } else {
+                    setText(i.getIngredientName());
+                }
             }
         });
 
@@ -88,6 +112,11 @@ public class EditRecipeCtrl {
         instructionArea.setText("");
         editStepButton.setText("Edit Selected");
         addInstructionButton.setDisable(false);
+        ingredientAmountField.setText("");
+        ingredientCombo.getSelectionModel().clearSelection();
+        ingredientCombo.setValue(null);
+        unitCombo.getSelectionModel().clearSelection();
+        unitCombo.setValue(null);
     }
 
 
