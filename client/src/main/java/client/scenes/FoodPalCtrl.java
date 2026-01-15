@@ -40,6 +40,7 @@ public class FoodPalCtrl {
         this.downloadRecipeScene = new Scene(downloadRecipe.getValue());
         this.downloadRecipeCtrl = downloadRecipe.getKey();
         this.editRecipeScene = new Scene(editRecipe.getValue());
+
         showRecipeOverview();
         primaryStage.show();
     }
@@ -48,12 +49,18 @@ public class FoodPalCtrl {
         primaryStage.setTitle("Recipe Overview");
         primaryStage.setScene(recipeOverviewScene);
         recipeOverviewCtrl.refresh();
+        primaryStage.setMinWidth(600);
+        primaryStage.setMinHeight(430);
+        primaryStage.sizeToScene();
     }
 
     public void showAddRecipe() {
         addRecipeCtrl.cloneRecipe();
         primaryStage.setTitle("Add Recipe");
         primaryStage.setScene(addRecipeScene);
+        primaryStage.setMinWidth(900);
+        primaryStage.setMinHeight(600);
+        primaryStage.sizeToScene();
     }
 
     public void showDownloadRecipe(Recipe recipe) {
@@ -67,18 +74,26 @@ public class FoodPalCtrl {
         primaryStage.setTitle("Ingredient Overview");
         primaryStage.setScene(ingredientOverviewScene);
         ingredientOverviewCtrl.refresh();
-
+        primaryStage.setMinWidth(600);
+        primaryStage.setMinHeight(430);
+        primaryStage.sizeToScene();
     }
 
     public void showAddIngredient() {
         primaryStage.setTitle("Add Ingredient");
         primaryStage.setScene(addIngredientScene);
+        primaryStage.setMinWidth(600);
+        primaryStage.setMinHeight(280);
+        primaryStage.sizeToScene();
     }
 
     public void showEditRecipe(Recipe recipe) {
         editRecipeCtrl.setRecipeToEdit(recipe);
         primaryStage.setTitle("Edit Recipe");
         primaryStage.setScene(editRecipeScene);
+        primaryStage.setMinWidth(900);
+        primaryStage.setMinHeight(600);
+        primaryStage.sizeToScene();
     }
 }
 
