@@ -67,7 +67,7 @@ public class ServerUtils {
                 });
     }
 
-    public Recipe getRecipeById(long id) {
+    public static Recipe getRecipeById(long id) {
         return client.target(SERVER)
                 .path("recipes/" + id)
                 .request(APPLICATION_JSON)
