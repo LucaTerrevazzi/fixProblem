@@ -89,7 +89,7 @@ public class AddRecipeCtrl {
             }
         });
 
-        ingredientCombo.getItems().setAll(server.getIngredients());
+        updateIngredients();
     }
 
     public void cloneRecipe() {
@@ -137,7 +137,10 @@ public class AddRecipeCtrl {
 
     @FXML
     public void updateIngredients() {
-        ingredientCombo.getItems().setAll(server.getIngredients());
+        ingredientCombo.getItems().setAll(server.getIngredients().stream()
+                .sorted(java.util.Comparator.comparing(
+                        i -> i.getIngredientName().toLowerCase()))
+                .toList());
         System.out.println("updated ingredients");
     }
 
