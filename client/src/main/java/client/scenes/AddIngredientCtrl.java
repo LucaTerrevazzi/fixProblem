@@ -25,6 +25,15 @@ public class AddIngredientCtrl {
     @FXML
     public void goBack() {
         pc.showIngredientOverview();
+        clear();
+    }
+
+    private void clear(){
+        nameField.setText("");
+        fatField.setText("");
+        proteinField.setText("");
+        carbsField.setText("");
+        errorLabel.setText("");
     }
 
     @FXML
