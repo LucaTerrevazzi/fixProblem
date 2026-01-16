@@ -1,6 +1,7 @@
 package server.api;
 
 import commons.Ingredient;
+import commons.Recipe;
 import commons.RecipeIngredient;
 import commons.Unit;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,4 +52,29 @@ public class RecipeIngredientControllerTest {
         assertEquals(ri2, result.get(1));
         verify(recipeIngredientServiceMock).findAll();
     }
+
+    @Test
+    public void testGetRecipeByIngredientID() {
+        Recipe r1 = new Recipe();
+        r1.setRecipeID(10L);
+        r1.setRecipeName("Pasta");
+
+        Recipe r2 = new Recipe();
+        r2.setRecipeID(20L);
+        r2.setRecipeName("Salad");
+
+        List<Recipe> recipes = List.of(r1, r2);
+
+        when(recipeServiceMock.findRecipeByIngredientID(5L)).thenReturn(recipes);
+
+        var result = sut.getRecipeByIngredientID(5L);
+
+        assertEquals(2, result.size());
+        assertEquals(r1, result.get(0));
+        assertEquals(r2, result.get(1));
+
+        verify(recipeServiceMock).findRecipeByIngredientID(5L);
+    }
+
+
 }
