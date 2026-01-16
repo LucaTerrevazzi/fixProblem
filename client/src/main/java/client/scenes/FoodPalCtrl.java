@@ -47,10 +47,12 @@ public class FoodPalCtrl {
         recipeOverviewCtrl.setWsClient(ws);
         editRecipeCtrl.setWsClient(ws);
 
-        ws.setStatusListener(s -> System.out.println("WS status: " + s));
-        ws.connect(ServerUtils.getServer());
-
+        recipeOverviewCtrl.bindWsStatus();
         recipeOverviewCtrl.onAppStart();
+
+        ws.connect(ServerUtils.getServer());
+        ws.addStatusListener(s -> System.out.println("UI LISTENER sees: " + s));
+
 
         showRecipeOverview();
         primaryStage.show();

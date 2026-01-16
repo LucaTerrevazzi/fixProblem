@@ -334,7 +334,7 @@ public class RecipeOverviewCtrl implements Initializable {
     public void bindWsStatus() {
         if (ws == null) return;
 
-        ws.setStatusListener(status -> {
+        ws.addStatusListener(status -> {
             wsStatusLabel.setText(switch (status) {
                 case CONNECTED -> "Live ● Connected";
                 case CONNECTING -> "Connecting…";

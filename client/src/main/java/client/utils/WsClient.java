@@ -32,20 +32,23 @@ public class WsClient {
     private volatile StompSession session;
     private volatile Status status = Status.DISCONNECTED;
 
-    private volatile Consumer<Status> statusListener = s -> {};
+    private final CopyOnWriteArrayList<Consumer<Status>> statusListeners = new CopyOnWriteArrayList<>();
 
     public WsClient() {
         this.stompClient = new WebSocketStompClient(new StandardWebSocketClient());
         this.stompClient.setMessageConverter(new MappingJackson2MessageConverter());
     }
 
-    public void setStatusListener(Consumer<Status> listener) {
-        this.statusListener = (listener == null) ? (s -> {}) : listener;
+
+    public void addStatusListener(Consumer<Status> listener) {
+        if (listener != null) statusListeners.add(listener);
     }
 
     private void setStatus(Status s) {
         status = s;
-        Platform.runLater(() -> statusListener.accept(s));
+        Platform.runLater(() -> {
+            for (var l : statusListeners) l.accept(s);
+        });
     }
 
     public void connect(String serverBaseUrl) {
