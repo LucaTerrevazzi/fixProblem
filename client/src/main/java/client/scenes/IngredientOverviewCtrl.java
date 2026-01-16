@@ -17,7 +17,8 @@ import java.util.Optional;
 
 public class IngredientOverviewCtrl implements Initializable {
 
-    public Button editIngredientButton;
+    @FXML
+    private Button editIngredientButton;
     @FXML
     private Button addIngredientButton;
     @FXML
