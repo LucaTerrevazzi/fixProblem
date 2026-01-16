@@ -46,16 +46,31 @@ public class RecipeIngredientController {
     }
 
     /**
-     * DELETE /recipes/{id}
+     * DELETE /ingredient/{id}
      * deletes a recipeIngredient by its IngredientID
      * @param id id of the recipeIngredient to delete
      */
     @DeleteMapping("/ingredient/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteRecipeIngredient(@PathVariable long id) {
+    public void deleteRecipeIngredientByIngredient(@PathVariable long id) {
         try {
             recipeIngredientService.findByIngredientID(id);
-            recipeIngredientService.delete(id);
+            recipeIngredientService.deleteByIngredient(id);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+    /**
+     * DELETE /recipes/{id}
+     * deletes a recipeIngredient by its RecipeID
+     * @param id id of the recipeIngredient to delete
+     */
+    @DeleteMapping("/recipe/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteRecipeIngredientByRecipe(@PathVariable long id) {
+        try {
+            recipeIngredientService.findByRecipeID(id);
+            recipeIngredientService.deleteByRecipe(id);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

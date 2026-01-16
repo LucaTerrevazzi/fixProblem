@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import server.service.RecipeIngredientService;
 import server.service.RecipeService;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -76,5 +77,29 @@ public class RecipeIngredientControllerTest {
         verify(recipeServiceMock).findRecipeByIngredientID(5L);
     }
 
+    @Test
+    public void testDeleteRecipeIngredientByIngredient_success() {
+        long id = 7L;
 
+        when(recipeIngredientServiceMock.findByIngredientID(id))
+                .thenReturn(Collections.emptyList());
+
+        sut.deleteRecipeIngredientByIngredient(id);
+
+        verify(recipeIngredientServiceMock).findByIngredientID(id);
+        verify(recipeIngredientServiceMock).deleteByIngredient(id);
+    }
+
+    @Test
+    public void testDeleteRecipeIngredientByRecipe_success() {
+        long id = 3L;
+
+        when(recipeIngredientServiceMock.findByRecipeID(id))
+                .thenReturn(Collections.emptyList());
+
+        sut.deleteRecipeIngredientByRecipe(id);
+
+        verify(recipeIngredientServiceMock).findByRecipeID(id);
+        verify(recipeIngredientServiceMock).deleteByRecipe(id);
+    }
 }
