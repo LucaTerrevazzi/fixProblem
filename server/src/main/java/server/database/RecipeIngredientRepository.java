@@ -8,6 +8,7 @@ import java.util.List;
 public interface RecipeIngredientRepository
         extends JpaRepository<RecipeIngredient, Long> {
     List<RecipeIngredient> findByIngredientIngredientID(Long recipeId);
+    Integer countByIngredientIngredientID(Long recipeId);
 }
 
 

@@ -18,7 +18,11 @@ public class RecipeIngredientService {
         return recipeIngredientRepo.findAll();
     }
 
-    public List<RecipeIngredient> findByIngredientID(Long recipeIngredientID) {
-        return recipeIngredientRepo.findByIngredientIngredientID(recipeIngredientID);
+    public List<RecipeIngredient> findByIngredientID(Long ingredientId) {
+        return recipeIngredientRepo.findByIngredientIngredientID(ingredientId);
+    }
+
+    public Integer countByIngredientID(Long ingredientId) {
+        return recipeIngredientRepo.countByIngredientIngredientID(ingredientId);
     }
 }
