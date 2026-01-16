@@ -143,8 +143,6 @@ public class RecipeOverviewCtrl implements Initializable {
 
                     System.out.println("Recipe " + selectedRecipe.getRecipeName() + " deleted");
                 });
-
-        refresh();
     }
 
     public void cloneRecipe() {
@@ -247,17 +245,17 @@ public class RecipeOverviewCtrl implements Initializable {
                         recipeLanguage.setText("");
                     }
                 });
-        if (ws != null) {
-            ws.subscribeRecipeListStored(this::handleRecipeListEvent);
-        }
-
-        refresh();
+        //refresh();
     }
     private void handleRecipeListEvent(RecipeEvent ev) {
         switch (ev.type) {
             case RECIPE_ADDED -> {
-                refresh();
+                Recipe r = new Recipe(ev.title);
+                r.setRecipeID(ev.id);
+                recipes.add(r);
+                recipes.sort(java.util.Comparator.comparing(x -> x.getRecipeName().toLowerCase()));
             }
+
             case RECIPE_DELETED -> {
                 recipes.removeIf(r -> r.getRecipeID() == ev.id);
 
