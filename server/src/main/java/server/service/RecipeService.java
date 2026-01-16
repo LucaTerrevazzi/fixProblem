@@ -9,6 +9,7 @@ import server.database.InstructionRepository;
 import server.database.RecipeIngredientRepository;
 import server.database.RecipeRepository;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -53,6 +54,15 @@ public class RecipeService {
     public Recipe findById(long id) {
         return recipeRepo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Recipe not found: " + id));
+    }
+
+    public List<Recipe> findRecipeByIngredientID(Long recipeIngredientID) {
+        List<Recipe> filteredRecipes = new LinkedList<>();
+        List<RecipeIngredient> filteredRecipeIngredients = recipeIngredientRepo.findByIngredientIngredientID(recipeIngredientID);
+        for (RecipeIngredient recipeIngredient : filteredRecipeIngredients) {
+            filteredRecipes.add(recipeIngredient.getRecipe());
+        }
+        return filteredRecipes;
     }
 
     /**
