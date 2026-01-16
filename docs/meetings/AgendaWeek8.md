@@ -65,12 +65,12 @@ Then we can verify that it works and have an early final version... We can use f
 
 * Where do we have to put our focus ?
 * If basic requirements are meet -> distribute nutritional values
-* ![img.png](img.png)
+* ![nutrionalValues.png](Images agenda week 8/Nutritional Values.png)
 
 ### 6. If we have extra time / if we need more to distribute
 
 * We can have a look at other features, like searching for Recipes:
-![img_1.png](img_1.png)
+![searchinForRecipe.png](Images agenda week 8/Searchinf for Recipe.png)
 * Does someone have to add something ?
 
 ### 6. Closing (3 minutes)
