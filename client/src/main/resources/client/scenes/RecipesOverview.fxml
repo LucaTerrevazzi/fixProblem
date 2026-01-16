@@ -104,9 +104,6 @@
                          style="-fx-padding: 5 5;"
                          text="⟳"/>
              </HBox>
-
-
-
          </children>
       </HBox>
    </top>

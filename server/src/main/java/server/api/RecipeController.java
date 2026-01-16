@@ -31,8 +31,6 @@ public class RecipeController {
         this.recipeService = recipeService;
         this.publisher = null;
     }
-
-
     @GetMapping
     public List<Recipe> getAllRecipes() {
         return recipeService.findAll();
@@ -57,7 +55,6 @@ public class RecipeController {
 
         return saved;
     }
-
     @PutMapping("/{id}")
     public Recipe updateRecipe(@PathVariable long id, @RequestBody Recipe recipe) {
         if (recipe == null) {
@@ -79,7 +76,6 @@ public class RecipeController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRecipe(@PathVariable long id) {
