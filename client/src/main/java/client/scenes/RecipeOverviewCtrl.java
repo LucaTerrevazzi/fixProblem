@@ -11,7 +11,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-
+import client.utils.WsClient;
+import client.ws.RecipeEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -52,11 +53,14 @@ public class RecipeOverviewCtrl implements Initializable {
 
     @FXML
     private ListView<Recipe> recipeListView;
+    @FXML
+    private Label wsStatusLabel;
 
     @FXML
     private Label recipeName;
     private final ObservableList<Recipe> recipes =
             FXCollections.observableArrayList();
+    private WsClient ws;
 
     @Inject
     private ServerUtils server;
@@ -80,6 +84,9 @@ public class RecipeOverviewCtrl implements Initializable {
         }
     }
 
+    public void setWsClient(WsClient ws) {
+        this.ws = ws;
+    }
     public void goToEditScene(){
         System.out.println(" Go to edit scene ");
         Recipe selected = recipeListView.getSelectionModel().getSelectedItem();
@@ -158,9 +165,7 @@ public class RecipeOverviewCtrl implements Initializable {
 
         recipes.setAll(
                 server.getRecipes().stream()
-                        .sorted(java.util.Comparator.comparing(
-                                r -> r.getRecipeName().toLowerCase()
-                        ))
+                        .sorted(java.util.Comparator.comparing(r -> r.getRecipeName().toLowerCase()))
                         .toList()
         );
 
@@ -173,22 +178,33 @@ public class RecipeOverviewCtrl implements Initializable {
             }
         }
 
-        // Auto-select first recipe if nothing selected
         if (recipeListView.getSelectionModel().getSelectedItem() == null && !recipes.isEmpty()) {
             recipeListView.getSelectionModel().selectFirst();
         }
+        Recipe selectedInList = recipeListView.getSelectionModel().getSelectedItem();
+        if (selectedInList == null) {
+            selectedRecipe = null;
 
+            deleteRecipeButton.setDisable(true);
+            editRecipeButton.setDisable(true);
+            downloadButton.setDisable(true);
+            cloneRecipeButton.setDisable(true);
 
-        selectedRecipe = ServerUtils.getRecipeById(recipeListView.getSelectionModel().getSelectedItem().getRecipeID());
+            return;
+        }
+
+        selectedRecipe = ServerUtils.getRecipeById(selectedInList.getRecipeID());
         boolean hasSelection = selectedRecipe != null;
+
         deleteRecipeButton.setDisable(!hasSelection);
         editRecipeButton.setDisable(!hasSelection);
         downloadButton.setDisable(!hasSelection);
         cloneRecipeButton.setDisable(!hasSelection);
 
-        System.out.println(selectedRecipe.toString());
+        System.out.println(selectedRecipe);
         showRecipeDetails(selectedRecipe);
     }
+
 
 
 
@@ -231,7 +247,59 @@ public class RecipeOverviewCtrl implements Initializable {
                         recipeLanguage.setText("");
                     }
                 });
+        if (ws != null) {
+            ws.subscribeRecipeListStored(this::handleRecipeListEvent);
+        }
 
+        refresh();
+    }
+    private void handleRecipeListEvent(RecipeEvent ev) {
+        switch (ev.type) {
+            case RECIPE_ADDED -> {
+                // Minimal: fetch the full list once and update UI
+                // (still NOT polling — it’s push-triggered)
+                refresh();
+                // optional sparkle: showToast("Recipe added: " + ev.title);
+            }
+            case RECIPE_DELETED -> {
+                // Remove locally without full refresh (better)
+                recipes.removeIf(r -> r.getRecipeID() == ev.id);
+
+                // If you were viewing it, clear details
+                if (selectedRecipe != null && selectedRecipe.getRecipeID() == ev.id) {
+                    selectedRecipe = null;
+                    recipeName.setText("");
+                    ingredientsList.setItems(FXCollections.observableArrayList());
+                    instructionsList.setItems(FXCollections.observableArrayList());
+                    recipeLanguage.setText("");
+                }
+            }
+            case RECIPE_TITLE_UPDATED -> {
+                // Update the title in the list (your ListCell uses getRecipeName())
+                for (int i = 0; i < recipes.size(); i++) {
+                    Recipe r = recipes.get(i);
+                    if (r.getRecipeID() == ev.id) {
+                        // if your Recipe has setRecipeName(...) use that:
+                        r.setRecipeName(ev.title);
+                        recipes.set(i, r); // force list refresh
+                        break;
+                    }
+                }
+
+                // if currently selected, update header title too
+                if (selectedRecipe != null && selectedRecipe.getRecipeID() == ev.id) {
+                    recipeName.setText(ev.title);
+                }
+            }
+            default -> {
+                // ignore RECIPE_UPDATED here (that’s for the single-recipe topic)
+            }
+        }
+    }
+    public void onAppStart() {
+        if (ws != null) {
+            ws.subscribeRecipeListStored(this::handleRecipeListEvent);
+        }
         refresh();
     }
 
@@ -262,6 +330,18 @@ public class RecipeOverviewCtrl implements Initializable {
         );
 
         recipeLanguage.setText("Language: " + recipe.getRecipeLanguage().toString());
+    }
+    public void bindWsStatus() {
+        if (ws == null) return;
+
+        ws.setStatusListener(status -> {
+            wsStatusLabel.setText(switch (status) {
+                case CONNECTED -> "Live ● Connected";
+                case CONNECTING -> "Connecting…";
+                case RECONNECTING -> "Reconnecting…";
+                case DISCONNECTED -> "Offline";
+            });
+        });
     }
 
 }

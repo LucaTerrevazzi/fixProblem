@@ -5,7 +5,8 @@ import com.google.inject.Inject;
 import commons.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-
+import client.utils.WsClient;
+import client.ws.RecipeEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,8 @@ public class EditRecipeCtrl {
 
     @FXML private Button editStepButton;
     @FXML private Button addInstructionButton;
-
+    private WsClient ws;
+    private long currentRecipeId = -1;
     private final FoodPalCtrl pc;
     private final ServerUtils server;
 
@@ -122,6 +124,10 @@ public class EditRecipeCtrl {
         unitCombo.setValue(null);
     }
 
+    public void setWsClient(WsClient ws) {
+        this.ws = ws;
+    }
+
 
     @FXML
     public void addIngredient() {
@@ -195,17 +201,15 @@ public class EditRecipeCtrl {
         recipe.setIngredients(new ArrayList<>(ingredientsList.getItems()));
         System.out.println(recipe.toString());
         try {
-            ServerUtils.editRecipe(recipeId, recipe);
+            ServerUtils.editRecipe(currentRecipeId, recipe);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        if (ws != null && currentRecipeId != -1) {
+            ws.unsubscribeRecipe(currentRecipeId);
+        }
         pc.showRecipeOverview();
     }
-    @FXML
-    public void goBack() {
-        pc.showRecipeOverview();
-    }
-
     @FXML
     public void removeSelectedIngredient() {
         int idx = ingredientsList.getSelectionModel().getSelectedIndex();
@@ -287,6 +291,55 @@ public class EditRecipeCtrl {
             default -> "EN";
         };
     }
+    private void loadRecipeIntoFields(Recipe recipe) {
+        nameField.setText(recipe.getRecipeName());
+        languageCombo.setValue(languageToCode(recipe.getRecipeLanguage()));
 
+        ingredientsList.getItems().setAll(recipe.getIngredients());
 
+        instructionsList.getItems().setAll(
+                recipe.getSteps().stream()
+                        .sorted((a, b) -> Integer.compare(a.getOrderNumber(), b.getOrderNumber()))
+                        .map(Instruction::getDescription)
+                        .toList()
+        );
+
+        instructionsList.setDisable(false);
+        instructionArea.setText("");
+        editStepButton.setText("Edit Selected");
+        addInstructionButton.setDisable(false);
+
+        ingredientAmountField.setText("");
+        ingredientCombo.getSelectionModel().clearSelection();
+        ingredientCombo.setValue(null);
+        unitCombo.getSelectionModel().clearSelection();
+        unitCombo.setValue(null);
+    }
+
+    private void handleRecipeEvent(RecipeEvent ev) {
+        if (ev == null || ev.type == null) return;
+
+        if (ev.type == RecipeEvent.Type.RECIPE_UPDATED && ev.id == currentRecipeId) {
+
+            // (Sparkle) If user is mid-edit, show a warning instead of overwriting their fields.
+            // Basic rule: don't crash; last write wins is OK; warning is sparkle.
+            boolean userTyping = nameField.isFocused() || instructionArea.isFocused();
+            if (userTyping) {
+                errorLabel.setText("This recipe was changed in another client. Saving may overwrite changes.");
+                return;
+            }
+
+            // Push-triggered refresh of ONLY this recipe (still no polling)
+            Recipe fresh = ServerUtils.getRecipeById(currentRecipeId);
+            loadRecipeIntoFields(fresh);
+            errorLabel.setText("Synced latest changes.");
+        }
+    }
+    @FXML
+    public void goBack() {
+        if (ws != null && currentRecipeId != -1) {
+            ws.unsubscribeRecipe(currentRecipeId);
+        }
+        pc.showRecipeOverview();
+    }
 }

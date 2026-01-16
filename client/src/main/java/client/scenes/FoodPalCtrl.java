@@ -1,6 +1,8 @@
 package client.scenes;
 
 import client.utils.RecipeUtil;
+import client.utils.ServerUtils;
+import client.utils.WsClient;
 import commons.Recipe;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,6 +11,7 @@ import javafx.util.Pair;
 
 public class FoodPalCtrl {
 
+    private WsClient ws;
     private Stage primaryStage;
     private Scene recipeOverviewScene;
     private RecipeOverviewCtrl recipeOverviewCtrl;
@@ -40,6 +43,15 @@ public class FoodPalCtrl {
         this.downloadRecipeScene = new Scene(downloadRecipe.getValue());
         this.downloadRecipeCtrl = downloadRecipe.getKey();
         this.editRecipeScene = new Scene(editRecipe.getValue());
+        this.ws = new WsClient();
+        recipeOverviewCtrl.setWsClient(ws);
+        editRecipeCtrl.setWsClient(ws);
+
+        ws.setStatusListener(s -> System.out.println("WS status: " + s));
+        ws.connect(ServerUtils.getServer());
+
+        recipeOverviewCtrl.onAppStart();
+
         showRecipeOverview();
         primaryStage.show();
     }
