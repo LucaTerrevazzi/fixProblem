@@ -47,9 +47,9 @@ public class AddRecipeCtrl {
                 super.updateItem(u, empty);
 
                 if (empty || u == null) {
-                    setText("Unit");   // ton prompt visuel
+                    setText("Unit");
                 } else {
-                    setText(u.name());   // ou u.toString()
+                    setText(u.name());
                 }
             }
         });
@@ -73,7 +73,7 @@ public class AddRecipeCtrl {
             protected void updateItem(Ingredient i, boolean empty) {
                 super.updateItem(i, empty);
                 if (empty || i == null) {
-                    setText("Ingredient");   // ← ton prompt visuel
+                    setText("Ingredient");
                 } else {
                     setText(i.getIngredientName());
                 }
