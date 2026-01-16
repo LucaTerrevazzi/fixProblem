@@ -152,42 +152,46 @@ public class RecipeOverviewCtrl implements Initializable {
 
     public void refresh() {
         System.out.println("Refresh ! (Refresh button clicked or else)");
+        try {
+            Recipe previouslySelected = recipeListView.getSelectionModel().getSelectedItem();
+            Long prevId = previouslySelected != null ? previouslySelected.getRecipeID() : null;
 
-        Recipe previouslySelected = recipeListView.getSelectionModel().getSelectedItem();
-        Long prevId = previouslySelected != null ? previouslySelected.getRecipeID() : null;
+            recipes.setAll(
+                    server.getRecipes().stream()
+                            .sorted(java.util.Comparator.comparing(
+                                    r -> r.getRecipeName().toLowerCase()
+                            ))
+                            .toList()
+            );
 
-        recipes.setAll(
-                server.getRecipes().stream()
-                        .sorted(java.util.Comparator.comparing(
-                                r -> r.getRecipeName().toLowerCase()
-                        ))
-                        .toList()
-        );
-
-        if (prevId != null) {
-            for (Recipe r : recipes) {
-                if (prevId.equals(r.getRecipeID())) {
-                    recipeListView.getSelectionModel().select(r);
-                    break;
+            if (prevId != null) {
+                for (Recipe r : recipes) {
+                    if (prevId.equals(r.getRecipeID())) {
+                        recipeListView.getSelectionModel().select(r);
+                        break;
+                    }
                 }
             }
+
+            // Auto-select first recipe if nothing selected
+            if (recipeListView.getSelectionModel().getSelectedItem() == null && !recipes.isEmpty()) {
+                recipeListView.getSelectionModel().selectFirst();
+            }
+
+
+            selectedRecipe = ServerUtils.getRecipeById(recipeListView.getSelectionModel().getSelectedItem().getRecipeID());
+            boolean hasSelection = selectedRecipe != null;
+            deleteRecipeButton.setDisable(!hasSelection);
+            editRecipeButton.setDisable(!hasSelection);
+            downloadButton.setDisable(!hasSelection);
+            cloneRecipeButton.setDisable(!hasSelection);
+
+            System.out.println(selectedRecipe.toString());
+            showRecipeDetails(selectedRecipe);
         }
-
-        // Auto-select first recipe if nothing selected
-        if (recipeListView.getSelectionModel().getSelectedItem() == null && !recipes.isEmpty()) {
-            recipeListView.getSelectionModel().selectFirst();
+        catch (Exception e) {
+            System.out.println("No Recipe found");
         }
-
-
-        selectedRecipe = ServerUtils.getRecipeById(recipeListView.getSelectionModel().getSelectedItem().getRecipeID());
-        boolean hasSelection = selectedRecipe != null;
-        deleteRecipeButton.setDisable(!hasSelection);
-        editRecipeButton.setDisable(!hasSelection);
-        downloadButton.setDisable(!hasSelection);
-        cloneRecipeButton.setDisable(!hasSelection);
-
-        System.out.println(selectedRecipe.toString());
-        showRecipeDetails(selectedRecipe);
     }
 
 
