@@ -49,9 +49,9 @@ public class EditRecipeCtrl {
                 super.updateItem(u, empty);
 
                 if (empty || u == null) {
-                    setText("Unit");   // ton prompt visuel
+                    setText("Unit");
                 } else {
-                    setText(u.name());   // ou u.toString()
+                    setText(u.name());
                 }
             }
         });
@@ -75,7 +75,7 @@ public class EditRecipeCtrl {
             protected void updateItem(Ingredient i, boolean empty) {
                 super.updateItem(i, empty);
                 if (empty || i == null) {
-                    setText("Ingredient");   // ← ton prompt visuel
+                    setText("Ingredient");
                 } else {
                     setText(i.getIngredientName());
                 }
@@ -95,6 +95,17 @@ public class EditRecipeCtrl {
                 .sorted(java.util.Comparator.comparing(
                         i -> i.getIngredientName().toLowerCase()))
                 .toList());
+
+        updateIngredients();
+    }
+
+    @FXML
+    public void updateIngredients() {
+        ingredientCombo.getItems().setAll(server.getIngredients().stream()
+                .sorted(java.util.Comparator.comparing(
+                        i -> i.getIngredientName().toLowerCase()))
+                .toList());
+        System.out.println("updated ingredients");
     }
 
     public void setRecipeToEdit(Recipe recipe) {
