@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddRecipeCtrl">
+<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddRecipeCtrl">
 
     <top>
         <HBox prefHeight="45.0" spacing="10" BorderPane.alignment="CENTER">
@@ -90,6 +90,7 @@
                     <HBox spacing="8">
                         <Button onAction="#removeSelectedIngredient" text="Remove selected" />
                         <Button onAction="#clearIngredients" text="Clear" />
+                  <Button mnemonicParsing="false" onAction="#createNewIngredient" text="Create new ingredient" />
                     </HBox>
                 </VBox>
 

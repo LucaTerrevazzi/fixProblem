@@ -243,6 +243,11 @@ public class AddRecipeCtrl {
     }
 
     @FXML
+    public void createNewIngredient() {
+        AddIngredientCtrl.setFromAddRecipe(true);
+        pc.showAddIngredient(); }
+
+    @FXML
     public void moveInstructionUp() {
         int idx = instructionsList.getSelectionModel().getSelectedIndex();
         if (idx > 0) {
