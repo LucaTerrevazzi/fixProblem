@@ -11,14 +11,8 @@ public class RecipeEvent {
 
     public Type type;
     public long id;
-
-    // for list updates
     public String title;
-
-    // sparkle/basic conflict friendliness
     public long version;
-
-    // optional: for RECIPE_UPDATED to keep payload tiny
     public String[] changedFields;
 
     public RecipeEvent() {}

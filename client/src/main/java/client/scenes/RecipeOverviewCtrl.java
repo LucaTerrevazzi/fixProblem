@@ -256,16 +256,11 @@ public class RecipeOverviewCtrl implements Initializable {
     private void handleRecipeListEvent(RecipeEvent ev) {
         switch (ev.type) {
             case RECIPE_ADDED -> {
-                // Minimal: fetch the full list once and update UI
-                // (still NOT polling — it’s push-triggered)
                 refresh();
-                // optional sparkle: showToast("Recipe added: " + ev.title);
             }
             case RECIPE_DELETED -> {
-                // Remove locally without full refresh (better)
                 recipes.removeIf(r -> r.getRecipeID() == ev.id);
 
-                // If you were viewing it, clear details
                 if (selectedRecipe != null && selectedRecipe.getRecipeID() == ev.id) {
                     selectedRecipe = null;
                     recipeName.setText("");
@@ -275,24 +270,19 @@ public class RecipeOverviewCtrl implements Initializable {
                 }
             }
             case RECIPE_TITLE_UPDATED -> {
-                // Update the title in the list (your ListCell uses getRecipeName())
                 for (int i = 0; i < recipes.size(); i++) {
                     Recipe r = recipes.get(i);
                     if (r.getRecipeID() == ev.id) {
-                        // if your Recipe has setRecipeName(...) use that:
                         r.setRecipeName(ev.title);
-                        recipes.set(i, r); // force list refresh
+                        recipes.set(i, r);
                         break;
                     }
                 }
-
-                // if currently selected, update header title too
                 if (selectedRecipe != null && selectedRecipe.getRecipeID() == ev.id) {
                     recipeName.setText(ev.title);
                 }
             }
             default -> {
-                // ignore RECIPE_UPDATED here (that’s for the single-recipe topic)
             }
         }
     }

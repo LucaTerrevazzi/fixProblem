@@ -19,15 +19,14 @@ public class RecipeController {
     private final RecipePublisher publisher;
 
     /**
-     * Used by Spring (publisher will be injected).
+     * Constructor for Spring.
      */
     @Autowired
     public RecipeController(RecipeService recipeService, RecipePublisher publisher) {
         this.recipeService = recipeService;
         this.publisher = publisher;
     }
-
-    // For tests only
+    //Constractor for tests
     public RecipeController(RecipeService recipeService) {
         this.recipeService = recipeService;
         this.publisher = null;
@@ -66,15 +65,12 @@ public class RecipeController {
         }
 
         try {
-            // IMPORTANT: do NOT call findById() before update() (tests expect this)
             Recipe updated = recipeService.update(id, recipe);
 
             if (publisher != null) {
-                // Title propagation (list subscribers)
                 if (updated != null && updated.getRecipeName() != null) {
                     publisher.recipeTitleUpdated(id, updated.getRecipeName());
                 }
-                // Content propagation (recipe viewers)
                 publisher.recipeUpdated(id, System.currentTimeMillis(), "content");
             }
 
@@ -88,7 +84,6 @@ public class RecipeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRecipe(@PathVariable long id) {
         try {
-            // Keep old behavior for tests (many tests expect findById then delete)
             recipeService.findById(id);
             recipeService.delete(id);
 

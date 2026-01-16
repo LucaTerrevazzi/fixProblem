@@ -51,9 +51,9 @@ public class EditRecipeCtrl {
                 super.updateItem(u, empty);
 
                 if (empty || u == null) {
-                    setText("Unit");   // ton prompt visuel
+                    setText("Unit");
                 } else {
-                    setText(u.name());   // ou u.toString()
+                    setText(u.name());
                 }
             }
         });
@@ -321,15 +321,11 @@ public class EditRecipeCtrl {
 
         if (ev.type == RecipeEvent.Type.RECIPE_UPDATED && ev.id == currentRecipeId) {
 
-            // (Sparkle) If user is mid-edit, show a warning instead of overwriting their fields.
-            // Basic rule: don't crash; last write wins is OK; warning is sparkle.
             boolean userTyping = nameField.isFocused() || instructionArea.isFocused();
             if (userTyping) {
                 errorLabel.setText("This recipe was changed in another client. Saving may overwrite changes.");
                 return;
             }
-
-            // Push-triggered refresh of ONLY this recipe (still no polling)
             Recipe fresh = ServerUtils.getRecipeById(currentRecipeId);
             loadRecipeIntoFields(fresh);
             errorLabel.setText("Synced latest changes.");
