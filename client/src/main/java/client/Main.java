@@ -54,12 +54,15 @@ public class Main extends Application {
         var downloadRecipe =  FXML.load(DownloadRecipeCtrl.class,
                 "client", "scenes", "PrintDownloadableVersion.fxml");
         var foodPalCtrl = INJECTOR.getInstance(FoodPalCtrl.class);
+        var editIngredient = FXML.load(EditIngredientCtrl.class,
+                "client", "scenes", "EditIngredient.fxml");
         foodPalCtrl.init(primaryStage,
                 overview,
                 addRecipe,
                 ingredientOverview,
                 addIngredient,
                 editRecipe,
-                downloadRecipe);
+                downloadRecipe,
+                editIngredient);
     }
 }
