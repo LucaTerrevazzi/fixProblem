@@ -90,6 +90,13 @@ public class RecipeTest {
     }
 
     @Test
+    public void testSetRecipeServings(){
+        Recipe r = new Recipe();
+        r.setServings(3);
+        assertEquals(3, r.getServings());
+    }
+
+    @Test
     public void testEquals() {
         Recipe recipeRef = new Recipe(Long.valueOf(1));
 
@@ -103,11 +110,13 @@ public class RecipeTest {
         r1.setRecipeName("Tea");
         r1.setSteps(instr);
         r1.setIngredients(ingr);
+        r1.setServings(3);
 
         Recipe r2 = new Recipe(Long.valueOf(1));
         r2.setRecipeName("Tea");
         r2.setSteps(instr);
         r2.setIngredients(ingr);
+        r2.setServings(3);
 
         assertEquals(r1, r2);
     }
