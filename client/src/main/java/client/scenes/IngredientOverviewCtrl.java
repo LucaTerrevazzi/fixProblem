@@ -18,8 +18,6 @@ import java.util.Optional;
 public class IngredientOverviewCtrl implements Initializable {
 
     @FXML
-    private Button editIngredientButton;
-    @FXML
     private Button addIngredientButton;
     @FXML
     private Button favoritesButton;
@@ -52,18 +50,6 @@ public class IngredientOverviewCtrl implements Initializable {
     public IngredientOverviewCtrl(FoodPalCtrl p, ServerUtils server) {
         this.pc = p;
         this.server = server;
-    }
-
-    public void goToEditIngredientScene() {
-        System.out.println(" Go to edit scene ");
-        Ingredient selected = ingredientListView.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            System.out.println("No ingredient selected for editing");
-            return;
-        }
-
-        pc.showEditIngredient(selected);
-
     }
 
     public void goToAddIngredientScene() {

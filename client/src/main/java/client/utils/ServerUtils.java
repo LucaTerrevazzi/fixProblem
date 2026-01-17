@@ -77,12 +77,10 @@ public class ServerUtils {
     public static Recipe addRecipe(Recipe recipe) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-
         String json = mapper.writerWithDefaultPrettyPrinter()
                 .writeValueAsString(recipe);
         System.out.println("JSON being sent:");
         System.out.println(json);
-
         return client.target(SERVER)
                 .path("recipes")
                 .request(MediaType.APPLICATION_JSON)
@@ -96,48 +94,29 @@ public class ServerUtils {
 
         String json = mapper.writerWithDefaultPrettyPrinter()
                 .writeValueAsString(recipe);
+
         System.out.println("JSON being sent:");
         System.out.println(json);
 
         return client.target(SERVER)
                 .path("recipes/" + id)
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.entity(recipe, MediaType.APPLICATION_JSON),
-                        Recipe.class);
+                .put(Entity.entity(recipe, MediaType.APPLICATION_JSON), Recipe.class);
     }
 
     public static Ingredient addIngredient(Ingredient ingredient) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-
         String json = mapper.writerWithDefaultPrettyPrinter()
                 .writeValueAsString(ingredient);
         System.out.println("JSON being sent:");
         System.out.println(json);
-
         return client.target(SERVER)
                 .path("api/ingredients")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(ingredient, MediaType.APPLICATION_JSON),
                         Ingredient.class);
     }
-
-    public static Ingredient editIngredient(long id, Ingredient ingredient) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-
-        String json = mapper.writerWithDefaultPrettyPrinter()
-                .writeValueAsString(ingredient);
-        System.out.println("JSON being sent:");
-        System.out.println(json);
-
-        return client.target(SERVER)
-                .path("api/ingredients/" + id)
-                .request(MediaType.APPLICATION_JSON)
-                .put(Entity.entity(ingredient, MediaType.APPLICATION_JSON),
-                        Ingredient.class);
-    }
-
     public boolean deleteIngredient(long id) {
         Response r = client.target(SERVER)
                 .path("api/ingredients/" + id)
