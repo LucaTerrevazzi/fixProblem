@@ -2,19 +2,23 @@ package server.api;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import commons.Ingredient;
-import org.springframework.web.server.ResponseStatusException;
 import server.service.IngredientService;
 
 @RestController
 @RequestMapping("/api/ingredients")
 public class IngredientController {
 
-    private final IngredientService ingredientService;
+    private final IngredientService service;
 
     /**
      * Creates a new IngredientController. This is only used by Spring.
@@ -22,7 +26,7 @@ public class IngredientController {
      * @param service repository used to persist and retrieve ingredients
      */
     public IngredientController(IngredientService service) {
-        this.ingredientService = service;
+        this.service = service;
     }
 
     /**
@@ -32,7 +36,7 @@ public class IngredientController {
      */
     @GetMapping(path = { "", "/" })
     public List<Ingredient> getAll() {
-        return ingredientService.findAll();
+        return service.findAll();
     }
 
     /**
@@ -44,7 +48,7 @@ public class IngredientController {
     @GetMapping("/{id}")
     public ResponseEntity<Ingredient> getById(@PathVariable("id") long id) {
         try {
-            return ResponseEntity.ok(ingredientService.findById(id));
+            return ResponseEntity.ok(service.findById(id));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -64,27 +68,8 @@ public class IngredientController {
             return ResponseEntity.badRequest().build();
         }
 
-        Ingredient saved = ingredientService.save(ingredient);
+        Ingredient saved = service.save(ingredient);
         return ResponseEntity.ok(saved);
-    }
-
-    /**
-     * PUT api/ingredient/{id}
-     * updates an existing ingredient
-     * @param id id of ingredient to update
-     * @param ingredient new ingredient values
-     * @return updated ingredient, or 404 if not found
-     */
-    @PutMapping("/{id}")
-    public Ingredient updateIngredient(@PathVariable long id, @RequestBody Ingredient ingredient) {
-        if (ingredient == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-        try {
-            return ingredientService.update(id, ingredient);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
     }
 
     /**
@@ -92,7 +77,7 @@ public class IngredientController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        ingredientService.delete(id);
+        service.delete(id);
         return ResponseEntity.ok().build();
     }
 

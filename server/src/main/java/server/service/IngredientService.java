@@ -57,10 +57,6 @@ public class IngredientService {
     public Ingredient update(long id, Ingredient updated) {
         Ingredient existing = findById(id);
         existing.setIngredientName(updated.getIngredientName());
-        existing.setFat(updated.getFat());
-        existing.setCarbs(updated.getCarbs());
-        existing.setProtein(updated.getProtein());
-        existing.setIngredientLanguage(updated.getIngredientLanguage());
         return ingredientRepo.save(existing);
     }
 
