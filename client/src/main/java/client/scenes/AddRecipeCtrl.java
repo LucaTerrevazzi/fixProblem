@@ -16,6 +16,7 @@ public class AddRecipeCtrl {
 
     @FXML private TextField nameField;
     @FXML private ComboBox<Language> languageCombo;
+    @FXML private TextField servingsNumber;
 
     @FXML private ComboBox<Ingredient> ingredientCombo;
     @FXML private TextField ingredientAmountField;
@@ -122,6 +123,7 @@ public class AddRecipeCtrl {
     private void clear(){
         nameField.setText("");
         languageCombo.setValue(Language.EN);
+        servingsNumber.setText("");
         ingredientAmountField.setText("");
         ingredientCombo.getSelectionModel().clearSelection();
         ingredientCombo.setValue(null);
@@ -190,13 +192,34 @@ public class AddRecipeCtrl {
         errorLabel.setText("");
 
         String name = nameField.getText().trim();
-        if (name.isEmpty()) {
+        if (name.isBlank()) {
             errorLabel.setText("Recipe name required.");
+            return;
+        }
+
+
+        String servingsStr = servingsNumber.getText().trim();
+        if (servingsStr.isBlank()){
+            errorLabel.setText("number of servings required.");
+            return;
+        }
+
+        int servings;
+        try{
+            servings = Integer.parseInt(servingsStr);
+        } catch(NumberFormatException e){
+            errorLabel.setText("Servings must be an integer");
+            return;
+        }
+        
+        if(servings<=0){
+            errorLabel.setText("Servings must be at leat 1");
             return;
         }
 
         Recipe recipe = new Recipe(name);
         recipe.setRecipeLanguage(languageCombo.getValue());
+        recipe.setServings(servings);
 
 
         List<Instruction> steps = new ArrayList<>();

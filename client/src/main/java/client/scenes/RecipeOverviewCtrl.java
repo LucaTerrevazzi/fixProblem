@@ -42,6 +42,9 @@ public class RecipeOverviewCtrl implements Initializable {
     private TextField searchBar;
 
     @FXML
+    private Label ingredientTitle;
+
+    @FXML
     private ListView<String> ingredientsList;
 
     @FXML
@@ -247,6 +250,13 @@ public class RecipeOverviewCtrl implements Initializable {
                         + " steps=" + (recipe.getSteps() == null ? "NULL" : recipe.getSteps().size())
         );
         recipeName.setText(recipe.getRecipeName());
+
+        if(recipe.getServings()==0){
+            System.out.println("\n\nYou did not remove the .db files before running the project...\n\n");
+            ingredientTitle.setText("Ingredients (Servings unknown)");
+        } else {
+            ingredientTitle.setText("Ingredients (for " + recipe.getServings() + " people)");
+        }
 
         ingredientsList.setItems(
                 FXCollections.observableArrayList(
