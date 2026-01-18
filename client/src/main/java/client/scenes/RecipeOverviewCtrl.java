@@ -251,7 +251,12 @@ public class RecipeOverviewCtrl implements Initializable {
         );
         recipeName.setText(recipe.getRecipeName());
 
-        ingredientTitle.setText("Ingredients (for "+recipe.getServings()+" people)");
+        if(recipe.getServings()==0){
+            System.out.println("\n\nYou did not remove the .db files before running the project...\n\n");
+            ingredientTitle.setText("Ingredients (Servings unknown)");
+        } else {
+            ingredientTitle.setText("Ingredients (for " + recipe.getServings() + " people)");
+        }
 
         ingredientsList.setItems(
                 FXCollections.observableArrayList(
