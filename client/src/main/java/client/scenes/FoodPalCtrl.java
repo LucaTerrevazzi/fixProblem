@@ -1,6 +1,8 @@
 package client.scenes;
 
 import client.utils.RecipeUtil;
+import client.utils.ServerUtils;
+import client.utils.WsClient;
 import commons.Ingredient;
 import commons.Recipe;
 import javafx.scene.Parent;
@@ -10,6 +12,7 @@ import javafx.util.Pair;
 
 public class FoodPalCtrl {
 
+    private WsClient ws;
     private Stage primaryStage;
     private Scene recipeOverviewScene;
     private RecipeOverviewCtrl recipeOverviewCtrl;
@@ -32,20 +35,40 @@ public class FoodPalCtrl {
                      Pair<EditRecipeCtrl, Parent> editRecipe,
                      Pair<DownloadRecipeCtrl, Parent> downloadRecipe,
                      Pair<EditIngredientCtrl, Parent> editIngredient) {
+
         this.primaryStage = primaryStage;
-        this.editRecipeCtrl = editRecipe.getKey();
+
         this.recipeOverviewScene = new Scene(overview.getValue());
         this.recipeOverviewCtrl = overview.getKey();
+
         this.addRecipeScene = new Scene(addRecipe.getValue());
         this.addRecipeCtrl = addRecipe.getKey();
+
         this.ingredientOverviewScene = new Scene(ingredientOverview.getValue());
         this.ingredientOverviewCtrl = ingredientOverview.getKey();
+
         this.addIngredientScene = new Scene(addIngredient.getValue());
+
         this.downloadRecipeScene = new Scene(downloadRecipe.getValue());
         this.downloadRecipeCtrl = downloadRecipe.getKey();
+
         this.editRecipeScene = new Scene(editRecipe.getValue());
+        this.editRecipeCtrl = editRecipe.getKey();
+
         this.editIngredientScene = new Scene(editIngredient.getValue());
         this.editIngredientCtrl = editIngredient.getKey();
+
+        // WebSocket setup (from the other branch)
+        this.ws = new WsClient();
+        recipeOverviewCtrl.setWsClient(ws);
+        editRecipeCtrl.setWsClient(ws);
+
+        recipeOverviewCtrl.bindWsStatus();
+        recipeOverviewCtrl.onAppStart();
+
+        ws.connect(ServerUtils.getServer());
+        ws.addStatusListener(s -> System.out.println("UI LISTENER sees: " + s));
+
         showRecipeOverview();
         primaryStage.show();
     }
@@ -53,7 +76,6 @@ public class FoodPalCtrl {
     public void showRecipeOverview() {
         primaryStage.setTitle("Recipe Overview");
         primaryStage.setScene(recipeOverviewScene);
-        recipeOverviewCtrl.refresh();
         primaryStage.setMinWidth(600);
         primaryStage.setMinHeight(430);
         primaryStage.sizeToScene();
@@ -107,4 +129,3 @@ public class FoodPalCtrl {
         primaryStage.setScene(editIngredientScene);
     }
 }
-

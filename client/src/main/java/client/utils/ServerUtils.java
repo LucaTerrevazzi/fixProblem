@@ -153,6 +153,10 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .delete(Recipe.class);
     }
+    public static String getServer() {
+        return SERVER;
+    }
+
 
 
 }

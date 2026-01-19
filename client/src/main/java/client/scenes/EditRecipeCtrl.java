@@ -5,6 +5,8 @@ import com.google.inject.Inject;
 import commons.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import client.utils.WsClient;
+import client.ws.RecipeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,8 @@ public class EditRecipeCtrl {
     @FXML private Button editStepButton;
     @FXML private Button addInstructionButton;
 
+    private WsClient ws;
+    private long currentRecipeId = -1;
     private final FoodPalCtrl pc;
     private final ServerUtils server;
 
@@ -110,6 +114,7 @@ public class EditRecipeCtrl {
 
     public void setRecipeToEdit(Recipe recipe) {
         this.recipeId = recipe.getRecipeID();
+        this.currentRecipeId = recipe.getRecipeID();
 
         nameField.setText(recipe.getRecipeName());
         languageCombo.setValue(recipe.getRecipeLanguage());
@@ -134,6 +139,9 @@ public class EditRecipeCtrl {
         unitCombo.setValue(null);
     }
 
+    public void setWsClient(WsClient ws) {
+        this.ws = ws;
+    }
 
     @FXML
     public void addIngredient() {
@@ -180,28 +188,32 @@ public class EditRecipeCtrl {
     public void editRecipe() {
         errorLabel.setText("");
 
+        if (currentRecipeId == -1) {
+            errorLabel.setText("No recipe selected to edit (missing id).");
+            return;
+        }
+
         String name = nameField.getText().trim();
         if (name.isEmpty()) {
             errorLabel.setText("Recipe name required.");
             return;
         }
 
-
         String servingsStr = servingsNumber.getText().trim();
-        if (servingsStr.isBlank()){
+        if (servingsStr.isBlank()) {
             errorLabel.setText("number of servings required.");
             return;
         }
 
         int servings;
-        try{
+        try {
             servings = Integer.parseInt(servingsStr);
-        } catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             errorLabel.setText("Servings must be an integer");
             return;
         }
 
-        if(servings<=0){
+        if (servings <= 0) {
             errorLabel.setText("Servings must be at leat 1");
             return;
         }
@@ -220,23 +232,29 @@ public class EditRecipeCtrl {
         }
         recipe.setSteps(steps);
 
-
         for (RecipeIngredient ri : ingredientsList.getItems()) {
             ri.setRecipe(recipe);
         }
         recipe.setIngredients(new ArrayList<>(ingredientsList.getItems()));
         System.out.println(recipe.toString());
         try {
-            ServerUtils.editRecipe(recipeId, recipe);
+            ServerUtils.editRecipe(currentRecipeId, recipe);
         } catch (Exception e) {
             System.out.println("Failed to edit the Recipe");
             throw new RuntimeException(e);
+        }
+
+        if (ws != null && currentRecipeId != -1) {
+            ws.unsubscribeRecipe(currentRecipeId);
         }
         pc.showRecipeOverview();
     }
 
     @FXML
     public void goBack() {
+        if (ws != null && currentRecipeId != -1) {
+            ws.unsubscribeRecipe(currentRecipeId);
+        }
         pc.showRecipeOverview();
     }
 
@@ -290,18 +308,75 @@ public class EditRecipeCtrl {
             editStepButton.setText("Save Changes");
             instructionArea.setText(instructionsList.getSelectionModel().getSelectedItem());
             editingInstruction = true;
-        }
-        else if (idx >= 0 && editStepButton.getText().equals("Save Changes")) {
+        } else if (idx >= 0 && editStepButton.getText().equals("Save Changes")) {
             editStepButton.setText("Edit Selected");
             var item = instructionArea.getText();
             instructionsList.getItems().remove(idx);
-            instructionsList.getItems().add(idx , item);
-            instructionsList.getSelectionModel().select(idx );
+            instructionsList.getItems().add(idx, item);
+            instructionsList.getSelectionModel().select(idx);
             instructionArea.setText("");
         }
         addInstructionButton.setDisable(editingInstruction);
         instructionsList.setDisable(editingInstruction);
     }
 
+    private Language codeToLanguage(String code) {
+        return switch (code) {
+            case "EN" -> Language.EN;
+            case "NL" -> Language.NL;
+            case "GR" -> Language.GR;
+            default -> Language.EN;
+        };
+    }
 
+    private String languageToCode(Language lang) {
+        return switch (lang) {
+            case EN -> "EN";
+            case NL -> "NL";
+            case GR -> "GR";
+        };
+    }
+
+    private void loadRecipeIntoFields(Recipe recipe) {
+        nameField.setText(recipe.getRecipeName());
+        languageCombo.setValue(recipe.getRecipeLanguage());
+
+        servingsNumber.setText(Integer.toString(recipe.getServings()));
+
+        ingredientsList.getItems().setAll(recipe.getIngredients());
+
+        instructionsList.getItems().setAll(
+                recipe.getSteps().stream()
+                        .sorted((a, b) -> Integer.compare(a.getOrderNumber(), b.getOrderNumber()))
+                        .map(Instruction::getDescription)
+                        .toList()
+        );
+
+        instructionsList.setDisable(false);
+        instructionArea.setText("");
+        editStepButton.setText("Edit Selected");
+        addInstructionButton.setDisable(false);
+
+        ingredientAmountField.setText("");
+        ingredientCombo.getSelectionModel().clearSelection();
+        ingredientCombo.setValue(null);
+        unitCombo.getSelectionModel().clearSelection();
+        unitCombo.setValue(null);
+    }
+
+    private void handleRecipeEvent(RecipeEvent ev) {
+        if (ev == null || ev.type == null) return;
+
+        if (ev.type == RecipeEvent.Type.RECIPE_UPDATED && ev.id == currentRecipeId) {
+
+            boolean userTyping = nameField.isFocused() || instructionArea.isFocused();
+            if (userTyping) {
+                errorLabel.setText("This recipe was changed in another client. Saving may overwrite changes.");
+                return;
+            }
+            Recipe fresh = ServerUtils.getRecipeById(currentRecipeId);
+            loadRecipeIntoFields(fresh);
+            errorLabel.setText("Synced latest changes.");
+        }
+    }
 }

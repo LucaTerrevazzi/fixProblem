@@ -5,6 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import server.service.RecipeService;
+import server.ws.RecipePublisher;
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 import java.util.List;
 
@@ -13,15 +16,21 @@ import java.util.List;
 public class RecipeController {
 
     private final RecipeService recipeService;
+    private final RecipePublisher publisher;
 
     /**
-     * constructor for RecipeController
-     * @param recipeService service for getting and saving recipes
+     * Constructor for Spring.
      */
+    @Autowired
+    public RecipeController(RecipeService recipeService, RecipePublisher publisher) {
+        this.recipeService = recipeService;
+        this.publisher = publisher;
+    }
+    //Constractor for tests
     public RecipeController(RecipeService recipeService) {
         this.recipeService = recipeService;
+        this.publisher = null;
     }
-
     /**
      * GET /recipes
      * returns all the recipes
@@ -30,7 +39,6 @@ public class RecipeController {
     public List<Recipe> getAllRecipes() {
         return recipeService.findAll();
     }
-
     /**
      * GET /recipes/{id}
      * returns a recipe based on its ID
@@ -39,7 +47,6 @@ public class RecipeController {
     public Recipe getRecipeById(@PathVariable long id) {
         return recipeService.findById(id);
     }
-
     /**
      * POST /recipes
      * creates a new recipe
@@ -51,9 +58,15 @@ public class RecipeController {
         if (recipe == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        return recipeService.save(recipe);
-    }
 
+        Recipe saved = recipeService.save(recipe);
+
+        if (publisher != null) {
+            publisher.recipeAdded(saved);
+        }
+
+        return saved;
+    }
     /**
      * PUT /recipes/{id}
      * updates an existing recipe
@@ -66,13 +79,22 @@ public class RecipeController {
         if (recipe == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+
         try {
-            return recipeService.update(id, recipe);
+            Recipe updated = recipeService.update(id, recipe);
+
+            if (publisher != null) {
+                if (updated != null && updated.getRecipeName() != null) {
+                    publisher.recipeTitleUpdated(id, updated.getRecipeName());
+                }
+                publisher.recipeUpdated(id, System.currentTimeMillis(), "content");
+            }
+
+            return updated;
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
-
     /**
      * DELETE /recipes/{id}
      * deletes a recipe by its id
@@ -84,9 +106,12 @@ public class RecipeController {
         try {
             recipeService.findById(id);
             recipeService.delete(id);
+
+            if (publisher != null) {
+                publisher.recipeDeleted(id);
+            }
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 }
-
