@@ -2,10 +2,9 @@ package server.api;
 
 import commons.Recipe;
 import commons.RecipeIngredient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import server.database.RecipeIngredientRepository;
 import server.service.RecipeIngredientService;
 import server.service.RecipeService;
@@ -28,13 +27,52 @@ public class RecipeIngredientController {
         this.recipeService = recipeService;
     }
 
+    /**
+     * GET /recipeIngredients
+     * returns all the recipeIngredients
+     */
     @GetMapping("/{id}")
     public List<RecipeIngredient> getAllRecipeIngredients(){
         return recipeIngredientService.findAll();
     }
 
+    /**
+     * GET /recipes/{id}
+     * returns a recipe based on the ingredientID
+     */
     @GetMapping("/ingredient/{id}")
     public List<Recipe> getRecipeByIngredientID(@PathVariable long id){
         return recipeService.findRecipeByIngredientID(id);
+    }
+
+    /**
+     * DELETE /ingredient/{id}
+     * deletes a recipeIngredient by its IngredientID
+     * @param id id of the recipeIngredient to delete
+     */
+    @DeleteMapping("/ingredient/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteRecipeIngredientByIngredient(@PathVariable long id) {
+        try {
+            recipeIngredientService.findByIngredientID(id);
+            recipeIngredientService.deleteByIngredient(id);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+    /**
+     * DELETE /recipes/{id}
+     * deletes a recipeIngredient by its RecipeID
+     * @param id id of the recipeIngredient to delete
+     */
+    @DeleteMapping("/recipe/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteRecipeIngredientByRecipe(@PathVariable long id) {
+        try {
+            recipeIngredientService.findByRecipeID(id);
+            recipeIngredientService.deleteByRecipe(id);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 }

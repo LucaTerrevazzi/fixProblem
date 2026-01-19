@@ -1,6 +1,7 @@
 package server.api;
 
 import commons.Ingredient;
+import commons.Recipe;
 import commons.RecipeIngredient;
 import commons.Unit;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import server.service.RecipeIngredientService;
 import server.service.RecipeService;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -50,5 +52,54 @@ public class RecipeIngredientControllerTest {
         assertEquals(ri1, result.get(0));
         assertEquals(ri2, result.get(1));
         verify(recipeIngredientServiceMock).findAll();
+    }
+
+    @Test
+    public void testGetRecipeByIngredientID() {
+        Recipe r1 = new Recipe();
+        r1.setRecipeID(10L);
+        r1.setRecipeName("Pasta");
+
+        Recipe r2 = new Recipe();
+        r2.setRecipeID(20L);
+        r2.setRecipeName("Salad");
+
+        List<Recipe> recipes = List.of(r1, r2);
+
+        when(recipeServiceMock.findRecipeByIngredientID(5L)).thenReturn(recipes);
+
+        var result = sut.getRecipeByIngredientID(5L);
+
+        assertEquals(2, result.size());
+        assertEquals(r1, result.get(0));
+        assertEquals(r2, result.get(1));
+
+        verify(recipeServiceMock).findRecipeByIngredientID(5L);
+    }
+
+    @Test
+    public void testDeleteRecipeIngredientByIngredient_success() {
+        long id = 7L;
+
+        when(recipeIngredientServiceMock.findByIngredientID(id))
+                .thenReturn(Collections.emptyList());
+
+        sut.deleteRecipeIngredientByIngredient(id);
+
+        verify(recipeIngredientServiceMock).findByIngredientID(id);
+        verify(recipeIngredientServiceMock).deleteByIngredient(id);
+    }
+
+    @Test
+    public void testDeleteRecipeIngredientByRecipe_success() {
+        long id = 3L;
+
+        when(recipeIngredientServiceMock.findByRecipeID(id))
+                .thenReturn(Collections.emptyList());
+
+        sut.deleteRecipeIngredientByRecipe(id);
+
+        verify(recipeIngredientServiceMock).findByRecipeID(id);
+        verify(recipeIngredientServiceMock).deleteByRecipe(id);
     }
 }
