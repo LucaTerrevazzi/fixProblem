@@ -101,6 +101,7 @@ public class EditRecipeCtrl {
 
     public void setRecipeToEdit(Recipe recipe) {
         this.recipeId = recipe.getRecipeID();
+        this.currentRecipeId = recipe.getRecipeID();
 
         nameField.setText(recipe.getRecipeName());
         languageCombo.setValue(languageToCode(recipe.getRecipeLanguage()));
@@ -174,6 +175,11 @@ public class EditRecipeCtrl {
     public void editRecipe() {
         errorLabel.setText("");
 
+        if (currentRecipeId == -1) {
+            errorLabel.setText("No recipe selected to edit (missing id).");
+            return;
+        }
+
         String name = nameField.getText().trim();
         if (name.isEmpty()) {
             errorLabel.setText("Recipe name required.");
@@ -210,6 +216,7 @@ public class EditRecipeCtrl {
         }
         pc.showRecipeOverview();
     }
+
     @FXML
     public void removeSelectedIngredient() {
         int idx = ingredientsList.getSelectionModel().getSelectedIndex();
