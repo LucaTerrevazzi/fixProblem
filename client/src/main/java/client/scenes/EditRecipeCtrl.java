@@ -12,7 +12,7 @@ import java.util.List;
 public class EditRecipeCtrl {
     private long recipeId;
     @FXML private TextField nameField;
-    @FXML private ComboBox<String> languageCombo;
+    @FXML private ComboBox<Language> languageCombo;
     @FXML private TextField servingsNumber;
 
     @FXML private ComboBox<Ingredient> ingredientCombo;
@@ -38,8 +38,8 @@ public class EditRecipeCtrl {
     }
 
     public void initialize() {
-        languageCombo.getItems().setAll("EN", "NL", "GR");
-        languageCombo.setValue("EN");
+        languageCombo.getItems().setAll(Language.values());
+        languageCombo.setValue(Language.EN);
 
         unitCombo.getItems().setAll(Unit.values());
 
@@ -112,7 +112,7 @@ public class EditRecipeCtrl {
         this.recipeId = recipe.getRecipeID();
 
         nameField.setText(recipe.getRecipeName());
-        languageCombo.setValue(recipe.getRecipeLanguage().toString());
+        languageCombo.setValue(recipe.getRecipeLanguage());
         servingsNumber.setText(Integer.toString(recipe.getServings()));
 
         ingredientsList.getItems().setAll(recipe.getIngredients());
@@ -207,7 +207,7 @@ public class EditRecipeCtrl {
         }
 
         Recipe recipe = new Recipe(name);
-        recipe.setRecipeLanguage(Language.valueOf(languageCombo.getValue()));
+        recipe.setRecipeLanguage(languageCombo.getValue());
         recipe.setServings(servings);
 
         List<Instruction> steps = new ArrayList<>();
@@ -229,6 +229,7 @@ public class EditRecipeCtrl {
         try {
             ServerUtils.editRecipe(recipeId, recipe);
         } catch (Exception e) {
+            System.out.println("Failed to edit the Recipe");
             throw new RuntimeException(e);
         }
         pc.showRecipeOverview();
