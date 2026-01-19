@@ -114,6 +114,8 @@ public class AddRecipeCtrl {
                 instructionsList.getItems().add(i.getDescription());
             }
 
+            servingsNumber.setText(Integer.toString(r.getServings()));
+
             System.out.println("Cloned recipe " + holder.getRecipe().getRecipeName());
         } else {
             System.out.println("No recipe to clone");
