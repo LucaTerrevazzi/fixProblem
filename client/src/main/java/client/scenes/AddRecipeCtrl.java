@@ -16,6 +16,7 @@ public class AddRecipeCtrl {
 
     @FXML private TextField nameField;
     @FXML private ComboBox<Language> languageCombo;
+    @FXML private TextField servingsNumber;
 
     @FXML private ComboBox<Ingredient> ingredientCombo;
     @FXML private TextField ingredientAmountField;
@@ -47,9 +48,9 @@ public class AddRecipeCtrl {
                 super.updateItem(u, empty);
 
                 if (empty || u == null) {
-                    setText("Unit");   // ton prompt visuel
+                    setText("Unit");
                 } else {
-                    setText(u.name());   // ou u.toString()
+                    setText(u.name());
                 }
             }
         });
@@ -73,7 +74,7 @@ public class AddRecipeCtrl {
             protected void updateItem(Ingredient i, boolean empty) {
                 super.updateItem(i, empty);
                 if (empty || i == null) {
-                    setText("Ingredient");   // ← ton prompt visuel
+                    setText("Ingredient");
                 } else {
                     setText(i.getIngredientName());
                 }
@@ -113,6 +114,8 @@ public class AddRecipeCtrl {
                 instructionsList.getItems().add(i.getDescription());
             }
 
+            servingsNumber.setText(Integer.toString(r.getServings()));
+
             System.out.println("Cloned recipe " + holder.getRecipe().getRecipeName());
         } else {
             System.out.println("No recipe to clone");
@@ -122,6 +125,7 @@ public class AddRecipeCtrl {
     private void clear(){
         nameField.setText("");
         languageCombo.setValue(Language.EN);
+        servingsNumber.setText("");
         ingredientAmountField.setText("");
         ingredientCombo.getSelectionModel().clearSelection();
         ingredientCombo.setValue(null);
@@ -190,13 +194,34 @@ public class AddRecipeCtrl {
         errorLabel.setText("");
 
         String name = nameField.getText().trim();
-        if (name.isEmpty()) {
+        if (name.isBlank()) {
             errorLabel.setText("Recipe name required.");
+            return;
+        }
+
+
+        String servingsStr = servingsNumber.getText().trim();
+        if (servingsStr.isBlank()){
+            errorLabel.setText("number of servings required.");
+            return;
+        }
+
+        int servings;
+        try{
+            servings = Integer.parseInt(servingsStr);
+        } catch(NumberFormatException e){
+            errorLabel.setText("Servings must be an integer");
+            return;
+        }
+        
+        if(servings<=0){
+            errorLabel.setText("Servings must be at leat 1");
             return;
         }
 
         Recipe recipe = new Recipe(name);
         recipe.setRecipeLanguage(languageCombo.getValue());
+        recipe.setServings(servings);
 
 
         List<Instruction> steps = new ArrayList<>();
@@ -241,6 +266,11 @@ public class AddRecipeCtrl {
     public void clearIngredients() {
         ingredientsList.getItems().clear();
     }
+
+    @FXML
+    public void createNewIngredient() {
+        AddIngredientCtrl.setFromAddRecipe(true);
+        pc.showAddIngredient(); }
 
     @FXML
     public void moveInstructionUp() {

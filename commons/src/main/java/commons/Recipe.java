@@ -26,6 +26,10 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeIngredient> ingredients = new ArrayList<>();
 
+    // total number of servings for the recipe, so I can indicate how much food will be created.
+    // servings = 3 means that the Recipe was initially created for 3 persons.
+    @Column(nullable = false)
+    private int servings;
 
     /**
      * This constructor creates a Recipe without any attributes set.
@@ -81,6 +85,14 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
+    public int getServings() {
+        return servings;
+    }
+
+    public void setServings(int servings) {
+        this.servings = servings;
+    }
+
     public Language getRecipeLanguage() {
         if (recipeLanguage == null) {
             recipeLanguage = Language.EN;
@@ -97,9 +109,10 @@ public class Recipe {
         return "Recipe{" +
                 "recipeID=" + recipeID +
                 ", recipeName='" + recipeName + '\'' +
+                ", recipeLanguage=" + recipeLanguage +
                 ", steps=" + steps +
                 ", ingredients=" + ingredients +
-                ", language='" + recipeLanguage + '\'' +
+                ", servings=" + servings +
                 '}';
     }
 
@@ -119,7 +132,8 @@ public class Recipe {
         return Objects.equals(recipeName, other.recipeName)
                 && Objects.equals(recipeLanguage, other.recipeLanguage)
                 && Objects.equals(steps, other.steps)
-                && Objects.equals(ingredients, other.ingredients);
+                && Objects.equals(ingredients, other.ingredients)
+                && servings == other.servings;
     }
 
 

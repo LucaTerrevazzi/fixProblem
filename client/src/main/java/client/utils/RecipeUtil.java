@@ -95,6 +95,8 @@ public class RecipeUtil {
         }
         r.setIngredients(newIngredients);
 
+        r.setServings(original.getServings());
+
         return r;
     }
 

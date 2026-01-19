@@ -7,14 +7,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import client.utils.WsClient;
 import client.ws.RecipeEvent;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class EditRecipeCtrl {
     private long recipeId;
-    @FXML
-    private TextField nameField;
-    @FXML private ComboBox<String> languageCombo;
+    @FXML private TextField nameField;
+    @FXML private ComboBox<Language> languageCombo;
+    @FXML private TextField servingsNumber;
 
     @FXML private ComboBox<Ingredient> ingredientCombo;
     @FXML private TextField ingredientAmountField;
@@ -28,6 +29,7 @@ public class EditRecipeCtrl {
 
     @FXML private Button editStepButton;
     @FXML private Button addInstructionButton;
+
     private WsClient ws;
     private long currentRecipeId = -1;
     private final FoodPalCtrl pc;
@@ -40,8 +42,8 @@ public class EditRecipeCtrl {
     }
 
     public void initialize() {
-        languageCombo.getItems().setAll("EN", "NL", "GR");
-        languageCombo.setValue("EN");
+        languageCombo.getItems().setAll(Language.values());
+        languageCombo.setValue(Language.EN);
 
         unitCombo.getItems().setAll(Unit.values());
 
@@ -77,7 +79,7 @@ public class EditRecipeCtrl {
             protected void updateItem(Ingredient i, boolean empty) {
                 super.updateItem(i, empty);
                 if (empty || i == null) {
-                    setText("Ingredient");   // ← ton prompt visuel
+                    setText("Ingredient");
                 } else {
                     setText(i.getIngredientName());
                 }
@@ -97,6 +99,17 @@ public class EditRecipeCtrl {
                 .sorted(java.util.Comparator.comparing(
                         i -> i.getIngredientName().toLowerCase()))
                 .toList());
+
+        updateIngredients();
+    }
+
+    @FXML
+    public void updateIngredients() {
+        ingredientCombo.getItems().setAll(server.getIngredients().stream()
+                .sorted(java.util.Comparator.comparing(
+                        i -> i.getIngredientName().toLowerCase()))
+                .toList());
+        System.out.println("updated ingredients");
     }
 
     public void setRecipeToEdit(Recipe recipe) {
@@ -104,7 +117,8 @@ public class EditRecipeCtrl {
         this.currentRecipeId = recipe.getRecipeID();
 
         nameField.setText(recipe.getRecipeName());
-        languageCombo.setValue(languageToCode(recipe.getRecipeLanguage()));
+        languageCombo.setValue(recipe.getRecipeLanguage());
+        servingsNumber.setText(Integer.toString(recipe.getServings()));
 
         ingredientsList.getItems().setAll(recipe.getIngredients());
 
@@ -128,7 +142,6 @@ public class EditRecipeCtrl {
     public void setWsClient(WsClient ws) {
         this.ws = ws;
     }
-
 
     @FXML
     public void addIngredient() {
@@ -186,9 +199,28 @@ public class EditRecipeCtrl {
             return;
         }
 
-        Recipe recipe = new Recipe(name);
-        recipe.setRecipeLanguage(codeToLanguage(languageCombo.getValue()));
+        String servingsStr = servingsNumber.getText().trim();
+        if (servingsStr.isBlank()) {
+            errorLabel.setText("number of servings required.");
+            return;
+        }
 
+        int servings;
+        try {
+            servings = Integer.parseInt(servingsStr);
+        } catch (NumberFormatException e) {
+            errorLabel.setText("Servings must be an integer");
+            return;
+        }
+
+        if (servings <= 0) {
+            errorLabel.setText("Servings must be at leat 1");
+            return;
+        }
+
+        Recipe recipe = new Recipe(name);
+        recipe.setRecipeLanguage(languageCombo.getValue());
+        recipe.setServings(servings);
 
         List<Instruction> steps = new ArrayList<>();
         for (int i = 0; i < instructionsList.getItems().size(); i++) {
@@ -200,7 +232,6 @@ public class EditRecipeCtrl {
         }
         recipe.setSteps(steps);
 
-
         for (RecipeIngredient ri : ingredientsList.getItems()) {
             ri.setRecipe(recipe);
         }
@@ -209,8 +240,18 @@ public class EditRecipeCtrl {
         try {
             ServerUtils.editRecipe(currentRecipeId, recipe);
         } catch (Exception e) {
+            System.out.println("Failed to edit the Recipe");
             throw new RuntimeException(e);
         }
+
+        if (ws != null && currentRecipeId != -1) {
+            ws.unsubscribeRecipe(currentRecipeId);
+        }
+        pc.showRecipeOverview();
+    }
+
+    @FXML
+    public void goBack() {
         if (ws != null && currentRecipeId != -1) {
             ws.unsubscribeRecipe(currentRecipeId);
         }
@@ -267,19 +308,17 @@ public class EditRecipeCtrl {
             editStepButton.setText("Save Changes");
             instructionArea.setText(instructionsList.getSelectionModel().getSelectedItem());
             editingInstruction = true;
-        }
-        else if (idx >= 0 && editStepButton.getText().equals("Save Changes")) {
+        } else if (idx >= 0 && editStepButton.getText().equals("Save Changes")) {
             editStepButton.setText("Edit Selected");
             var item = instructionArea.getText();
             instructionsList.getItems().remove(idx);
-            instructionsList.getItems().add(idx , item);
-            instructionsList.getSelectionModel().select(idx );
+            instructionsList.getItems().add(idx, item);
+            instructionsList.getSelectionModel().select(idx);
             instructionArea.setText("");
         }
         addInstructionButton.setDisable(editingInstruction);
         instructionsList.setDisable(editingInstruction);
     }
-
 
     private Language codeToLanguage(String code) {
         return switch (code) {
@@ -292,15 +331,17 @@ public class EditRecipeCtrl {
 
     private String languageToCode(Language lang) {
         return switch (lang) {
-            case Language.EN -> "EN";
-            case Language.NL -> "NL";
-            case Language.GR -> "GR";
-            default -> "EN";
+            case EN -> "EN";
+            case NL -> "NL";
+            case GR -> "GR";
         };
     }
+
     private void loadRecipeIntoFields(Recipe recipe) {
         nameField.setText(recipe.getRecipeName());
-        languageCombo.setValue(languageToCode(recipe.getRecipeLanguage()));
+        languageCombo.setValue(recipe.getRecipeLanguage());
+
+        servingsNumber.setText(Integer.toString(recipe.getServings()));
 
         ingredientsList.getItems().setAll(recipe.getIngredients());
 
@@ -337,12 +378,5 @@ public class EditRecipeCtrl {
             loadRecipeIntoFields(fresh);
             errorLabel.setText("Synced latest changes.");
         }
-    }
-    @FXML
-    public void goBack() {
-        if (ws != null && currentRecipeId != -1) {
-            ws.unsubscribeRecipe(currentRecipeId);
-        }
-        pc.showRecipeOverview();
     }
 }

@@ -52,11 +52,18 @@
                 <TextField fx:id="nameField" promptText="e.g., Pancakes" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
                 <Label text="Language:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <Label layoutX="10.0" layoutY="14.0" text="Servings :" GridPane.rowIndex="2" />
                 <ComboBox fx:id="languageCombo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <rowConstraints>
-               <RowConstraints />
-               <RowConstraints />
-            </rowConstraints>
+                <TextField fx:id="servingsNumber" maxWidth="150.0" prefHeight="26.0" prefWidth="150.0" promptText="Number of people eating" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                    <GridPane.margin>
+                        <Insets />
+                    </GridPane.margin>
+                </TextField>
+                <rowConstraints>
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                </rowConstraints>
             </GridPane>
 
             <Separator />
@@ -74,7 +81,7 @@
 
                     <HBox spacing="8">
                         <!-- Ingredient dropdown from server -->
-                        <ComboBox fx:id="ingredientCombo" promptText="Ingredient" HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="ingredientCombo" onMouseClicked="#updateIngredients" promptText="Ingredient" HBox.hgrow="ALWAYS" />
 
                         <!-- Amount -->
                         <TextField fx:id="ingredientAmountField" prefWidth="90" promptText="Amount" />
@@ -104,7 +111,7 @@
                     <HBox spacing="8">
                         <!-- Bigger input -->
                         <TextArea fx:id="instructionArea" prefHeight="38.0" prefRowCount="3" prefWidth="95.0" promptText="Write the instruction..." wrapText="true" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="addInstructionButton" text="Add" onAction="#addInstruction"/>
+                        <Button fx:id="addInstructionButton" onAction="#addInstruction" text="Add" />
                     </HBox>
 
                     <ListView fx:id="instructionsList" VBox.vgrow="ALWAYS" />

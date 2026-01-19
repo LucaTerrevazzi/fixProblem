@@ -15,6 +15,7 @@ public class AddIngredientCtrl {
     @FXML private TextField fatField;
     @FXML private TextField proteinField;
     @FXML private TextField carbsField;
+    private static boolean fromAddRecipe = false;
 
     private FoodPalCtrl pc ;
     @Inject
@@ -24,8 +25,15 @@ public class AddIngredientCtrl {
 
     @FXML
     public void goBack() {
+        if(fromAddRecipe){
+            fromAddRecipe = false;
+            pc.showAddRecipe();
+            clear();
+        }
+        else{
         pc.showIngredientOverview();
         clear();
+        }
     }
 
     private void clear(){
@@ -71,7 +79,8 @@ public class AddIngredientCtrl {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-
+    }
+    public static void setFromAddRecipe(boolean b){
+        fromAddRecipe = b;
     }
 }
