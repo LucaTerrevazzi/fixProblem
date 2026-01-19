@@ -112,7 +112,7 @@ public class EditRecipeCtrl {
         this.recipeId = recipe.getRecipeID();
 
         nameField.setText(recipe.getRecipeName());
-        languageCombo.setValue(languageToCode(recipe.getRecipeLanguage()));
+        languageCombo.setValue(recipe.getRecipeLanguage().toString());
         servingsNumber.setText(Integer.toString(recipe.getServings()));
 
         ingredientsList.getItems().setAll(recipe.getIngredients());
@@ -207,7 +207,7 @@ public class EditRecipeCtrl {
         }
 
         Recipe recipe = new Recipe(name);
-        recipe.setRecipeLanguage(codeToLanguage(languageCombo.getValue()));
+        recipe.setRecipeLanguage(Language.valueOf(languageCombo.getValue()));
         recipe.setServings(servings);
 
         List<Instruction> steps = new ArrayList<>();
@@ -300,25 +300,6 @@ public class EditRecipeCtrl {
         }
         addInstructionButton.setDisable(editingInstruction);
         instructionsList.setDisable(editingInstruction);
-    }
-
-
-    private Language codeToLanguage(String code) {
-        return switch (code) {
-            case "EN" -> Language.EN;
-            case "NL" -> Language.NL;
-            case "GR" -> Language.GR;
-            default -> Language.EN;
-        };
-    }
-
-    private String languageToCode(Language lang) {
-        return switch (lang) {
-            case Language.EN -> "EN";
-            case Language.NL -> "NL";
-            case Language.GR -> "GR";
-            default -> "EN";
-        };
     }
 
 
