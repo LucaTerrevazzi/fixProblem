@@ -76,7 +76,6 @@ public class FoodPalCtrl {
     public void showRecipeOverview() {
         primaryStage.setTitle("Recipe Overview");
         primaryStage.setScene(recipeOverviewScene);
-        recipeOverviewCtrl.refresh();
         primaryStage.setMinWidth(600);
         primaryStage.setMinHeight(430);
         primaryStage.sizeToScene();
