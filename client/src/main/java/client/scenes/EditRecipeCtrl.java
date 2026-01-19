@@ -11,9 +11,9 @@ import java.util.List;
 
 public class EditRecipeCtrl {
     private long recipeId;
-    @FXML
-    private TextField nameField;
-    @FXML private ComboBox<String> languageCombo;
+    @FXML private TextField nameField;
+    @FXML private ComboBox<Language> languageCombo;
+    @FXML private TextField servingsNumber;
 
     @FXML private ComboBox<Ingredient> ingredientCombo;
     @FXML private TextField ingredientAmountField;
@@ -38,8 +38,8 @@ public class EditRecipeCtrl {
     }
 
     public void initialize() {
-        languageCombo.getItems().setAll("EN", "NL", "GR");
-        languageCombo.setValue("EN");
+        languageCombo.getItems().setAll(Language.values());
+        languageCombo.setValue(Language.EN);
 
         unitCombo.getItems().setAll(Unit.values());
 
@@ -112,7 +112,8 @@ public class EditRecipeCtrl {
         this.recipeId = recipe.getRecipeID();
 
         nameField.setText(recipe.getRecipeName());
-        languageCombo.setValue(languageToCode(recipe.getRecipeLanguage()));
+        languageCombo.setValue(recipe.getRecipeLanguage());
+        servingsNumber.setText(Integer.toString(recipe.getServings()));
 
         ingredientsList.getItems().setAll(recipe.getIngredients());
 
@@ -185,9 +186,29 @@ public class EditRecipeCtrl {
             return;
         }
 
-        Recipe recipe = new Recipe(name);
-        recipe.setRecipeLanguage(codeToLanguage(languageCombo.getValue()));
 
+        String servingsStr = servingsNumber.getText().trim();
+        if (servingsStr.isBlank()){
+            errorLabel.setText("number of servings required.");
+            return;
+        }
+
+        int servings;
+        try{
+            servings = Integer.parseInt(servingsStr);
+        } catch(NumberFormatException e){
+            errorLabel.setText("Servings must be an integer");
+            return;
+        }
+
+        if(servings<=0){
+            errorLabel.setText("Servings must be at leat 1");
+            return;
+        }
+
+        Recipe recipe = new Recipe(name);
+        recipe.setRecipeLanguage(languageCombo.getValue());
+        recipe.setServings(servings);
 
         List<Instruction> steps = new ArrayList<>();
         for (int i = 0; i < instructionsList.getItems().size(); i++) {
@@ -208,10 +229,12 @@ public class EditRecipeCtrl {
         try {
             ServerUtils.editRecipe(recipeId, recipe);
         } catch (Exception e) {
+            System.out.println("Failed to edit the Recipe");
             throw new RuntimeException(e);
         }
         pc.showRecipeOverview();
     }
+
     @FXML
     public void goBack() {
         pc.showRecipeOverview();
@@ -278,25 +301,6 @@ public class EditRecipeCtrl {
         }
         addInstructionButton.setDisable(editingInstruction);
         instructionsList.setDisable(editingInstruction);
-    }
-
-
-    private Language codeToLanguage(String code) {
-        return switch (code) {
-            case "EN" -> Language.EN;
-            case "NL" -> Language.NL;
-            case "GR" -> Language.GR;
-            default -> Language.EN;
-        };
-    }
-
-    private String languageToCode(Language lang) {
-        return switch (lang) {
-            case Language.EN -> "EN";
-            case Language.NL -> "NL";
-            case Language.GR -> "GR";
-            default -> "EN";
-        };
     }
 
 

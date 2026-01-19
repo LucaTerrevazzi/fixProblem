@@ -102,6 +102,7 @@ public class RecipeService {
 
         existing.setRecipeName(updated.getRecipeName());
         existing.setRecipeLanguage(updated.getRecipeLanguage());
+        existing.setServings(updated.getServings());
 
         existing.getSteps().clear();
         if (updated.getSteps() != null) {
