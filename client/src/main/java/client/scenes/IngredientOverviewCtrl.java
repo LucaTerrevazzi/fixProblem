@@ -90,9 +90,18 @@ public class IngredientOverviewCtrl implements Initializable {
             return;
         }
 
+        int recipeCount = server.countRecipesUsingIngredient(selected.getIngredientID());
+        String ingredientDeletionInfo = "";
+        if (recipeCount != 1) {
+            ingredientDeletionInfo += "There are " + recipeCount + " recipes using this ingredient";
+        } else {
+            ingredientDeletionInfo += "There is 1 recipe using this ingredient";
+        }
+
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Delete ingredient");
-        confirm.setHeaderText("Delete \"" + selected.getIngredientName() + "\"?");
+        confirm.setHeaderText("Delete \"" + selected.getIngredientName() + "\"? \n"
+                                +  ingredientDeletionInfo);
         confirm.setContentText("This cannot be undone.");
 
         Optional<ButtonType> res = confirm.showAndWait();
@@ -199,7 +208,7 @@ public class IngredientOverviewCtrl implements Initializable {
 
         int recipeCount = server.countRecipesUsingIngredient(ing.getIngredientID());
         if (recipeCount != 1) {
-            recipeCounterText.setText("There are " + server.countRecipesUsingIngredient(ing.getIngredientID()) + " recipes using this ingredient");
+            recipeCounterText.setText("There are " + recipeCount + " recipes using this ingredient");
         } else {
             recipeCounterText.setText("There is 1 recipe using this ingredient");
         }
