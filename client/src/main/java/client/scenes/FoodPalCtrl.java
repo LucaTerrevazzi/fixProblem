@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.MyFXML;
 import client.utils.RecipeUtil;
 import client.utils.ServerUtils;
 import client.utils.WsClient;
@@ -27,6 +28,7 @@ public class FoodPalCtrl {
     private EditRecipeCtrl editRecipeCtrl;
     private EditIngredientCtrl editIngredientCtrl;
     private Scene editIngredientScene;
+    private MyFXML fxml;
 
     public void init(Stage primaryStage, Pair<RecipeOverviewCtrl, Parent> overview,
                      Pair<AddRecipeCtrl, Parent> addRecipe,
@@ -35,7 +37,7 @@ public class FoodPalCtrl {
                      Pair<EditRecipeCtrl, Parent> editRecipe,
                      Pair<DownloadRecipeCtrl, Parent> downloadRecipe,
                      Pair<EditIngredientCtrl, Parent> editIngredient) {
-
+        this.fxml= fxml;
         this.primaryStage = primaryStage;
 
         this.recipeOverviewScene = new Scene(overview.getValue());
@@ -57,8 +59,6 @@ public class FoodPalCtrl {
 
         this.editIngredientScene = new Scene(editIngredient.getValue());
         this.editIngredientCtrl = editIngredient.getKey();
-
-        // WebSocket setup (from the other branch)
         this.ws = new WsClient();
         recipeOverviewCtrl.setWsClient(ws);
         editRecipeCtrl.setWsClient(ws);
@@ -71,6 +71,10 @@ public class FoodPalCtrl {
 
         showRecipeOverview();
         primaryStage.show();
+    }
+
+    public void setFxml(MyFXML fxml) {
+        this.fxml = fxml;
     }
 
     public void showRecipeOverview() {
@@ -128,4 +132,23 @@ public class FoodPalCtrl {
         primaryStage.setTitle("Edit Ingredient");
         primaryStage.setScene(editIngredientScene);
     }
+    public void reloadUI() {
+        var overview = fxml.load(RecipeOverviewCtrl.class, "client", "scenes", "RecipesOverview.fxml");
+        var addRecipe = fxml.load(AddRecipeCtrl.class, "client", "scenes", "AddRecipe.fxml");
+        var ingredientOverview = fxml.load(IngredientOverviewCtrl.class, "client", "scenes", "IngredientsOverview.fxml");
+        var addIngredient = fxml.load(AddIngredientCtrl.class, "client", "scenes", "AddIngredient.fxml");
+        var editRecipe = fxml.load(EditRecipeCtrl.class, "client", "scenes", "EditRecipe.fxml");
+        var downloadRecipe = fxml.load(DownloadRecipeCtrl.class, "client", "scenes", "PrintDownloadableVersion.fxml");
+        var editIngredient = fxml.load(EditIngredientCtrl.class, "client", "scenes", "EditIngredient.fxml");
+
+        init(primaryStage,
+                overview,
+                addRecipe,
+                ingredientOverview,
+                addIngredient,
+                editRecipe,
+                downloadRecipe,
+                editIngredient);
+    }
+
 }

@@ -1,8 +1,6 @@
 package client.scenes;
 
-import client.utils.RecipeHolder;
-import client.utils.SearchUtil;
-import client.utils.ServerUtils;
+import client.utils.*;
 import com.google.inject.Inject;
 import commons.Instruction;
 import commons.Recipe;
@@ -11,10 +9,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import client.utils.WsClient;
 import client.ws.RecipeEvent;
 
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class RecipeOverviewCtrl implements Initializable {
@@ -348,5 +346,31 @@ public class RecipeOverviewCtrl implements Initializable {
             });
         });
     }
+    public void setEnglish() {
+        LanguageManager.setLocale(Locale.ENGLISH);
+        pc.reloadUI();
+    }
+
+    public void setDutch() {
+        LanguageManager.setLocale(new Locale("nl"));
+        pc.reloadUI();
+    }
+
+    public void setFrench() {
+        LanguageManager.setLocale(Locale.FRENCH);
+        pc.reloadUI();
+    }
+
+    public void setTurkish() {
+        LanguageManager.setLocale(new Locale("tr"));
+        pc.reloadUI();
+    }
+
+    public void setGreek() {
+        LanguageManager.setLocale(new Locale("el"));
+        pc.reloadUI();
+    }
+
+
 
 }

@@ -14,15 +14,18 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.RecipeOverviewCtrl">
    <bottom>
       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
-          <Button fx:id="addRecipeButton" mnemonicParsing="false" onAction="#goToAddScene" text="Add recipe" />
-            <Button fx:id="deleteRecipeButton" mnemonicParsing="false" onAction="#deleteRecipeWarning" text="Delete recipe" />
-            <Button fx:id="editRecipeButton" mnemonicParsing="false" onAction="#goToEditScene" text="Edit recipe" />
-            <Button fx:id="cloneRecipeButton" mnemonicParsing="false" onAction="#cloneRecipe" text="Clone recipe" />
+          <Button fx:id="addRecipeButton" mnemonicParsing="false" onAction="#goToAddScene" text="%button.addRecipe" />
+            <Button fx:id="deleteRecipeButton" mnemonicParsing="false" onAction="#deleteRecipeWarning" text="%button.deleteRecipe" />
+            <Button fx:id="editRecipeButton" mnemonicParsing="false" onAction="#goToEditScene" text="%button.deleteRecipe" />
+            <Button fx:id="cloneRecipeButton" mnemonicParsing="false" onAction="#cloneRecipe" text="%button.deleteRecipe" />
         </items>
       </ToolBar>
    </bottom>
@@ -49,8 +52,8 @@
                      <Insets top="40.0" />
                   </GridPane.margin>
                </Label>
-               <Button fx:id="downloadButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#goToDownloadRecipe" text="Download" textAlignment="RIGHT" GridPane.columnIndex="1" />
-               <TextField fx:id="searchBar" onAction="#applyFilters" prefHeight="26.0" prefWidth="103.0" promptText="Search for Recipes">
+               <Button fx:id="downloadButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#goToDownloadRecipe" text="%button.download" textAlignment="RIGHT" GridPane.columnIndex="1" />
+               <TextField fx:id="searchBar" onAction="#applyFilters" prefHeight="26.0" prefWidth="103.0" promptText="%recipes.searchPrompt">
                   <GridPane.margin>
                      <Insets right="20.0" />
                   </GridPane.margin>
@@ -65,7 +68,7 @@
             </VBox.margin></Label>
            <ListView fx:id="ingredientsList" prefHeight="120" />
 
-           <Label text="Instructions" />
+           <Label text="%label.instructions" />
            <ListView fx:id="instructionsList" prefHeight="120" />
 
            <Label fx:id="recipeLanguage" />
@@ -78,8 +81,8 @@
                <children>
                   <ToolBar layoutY="-2.0" prefHeight="40.0" prefWidth="164.0">
                     <items>
-                        <Button fx:id="favoritesButton" mnemonicParsing="false" onAction="#goToFavorites" text="Favorites" />
-                        <Button fx:id="ingredientsButton" mnemonicParsing="false" onAction="#goToIngredients" text="Ingredients" />
+                        <Button fx:id="favoritesButton" mnemonicParsing="false" onAction="#goToFavorites" text="%nav.favorites" />
+                        <Button fx:id="ingredientsButton" mnemonicParsing="false" onAction="#goToIngredients" text="%nav.ingredients" />
                     </items>
                   </ToolBar>
                </children></Pane>
@@ -92,10 +95,21 @@
 
              <HBox spacing="8" alignment="CENTER_RIGHT" minWidth="-Infinity">
                  <Label fx:id="wsStatusLabel"
-                        text="Offline"
+                        text="%ws.offline"
                         minWidth="110.0"
                         prefWidth="110.0"
                         textOverrun="CLIP"/>
+
+                 <MenuButton text="🌐">
+                     <items>
+                         <MenuItem text="🇬🇧 English" onAction="#setEnglish"/>
+                         <MenuItem text="🇳🇱 Nederlands" onAction="#setDutch"/>
+                         <MenuItem text="🇫🇷 Français" onAction="#setFrench"/>
+                         <MenuItem text="🇹🇷 Türkçe" onAction="#setTurkish"/>
+                         <MenuItem text="🇬🇷 Ελληνικά" onAction="#setGreek"/>
+                     </items>
+                 </MenuButton>
+
                  <Button fx:id="refreshButton"
                          mnemonicParsing="false"
                          onAction="#refresh"
@@ -104,13 +118,14 @@
                          style="-fx-padding: 5 5;"
                          text="⟳"/>
              </HBox>
+
          </children>
       </HBox>
    </top>
    <left>
       <VBox prefWidth="160.0" BorderPane.alignment="CENTER">
          <children>
-            <Label prefHeight="18.0" prefWidth="150.0" text="All Recipes">
+            <Label prefHeight="18.0" prefWidth="150.0" text="%recipes.all">
                <font>
                   <Font size="14.0" />
                </font>

@@ -19,8 +19,10 @@ import static com.google.inject.Guice.createInjector;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Locale;
 
 import client.scenes.*;
+import client.utils.LanguageManager;
 import com.google.inject.Injector;
 
 import client.utils.ServerUtils;
@@ -43,6 +45,8 @@ public class Main extends Application {
             System.err.println(msg);
             return;
         }
+        LanguageManager.setLocale(Locale.ENGLISH);
+
         var overview = FXML.load(RecipeOverviewCtrl.class,
                 "client", "scenes", "RecipesOverview.fxml");
         var addRecipe = FXML.load(AddRecipeCtrl.class, "client", "scenes", "AddRecipe.fxml");
@@ -54,6 +58,7 @@ public class Main extends Application {
         var downloadRecipe =  FXML.load(DownloadRecipeCtrl.class,
                 "client", "scenes", "PrintDownloadableVersion.fxml");
         var foodPalCtrl = INJECTOR.getInstance(FoodPalCtrl.class);
+        foodPalCtrl.setFxml(FXML);
         var editIngredient = FXML.load(EditIngredientCtrl.class,
                 "client", "scenes", "EditIngredient.fxml");
         foodPalCtrl.init(primaryStage,
