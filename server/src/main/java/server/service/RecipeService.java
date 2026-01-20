@@ -56,13 +56,17 @@ public class RecipeService {
                 .orElseThrow(() -> new IllegalArgumentException("Recipe not found: " + id));
     }
 
-    public List<Recipe> findRecipeByIngredientID(Long recipeIngredientID) {
+    public List<Recipe> findRecipeByIngredientID(Long ingredientId) {
         List<Recipe> filteredRecipes = new LinkedList<>();
-        List<RecipeIngredient> filteredRecipeIngredients = recipeIngredientRepo.findByIngredientIngredientID(recipeIngredientID);
+        List<RecipeIngredient> filteredRecipeIngredients = recipeIngredientRepo.findByIngredientIngredientID(ingredientId);
         for (RecipeIngredient recipeIngredient : filteredRecipeIngredients) {
             filteredRecipes.add(recipeIngredient.getRecipe());
         }
         return filteredRecipes;
+    }
+
+    public Integer countRecipeByIngredientID(Long ingredientId) {
+        return recipeIngredientRepo.countByIngredientIngredientID(ingredientId);
     }
 
     /**

@@ -158,4 +158,24 @@ public class RecipeControllerTest {
         verifyNoMoreInteractions(recipeService);
     }
 
+    @Test
+    public void getRecipeByIngredientID_returnsRecipes() {
+        RecipeService recipeService = mock(RecipeService.class);
+        RecipeController recipeContr = new RecipeController(recipeService);
+
+        long ingredientId = 10L;
+
+        Recipe pasta = createRecipe("Pasta");
+        Recipe pizza = createRecipe("Pizza");
+        List<Recipe> expected = List.of(pasta, pizza);
+
+        when(recipeService.findRecipeByIngredientID(ingredientId)).thenReturn(expected);
+
+        List<Recipe> actual = recipeContr.getRecipeByIngredientID(ingredientId);
+
+        assertEquals(expected, actual);
+        verify(recipeService).findRecipeByIngredientID(ingredientId);
+    }
+
+
 }

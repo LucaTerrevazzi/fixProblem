@@ -157,6 +157,12 @@ public class ServerUtils {
         return SERVER;
     }
 
+    public int countRecipesUsingIngredient(long id) {
+        return client.target(SERVER)
+                .path("/recipes/ingredient/" + id + "/count")
+                .request(APPLICATION_JSON)
+                .get(Integer.class);
+    }
 
 
 }
