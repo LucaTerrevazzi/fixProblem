@@ -12,14 +12,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.IngredientOverviewCtrl">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.IngredientOverviewCtrl">
    <bottom>
        <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-           <Button fx:id="addIngredientButton" mnemonicParsing="false" onAction="#goToAddIngredientScene"
-                   text="Add ingredient"/>
-           <Button fx:id="deleteIngredientButton" onAction="#deleteIngredient" text="Delete ingredient"/>
-           <Button fx:id="editIngredientButton" layoutX="10.0" layoutY="13.0" mnemonicParsing="false"
-                   onAction="#goToEditIngredientScene" text="Edit ingredient"/>
+           <Button fx:id="addIngredientButton" mnemonicParsing="false" onAction="#goToAddIngredientScene" text="Add ingredient" />
+           <Button fx:id="deleteIngredientButton" onAction="#deleteIngredient" text="Delete ingredient" />
+           <Button fx:id="editIngredientButton" layoutX="10.0" layoutY="13.0" mnemonicParsing="false" onAction="#goToEditIngredientScene" text="Edit ingredient" />
        </ToolBar>
    </bottom>
     <center>
@@ -72,6 +70,12 @@
                     <Region HBox.hgrow="ALWAYS" />
                     <Label fx:id="kcalLabel" style="-fx-font-weight: bold;" text="0 kcal" />
                 </HBox>
+            <Region prefHeight="10.0" />
+            <HBox prefHeight="20.0" prefWidth="400.0">
+               <children>
+                  <Label fx:id="recipeCounterText" text="No recipe has been selected" />
+               </children>
+            </HBox>
             </VBox>
         </VBox>
     </center>

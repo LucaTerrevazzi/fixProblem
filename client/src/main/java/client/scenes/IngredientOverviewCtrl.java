@@ -38,7 +38,7 @@ public class IngredientOverviewCtrl implements Initializable {
     @FXML private Label proteinLabel;
     @FXML private Label carbsLabel;
     @FXML private Label kcalLabel;
-
+    @FXML private Label recipeCounterText;
 
     @FXML
     private ListView<Ingredient> ingredientListView;
@@ -90,9 +90,18 @@ public class IngredientOverviewCtrl implements Initializable {
             return;
         }
 
+        int recipeCount = server.countRecipesUsingIngredient(selected.getIngredientID());
+        String ingredientDeletionInfo = "";
+        if (recipeCount != 1) {
+            ingredientDeletionInfo += "There are " + recipeCount + " recipes using this ingredient";
+        } else {
+            ingredientDeletionInfo += "There is 1 recipe using this ingredient";
+        }
+
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Delete ingredient");
-        confirm.setHeaderText("Delete \"" + selected.getIngredientName() + "\"?");
+        confirm.setHeaderText("Delete \"" + selected.getIngredientName() + "\"? \n"
+                                +  ingredientDeletionInfo);
         confirm.setContentText("This cannot be undone.");
 
         Optional<ButtonType> res = confirm.showAndWait();
@@ -145,6 +154,8 @@ public class IngredientOverviewCtrl implements Initializable {
 
         if (ingredientListView.getSelectionModel().getSelectedItem() == null && !ingredients.isEmpty()) {
             ingredientListView.getSelectionModel().selectFirst();
+        } else {
+            recipeCounterText.setText("No recipe has been selected");
         }
 
         showIngredientDetails(ingredientListView.getSelectionModel().getSelectedItem());
@@ -194,7 +205,15 @@ public class IngredientOverviewCtrl implements Initializable {
         fatLabel.setText(String.format("%.1fg", ing.getFat()));
         carbsLabel.setText(String.format("%.1fg", ing.getCarbs()));
         kcalLabel.setText(String.format("%.0f kcal", ing.getKcal()));
+
+        int recipeCount = server.countRecipesUsingIngredient(ing.getIngredientID());
+        if (recipeCount != 1) {
+            recipeCounterText.setText("There are " + recipeCount + " recipes using this ingredient");
+        } else {
+            recipeCounterText.setText("There is 1 recipe using this ingredient");
+        }
     }
+
     private void showError(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);

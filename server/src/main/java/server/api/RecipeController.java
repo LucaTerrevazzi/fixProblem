@@ -26,7 +26,7 @@ public class RecipeController {
         this.recipeService = recipeService;
         this.publisher = publisher;
     }
-    //Constractor for tests
+    //Constructor for tests
     public RecipeController(RecipeService recipeService) {
         this.recipeService = recipeService;
         this.publisher = null;
@@ -114,4 +114,23 @@ public class RecipeController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
+
+    /**
+     * GET /recipes/ingredient/{id}
+     * returns a list of recipes based on the ingredientID
+     */
+    @GetMapping("/ingredient/{ingredientId}")
+    public List<Recipe> getRecipeByIngredientID(@PathVariable long ingredientId){
+        return recipeService.findRecipeByIngredientID(ingredientId);
+    }
+
+    /**
+     * GET /recipes/ingredient/{id}/count
+     * returns the number of recipes using that ingredientId
+     */
+    @GetMapping("/ingredient/{ingredientId}/count")
+    public Integer countRecipeByIngredientID(@PathVariable long ingredientId){
+        return recipeService.countRecipeByIngredientID(ingredientId);
+    }
+
 }
