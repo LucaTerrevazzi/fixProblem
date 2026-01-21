@@ -10,6 +10,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import client.ws.RecipeEvent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.net.URL;
 import java.util.Locale;
@@ -43,6 +45,14 @@ public class RecipeOverviewCtrl implements Initializable {
 
     @FXML
     private Label ingredientTitle;
+    @FXML private MenuButton languageMenu;
+
+    @FXML private MenuItem englishItem;
+    @FXML private MenuItem dutchItem;
+    @FXML private MenuItem frenchItem;
+    @FXML private MenuItem turkishItem;
+    @FXML private MenuItem greekItem;
+
 
     @FXML
     private ListView<String> ingredientsList;
@@ -257,6 +267,23 @@ public class RecipeOverviewCtrl implements Initializable {
                     }
                 });
         //refresh();
+        englishItem.setText(" ");
+        englishItem.setGraphic(flagIcon("flags/gb.png"));
+        System.out.println(englishItem.getGraphic());
+
+        dutchItem.setText(" ");
+        dutchItem.setGraphic(flagIcon("flags/nl.png"));
+
+        frenchItem.setText(" ");
+        frenchItem.setGraphic(flagIcon("flags/fr.png"));
+
+        turkishItem.setText(" ");
+        turkishItem.setGraphic(flagIcon("flags/tr.png"));
+
+        greekItem.setText(" ");
+        greekItem.setGraphic(flagIcon("flags/gr.png"));
+
+
     }
 
     private void handleRecipeListEvent(RecipeEvent ev) {
@@ -366,5 +393,18 @@ public class RecipeOverviewCtrl implements Initializable {
     }
 
 
+    private ImageView flagIcon(String path) {
+        var stream = getClass().getClassLoader().getResourceAsStream(path);
+        if (stream == null) {
+            System.out.println("Missing flag image: " + path);
+            return null;
+        }
+
+        Image img = new Image(stream);
+        ImageView view = new ImageView(img);
+        view.setFitHeight(16);
+        view.setPreserveRatio(true);
+        return view;
+    }
 
 }

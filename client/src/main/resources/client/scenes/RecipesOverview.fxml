@@ -126,15 +126,16 @@
                            prefWidth="110.0"
                            textOverrun="CLIP"/>
 
-                    <MenuButton text="🌐">
+                    <MenuButton fx:id="languageMenu" text="🌐" prefWidth="55">
                         <items>
-                            <MenuItem text="🇬🇧 English" onAction="#setEnglish"/>
-                            <MenuItem text="🇳🇱 Nederlands" onAction="#setDutch"/>
-                            <MenuItem text="🇫🇷 Français" onAction="#setFrench"/>
-                            <MenuItem text="🇹🇷 Türkçe" onAction="#setTurkish"/>
-                            <MenuItem text="🇬🇷 Ελληνικά" onAction="#setGreek"/>
+                            <MenuItem fx:id="englishItem" onAction="#setEnglish"/>
+                            <MenuItem fx:id="dutchItem" onAction="#setDutch"/>
+                            <MenuItem fx:id="frenchItem" onAction="#setFrench"/>
+                            <MenuItem fx:id="turkishItem" onAction="#setTurkish"/>
+                            <MenuItem fx:id="greekItem" onAction="#setGreek"/>
                         </items>
                     </MenuButton>
+
 
                     <Button fx:id="refreshButton"
                             mnemonicParsing="false"
