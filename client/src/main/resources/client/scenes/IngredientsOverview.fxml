@@ -12,109 +12,134 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.IngredientOverviewCtrl">
-   <bottom>
-       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-           <Button fx:id="addIngredientButton" mnemonicParsing="false" onAction="#goToAddIngredientScene" text="Add ingredient" />
-           <Button fx:id="deleteIngredientButton" onAction="#deleteIngredient" text="Delete ingredient" />
-           <Button fx:id="editIngredientButton" layoutX="10.0" layoutY="13.0" mnemonicParsing="false" onAction="#goToEditIngredientScene" text="Edit ingredient" />
-       </ToolBar>
-   </bottom>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="client.scenes.IngredientOverviewCtrl">
+
+    <bottom>
+        <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <items>
+                <Button fx:id="addIngredientButton" mnemonicParsing="false"
+                        onAction="#goToAddIngredientScene" text="%button.addIngredient"/>
+                <Button fx:id="deleteIngredientButton"
+                        onAction="#deleteIngredient" text="%button.deleteIngredient"/>
+                <Button fx:id="editIngredientButton" mnemonicParsing="false"
+                        onAction="#goToEditIngredientScene" text="%button.editIngredient"/>
+            </items>
+        </ToolBar>
+    </bottom>
+
     <center>
         <VBox spacing="10" BorderPane.alignment="CENTER">
             <padding>
-                <Insets bottom="10" left="10" right="10" top="10" />
+                <Insets bottom="10" left="10" right="10" top="10"/>
             </padding>
 
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <Label fx:id="ingredientName">
                     <font>
-                        <Font size="18.0" />
+                        <Font size="18.0"/>
                     </font>
                 </Label>
-                <Region HBox.hgrow="ALWAYS" />
-                <Label fx:id="ingredientLanguage" textFill="#777777" />
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="ingredientLanguage" textFill="#777777"/>
             </HBox>
 
             <VBox minWidth="220.0" prefWidth="260.0" spacing="5.0" styleClass="card">
                 <padding>
-                    <Insets bottom="10" left="10" right="10" top="10" />
+                    <Insets bottom="10" left="10" right="10" top="10"/>
                 </padding>
 
-                <Label style="-fx-font-weight: bold;" text="Nutritional Values" />
-                <Label text="(per 100g)" textFill="#777777" />
-                <Region prefHeight="10.0" />
+                <Label style="-fx-font-weight: bold;" text="%ingredient.nutrition.title"/>
+                <Label text="%ingredient.nutrition.per100g" textFill="#777777"/>
+                <Region prefHeight="10.0"/>
 
                 <HBox>
-                    <Label text="Protein:" />
-                    <Region HBox.hgrow="ALWAYS" />
-                    <Label fx:id="proteinLabel" text="0g" />
+                    <Label text="%ingredient.nutrition.protein"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="proteinLabel" text="0g"/>
                 </HBox>
 
                 <HBox>
-                    <Label text="Fat:" />
-                    <Region HBox.hgrow="ALWAYS" />
-                    <Label fx:id="fatLabel" text="0g" />
+                    <Label text="%ingredient.nutrition.fat"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="fatLabel" text="0g"/>
                 </HBox>
 
                 <HBox>
-                    <Label text="Carbs:" />
-                    <Region HBox.hgrow="ALWAYS" />
-                    <Label fx:id="carbsLabel" text="0g" />
+                    <Label text="%ingredient.nutrition.carbs"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="carbsLabel" text="0g"/>
                 </HBox>
 
-                <Region prefHeight="5.0" style="-fx-border-color: transparent transparent #ccc transparent;" />
+                <Region prefHeight="5.0" style="-fx-border-color: transparent transparent #ccc transparent;"/>
 
                 <HBox>
-                    <Label style="-fx-font-weight: bold;" text="Energy:" />
-                    <Region HBox.hgrow="ALWAYS" />
-                    <Label fx:id="kcalLabel" style="-fx-font-weight: bold;" text="0 kcal" />
+                    <Label style="-fx-font-weight: bold;" text="%ingredient.nutrition.energy"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="kcalLabel" style="-fx-font-weight: bold;" text="0 kcal"/>
                 </HBox>
-            <Region prefHeight="10.0" />
-            <HBox prefHeight="20.0" prefWidth="400.0">
-               <children>
-                  <Label fx:id="recipeCounterText" text="No recipe has been selected" />
-               </children>
-            </HBox>
+
+                <Region prefHeight="10.0"/>
+
+                <HBox prefHeight="20.0" prefWidth="400.0">
+                    <children>
+                        <Label fx:id="recipeCounterText" text="%ingredient.usedIn.noneSelected"/>
+                    </children>
+                </HBox>
             </VBox>
         </VBox>
     </center>
 
     <top>
-      <HBox prefHeight="35.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-         <children>
-            <Pane prefHeight="37.0" prefWidth="275.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <ToolBar layoutY="-2.0" prefHeight="40.0" prefWidth="158.0">
-                    <items>
-                        <Button fx:id="favoritesButton" mnemonicParsing="false" onAction="#goToFavorites" text="Favorites" />
-                        <Button fx:id="recipesButton" mnemonicParsing="false" onAction="#goToRecipes" prefHeight="26.0" prefWidth="70.0" text="Recipes" />
-                    </items>
-                  </ToolBar>
-               </children></Pane>
-            <Label prefHeight="37.0" prefWidth="152.0" text="FoodPal" textAlignment="CENTER">
-               <font>
-                  <Font size="22.0" />
-               </font>
-            </Label>
-            <Pane prefHeight="37.0" prefWidth="166.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refresh" prefHeight="55.0" prefWidth="47.0" style="-fx-padding: 5 5;" text="⟳">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </Button>
-         </children>
-      </HBox>
-   </top>
-   <left>
-      <VBox prefWidth="160.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label prefHeight="18.0" prefWidth="150.0" text="All Ingredients">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label> <ListView fx:id="ingredientListView" prefWidth="138.0" VBox.vgrow="ALWAYS" />
-         </children>
-      </VBox>
-   </left>
+        <HBox prefHeight="35.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <children>
+                <Pane prefHeight="37.0" prefWidth="275.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <ToolBar layoutY="-2.0" prefHeight="40.0" prefWidth="158.0">
+                            <items>
+                                <Button fx:id="favoritesButton" mnemonicParsing="false"
+                                        onAction="#goToFavorites" text="%nav.favorites"/>
+                                <Button fx:id="recipesButton" mnemonicParsing="false"
+                                        onAction="#goToRecipes" prefHeight="26.0" prefWidth="70.0"
+                                        text="%nav.recipes"/>
+                            </items>
+                        </ToolBar>
+                    </children>
+                </Pane>
+
+                <Label prefHeight="37.0" prefWidth="152.0" text="%app.title" textAlignment="CENTER">
+                    <font>
+                        <Font size="22.0"/>
+                    </font>
+                </Label>
+
+                <Pane prefHeight="37.0" prefWidth="166.0" HBox.hgrow="ALWAYS"/>
+
+                <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refresh"
+                        prefHeight="55.0" prefWidth="47.0" style="-fx-padding: 5 5;"
+                        text="%button.refresh">
+                    <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </HBox.margin>
+                </Button>
+            </children>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox prefWidth="160.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label prefHeight="18.0" prefWidth="150.0" text="%ingredients.all">
+                    <font>
+                        <Font size="14.0"/>
+                    </font>
+                </Label>
+                <ListView fx:id="ingredientListView" prefWidth="138.0" VBox.vgrow="ALWAYS"/>
+            </children>
+        </VBox>
+    </left>
+
 </BorderPane>
