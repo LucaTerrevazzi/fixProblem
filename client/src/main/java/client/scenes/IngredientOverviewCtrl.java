@@ -10,10 +10,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
 import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import java.text.MessageFormat;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class IngredientOverviewCtrl implements Initializable {
 
@@ -29,24 +28,33 @@ public class IngredientOverviewCtrl implements Initializable {
     private Button deleteIngredientButton;
     @FXML
     private Button refreshButton;
-    @Inject
-    private ServerUtils server;
-    @Inject
-    private FoodPalCtrl pc ;
-    @FXML private Label ingredientLanguage;
-    @FXML private Label fatLabel;
-    @FXML private Label proteinLabel;
-    @FXML private Label carbsLabel;
-    @FXML private Label kcalLabel;
-    @FXML private Label recipeCounterText;
+
+    @FXML
+    private Label ingredientLanguage;
+    @FXML
+    private Label fatLabel;
+    @FXML
+    private Label proteinLabel;
+    @FXML
+    private Label carbsLabel;
+    @FXML
+    private Label kcalLabel;
+    @FXML
+    private Label recipeCounterText;
 
     @FXML
     private ListView<Ingredient> ingredientListView;
 
     @FXML
     private Label ingredientName;
+
     private final ObservableList<Ingredient> ingredients =
             FXCollections.observableArrayList();
+
+    private ResourceBundle bundle;
+
+    private final ServerUtils server;
+    private final FoodPalCtrl pc;
 
     @Inject
     public IngredientOverviewCtrl(FoodPalCtrl p, ServerUtils server) {
@@ -55,69 +63,66 @@ public class IngredientOverviewCtrl implements Initializable {
     }
 
     public void goToEditIngredientScene() {
-        System.out.println(" Go to edit scene ");
         Ingredient selected = ingredientListView.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            System.out.println("No ingredient selected for editing");
             return;
         }
-
         pc.showEditIngredient(selected);
-
     }
 
     public void goToAddIngredientScene() {
-        System.out.println("Go to the add ingredient scene *not functional yet*");
         pc.showAddIngredient();
     }
 
-    public void goToFavorites(){
-        System.out.println("Go to the Favorites scene *not functional yet*");
+    public void goToFavorites() {
+        // not implemented yet
     }
-    public void goToRecipes(){
-        System.out.println("Go to the Recipes scene");
+
+    public void goToRecipes() {
         pc.showRecipeOverview();
     }
+
     public void deleteIngredient() {
         Ingredient selected = ingredientListView.getSelectionModel().getSelectedItem();
 
         if (selected == null) {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
-            a.setTitle("No selection");
+            a.setTitle(bundle.getString("dialog.noSelection.title"));
             a.setHeaderText(null);
-            a.setContentText("Select an ingredient first.");
+            a.setContentText(bundle.getString("dialog.noSelection.ingredient"));
             a.showAndWait();
             return;
         }
 
         int recipeCount = server.countRecipesUsingIngredient(selected.getIngredientID());
-        String ingredientDeletionInfo = "";
-        if (recipeCount != 1) {
-            ingredientDeletionInfo += "There are " + recipeCount + " recipes using this ingredient";
-        } else {
-            ingredientDeletionInfo += "There is 1 recipe using this ingredient";
-        }
+
+        String usageText = (recipeCount == 1)
+                ? MessageFormat.format(bundle.getString("ingredient.usedIn.one"), recipeCount)
+                : MessageFormat.format(bundle.getString("ingredient.usedIn.many"), recipeCount);
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Delete ingredient");
-        confirm.setHeaderText("Delete \"" + selected.getIngredientName() + "\"? \n"
-                                +  ingredientDeletionInfo);
-        confirm.setContentText("This cannot be undone.");
+        confirm.setTitle(bundle.getString("dialog.deleteIngredient.title"));
+        confirm.setHeaderText(
+                MessageFormat.format(
+                        bundle.getString("dialog.deleteIngredient.header"),
+                        selected.getIngredientName(),
+                        usageText
+                )
+        );
+        confirm.setContentText(bundle.getString("dialog.deleteIngredient.content"));
 
         Optional<ButtonType> res = confirm.showAndWait();
         if (res.isEmpty() || res.get() != ButtonType.OK) {
             return;
         }
 
-        boolean success = server.deleteIngredient(
-                selected.getIngredientID().longValue()
-        );
+        boolean success = server.deleteIngredient(selected.getIngredientID().longValue());
 
         if (!success) {
             Alert err = new Alert(Alert.AlertType.ERROR);
-            err.setTitle("Delete failed");
-            err.setHeaderText("Could not delete ingredient.");
-            err.setContentText("It may be used in a recipe or the server rejected the request.");
+            err.setTitle(bundle.getString("dialog.deleteFailed.title"));
+            err.setHeaderText(bundle.getString("dialog.deleteFailed.header"));
+            err.setContentText(bundle.getString("dialog.deleteFailed.content"));
             err.showAndWait();
             return;
         }
@@ -127,11 +132,7 @@ public class IngredientOverviewCtrl implements Initializable {
         ingredientName.setText("");
     }
 
-
-
     public void refresh() {
-        System.out.println("Refresh button clicked! (Or refreshed automatically) ");
-
         Ingredient previouslySelected = ingredientListView.getSelectionModel().getSelectedItem();
         Long prevId = previouslySelected != null ? previouslySelected.getIngredientID() : null;
 
@@ -155,17 +156,15 @@ public class IngredientOverviewCtrl implements Initializable {
         if (ingredientListView.getSelectionModel().getSelectedItem() == null && !ingredients.isEmpty()) {
             ingredientListView.getSelectionModel().selectFirst();
         } else {
-            recipeCounterText.setText("No recipe has been selected");
+            recipeCounterText.setText(bundle.getString("ingredient.usedIn.noneSelected"));
         }
 
         showIngredientDetails(ingredientListView.getSelectionModel().getSelectedItem());
     }
 
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("IngredientOverviewCtrl initialized");
+        this.bundle = resourceBundle;
 
         ingredientListView.setItems(ingredients);
 
@@ -187,6 +186,7 @@ public class IngredientOverviewCtrl implements Initializable {
 
         refresh();
     }
+
     private void showIngredientDetails(Ingredient ing) {
         if (ing == null) {
             ingredientName.setText("");
@@ -195,6 +195,7 @@ public class IngredientOverviewCtrl implements Initializable {
             fatLabel.setText("0g");
             carbsLabel.setText("0g");
             kcalLabel.setText("0 kcal");
+            recipeCounterText.setText(bundle.getString("ingredient.usedIn.noneSelected"));
             return;
         }
 
@@ -207,21 +208,14 @@ public class IngredientOverviewCtrl implements Initializable {
         kcalLabel.setText(String.format("%.0f kcal", ing.getKcal()));
 
         int recipeCount = server.countRecipesUsingIngredient(ing.getIngredientID());
-        if (recipeCount != 1) {
-            recipeCounterText.setText("There are " + recipeCount + " recipes using this ingredient");
+        if (recipeCount == 1) {
+            recipeCounterText.setText(
+                    MessageFormat.format(bundle.getString("ingredient.usedIn.one"), recipeCount)
+            );
         } else {
-            recipeCounterText.setText("There is 1 recipe using this ingredient");
+            recipeCounterText.setText(
+                    MessageFormat.format(bundle.getString("ingredient.usedIn.many"), recipeCount)
+            );
         }
     }
-
-    private void showError(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-
-
 }
