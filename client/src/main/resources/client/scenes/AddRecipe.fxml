@@ -18,7 +18,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddRecipeCtrl">
+<BorderPane prefHeight="600.0" prefWidth="900.0"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="client.scenes.AddRecipeCtrl">
 
     <top>
         <HBox prefHeight="45.0" spacing="10" BorderPane.alignment="CENTER">
@@ -26,8 +29,8 @@
                 <Insets bottom="8" left="10" right="10" top="8" />
             </padding>
 
-            <Button onAction="#goBack" text="← Back" />
-            <Label text="Add Recipe">
+            <Button onAction="#goBack" text="%button.back" />
+            <Label text="%addRecipe.title">
                 <font><Font size="20" /></font>
             </Label>
 
@@ -48,22 +51,23 @@
                     <ColumnConstraints hgrow="ALWAYS" />
                 </columnConstraints>
 
-                <Label text="Recipe name:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <TextField fx:id="nameField" promptText="e.g., Pancakes" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <Label text="%addRecipe.nameLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="nameField" promptText="%addRecipe.namePrompt"
+                           GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                <Label text="Language:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <Label layoutX="10.0" layoutY="14.0" text="Servings :" GridPane.rowIndex="2" />
+                <Label text="%addRecipe.languageLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                 <ComboBox fx:id="languageCombo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="servingsNumber" maxWidth="150.0" prefHeight="26.0" prefWidth="150.0" promptText="Number of people eating" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </TextField>
-            <rowConstraints>
-               <RowConstraints />
-               <RowConstraints />
-               <RowConstraints />
-            </rowConstraints>
+
+                <Label text="%addRecipe.servingsLabel" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField fx:id="servingsNumber" maxWidth="150.0" prefHeight="26.0" prefWidth="150.0"
+                           promptText="%addRecipe.servingsPrompt"
+                           GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                <rowConstraints>
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                </rowConstraints>
             </GridPane>
 
             <Separator />
@@ -77,27 +81,32 @@
                         <Insets bottom="0" left="0" right="10" top="0" />
                     </padding>
 
-                    <Label style="-fx-font-weight: bold;" text="Ingredients" />
+                    <Label style="-fx-font-weight: bold;" text="%addRecipe.ingredientsTitle" />
 
                     <HBox spacing="8">
                         <!-- Ingredient dropdown from server -->
-                        <ComboBox fx:id="ingredientCombo" onMouseClicked="#updateIngredients" promptText="Ingredient" HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="ingredientCombo" onMouseClicked="#updateIngredients"
+                                  promptText="%addRecipe.ingredientPrompt"
+                                  HBox.hgrow="ALWAYS" />
 
                         <!-- Amount -->
-                        <TextField fx:id="ingredientAmountField" prefWidth="90" promptText="Amount" />
+                        <TextField fx:id="ingredientAmountField" prefWidth="90"
+                                   promptText="%addRecipe.amountPrompt" />
 
                         <!-- Unit enum dropdown -->
-                        <ComboBox fx:id="unitCombo" prefWidth="120" promptText="Unit" />
+                        <ComboBox fx:id="unitCombo" prefWidth="120"
+                                  promptText="%addRecipe.unitPrompt" />
 
-                        <Button onAction="#addIngredient" text="Add" />
+                        <Button onAction="#addIngredient" text="%button.add" />
                     </HBox>
 
                     <ListView fx:id="ingredientsList" VBox.vgrow="ALWAYS" />
 
                     <HBox spacing="8">
-                        <Button onAction="#removeSelectedIngredient" text="Remove selected" />
-                        <Button onAction="#clearIngredients" text="Clear" />
-                  <Button mnemonicParsing="false" onAction="#createNewIngredient" text="Create new ingredient" />
+                        <Button onAction="#removeSelectedIngredient" text="%button.removeSelected" />
+                        <Button onAction="#clearIngredients" text="%button.clear" />
+                        <Button mnemonicParsing="false" onAction="#createNewIngredient"
+                                text="%addRecipe.createNewIngredient" />
                     </HBox>
                 </VBox>
 
@@ -107,21 +116,22 @@
                         <Insets bottom="0" left="10" right="0" top="0" />
                     </padding>
 
-                    <Label style="-fx-font-weight: bold;" text="Instructions" />
+                    <Label style="-fx-font-weight: bold;" text="%addRecipe.instructionsTitle" />
 
                     <HBox spacing="8">
-                        <!-- Bigger input -->
-                        <TextArea fx:id="instructionArea" prefHeight="38.0" prefRowCount="3" prefWidth="145.0" promptText="Write the instruction..." wrapText="true" HBox.hgrow="ALWAYS" />
-                        <Button onAction="#addInstruction" text="Add" />
+                        <TextArea fx:id="instructionArea" prefHeight="38.0" prefRowCount="3" prefWidth="145.0"
+                                  promptText="%addRecipe.instructionPrompt"
+                                  wrapText="true" HBox.hgrow="ALWAYS" />
+                        <Button onAction="#addInstruction" text="%button.add" />
                     </HBox>
 
                     <ListView fx:id="instructionsList" VBox.vgrow="ALWAYS" />
 
                     <HBox spacing="8">
-                        <Button onAction="#moveInstructionUp" text="Move up" />
-                        <Button onAction="#moveInstructionDown" text="Move down" />
-                        <Button onAction="#removeSelectedInstruction" text="Remove selected" />
-                        <Button onAction="#clearInstructions" text="Clear" />
+                        <Button onAction="#moveInstructionUp" text="%button.moveUp" />
+                        <Button onAction="#moveInstructionDown" text="%button.moveDown" />
+                        <Button onAction="#removeSelectedInstruction" text="%button.removeSelected" />
+                        <Button onAction="#clearInstructions" text="%button.clear" />
                     </HBox>
                 </VBox>
 
@@ -138,8 +148,8 @@
             </padding>
 
             <Pane HBox.hgrow="ALWAYS" />
-            <Button onAction="#goBack" text="Cancel" />
-            <Button defaultButton="true" onAction="#createRecipe" text="Create" />
+            <Button onAction="#goBack" text="%button.cancel" />
+            <Button defaultButton="true" onAction="#createRecipe" text="%button.create" />
         </HBox>
     </bottom>
 

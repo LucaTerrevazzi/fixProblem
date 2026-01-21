@@ -7,12 +7,14 @@ import com.google.inject.Inject;
 import commons.*;
 import commons.Language;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class AddRecipeCtrl {
+public class AddRecipeCtrl implements Initializable {
 
     @FXML private TextField nameField;
     @FXML private ComboBox<Language> languageCombo;
@@ -27,6 +29,8 @@ public class AddRecipeCtrl {
     @FXML private ListView<String> instructionsList;
 
     @FXML private Label errorLabel;
+    private ResourceBundle resources;
+
 
     private final FoodPalCtrl pc;
     private final ServerUtils server;
@@ -37,7 +41,10 @@ public class AddRecipeCtrl {
         this.server = server;
     }
 
-    public void initialize() {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.resources = resources;
+
         languageCombo.getItems().setAll(Language.values());
         languageCombo.setValue(Language.EN);
 
@@ -46,9 +53,8 @@ public class AddRecipeCtrl {
             @Override
             protected void updateItem(Unit u, boolean empty) {
                 super.updateItem(u, empty);
-
                 if (empty || u == null) {
-                    setText("Unit");
+                    setText(resources.getString("addRecipe.unitPrompt"));
                 } else {
                     setText(u.name());
                 }
@@ -74,7 +80,7 @@ public class AddRecipeCtrl {
             protected void updateItem(Ingredient i, boolean empty) {
                 super.updateItem(i, empty);
                 if (empty || i == null) {
-                    setText("Ingredient");
+                    setText(resources.getString("addRecipe.ingredientPrompt"));
                 } else {
                     setText(i.getIngredientName());
                 }
@@ -92,6 +98,7 @@ public class AddRecipeCtrl {
 
         updateIngredients();
     }
+
 
     public void cloneRecipe() {
         System.out.println("Checking for clonable recipe...");
@@ -157,7 +164,7 @@ public class AddRecipeCtrl {
         Unit unit = unitCombo.getValue();
 
         if (ing == null || unit == null || amountText.isBlank()) {
-            errorLabel.setText("Fill ingredient, amount and unit.");
+            errorLabel.setText(resources.getString("addRecipe.error.fillIngredientAmountUnit"));
             return;
         }
 
@@ -165,7 +172,7 @@ public class AddRecipeCtrl {
         try {
             amount = Double.parseDouble(amountText);
         } catch (NumberFormatException e) {
-            errorLabel.setText("Amount must be a number.");
+            errorLabel.setText(resources.getString("addRecipe.error.amountMustBeNumber"));
             return;
         }
 
@@ -182,7 +189,7 @@ public class AddRecipeCtrl {
     public void addInstruction() {
         String text = instructionArea.getText().trim();
         if (text.isEmpty()) {
-            errorLabel.setText("Instruction cannot be empty.");
+            errorLabel.setText(resources.getString("addRecipe.error.instructionEmpty"));
             return;
         }
         instructionsList.getItems().add(text);
@@ -195,14 +202,14 @@ public class AddRecipeCtrl {
 
         String name = nameField.getText().trim();
         if (name.isBlank()) {
-            errorLabel.setText("Recipe name required.");
+            errorLabel.setText(resources.getString("addRecipe.error.nameRequired"));
             return;
         }
 
 
         String servingsStr = servingsNumber.getText().trim();
         if (servingsStr.isBlank()){
-            errorLabel.setText("number of servings required.");
+            errorLabel.setText(resources.getString("addRecipe.error.servingsRequired"));
             return;
         }
 
@@ -210,12 +217,12 @@ public class AddRecipeCtrl {
         try{
             servings = Integer.parseInt(servingsStr);
         } catch(NumberFormatException e){
-            errorLabel.setText("Servings must be an integer");
+            errorLabel.setText(resources.getString("addRecipe.error.servingsMustBeInteger"));
             return;
         }
         
         if(servings<=0){
-            errorLabel.setText("Servings must be at leat 1");
+            errorLabel.setText(resources.getString("addRecipe.error.servingsAtLeast1"));
             return;
         }
 
