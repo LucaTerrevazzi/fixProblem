@@ -6,7 +6,9 @@ package commons;
 public enum Language {
     EN("English"),
     NL("Dutch"),
-    GR("German");
+    GR("Greek"),
+    FR("French"),
+    TR("Turkish");
 
     private final String expandedForm;
 

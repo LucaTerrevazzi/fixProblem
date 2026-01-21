@@ -2,9 +2,9 @@ package client.scenes;
 
 import client.utils.RecipeUtil;
 import com.google.inject.Inject;
-import commons.*;
+import commons.Recipe;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.web.WebView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -15,6 +15,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 public class DownloadRecipeCtrl {
 
@@ -32,10 +33,16 @@ public class DownloadRecipeCtrl {
     private WebView preview;
 
     /**
-     * This label will show information to the user .
+     * This label will show information to the user.
      * e.g. "Downloading..."
      */
-    @FXML private Label status;
+    @FXML
+    private Label status;
+
+    /**
+     * ResourceBundle for translations (i18n).
+     */
+    private ResourceBundle resources;
 
     /**
      * Parser for converting Markdown to HTML.
@@ -54,6 +61,7 @@ public class DownloadRecipeCtrl {
 
     /**
      * Constructor with dependency injection.
+     *
      * @param pc main controller for navigation.
      */
     @Inject
@@ -62,8 +70,17 @@ public class DownloadRecipeCtrl {
     }
 
     /**
+     * Initialize method called after FXML loading.
+     * ResourceBundle is injected automatically by FXMLLoader.
+     */
+    public void initialize(java.net.URL url, ResourceBundle resourceBundle) {
+        this.resources = resourceBundle;
+    }
+
+    /**
      * Sets the Recipe on the UI for preview.
      * Converts the Recipe to Markdown and then to HTML for WebView.
+     *
      * @param recipe the Recipe to display
      */
     public void setRecipeOnUI(Recipe recipe) {
@@ -78,41 +95,36 @@ public class DownloadRecipeCtrl {
         String htmlBody = htmlRenderer.render(doc);
 
         String html = """
-            <html>
-              <head>
-                <style>
-                  body {
-                    font-family: Arial, sans-serif;
-                    padding: 10px;
-                    line-height: 1.5;
-                  }
-                  h2, h3 { color: #333; }
-                  ul { margin-left: 20px; }
-                  em { color: #555; }
-                </style>
-              </head>
-              <body>
-            """ + htmlBody + """
-              </body>
-            </html>
-            """;
+                <html>
+                  <head>
+                    <style>
+                      body {
+                        font-family: Arial, sans-serif;
+                        padding: 10px;
+                        line-height: 1.5;
+                      }
+                      h2, h3 { color: #333; }
+                      ul { margin-left: 20px; }
+                      em { color: #555; }
+                    </style>
+                  </head>
+                  <body>
+                """ + htmlBody + """
+                  </body>
+                </html>
+                """;
 
         preview.getEngine().loadContent(html);
     }
 
     /**
      * Sets the Recipe internally and updates the UI.
+     *
      * @param r the Recipe to set
      */
-    public void setRecipe(Recipe r){
+    public void setRecipe(Recipe r) {
         recipe = r;
         setRecipeOnUI(r);
-    }
-
-    /**
-     * Initialize method called after FXML loading.
-     */
-    public void initialize() {
     }
 
     /**
@@ -131,17 +143,21 @@ public class DownloadRecipeCtrl {
      */
     @FXML
     public void downloadRecipe() {
-        System.out.println("Downloading...");
-        status.setText("Downloading...");
+        if (recipe == null) {
+            status.setText(getText("download.error.noRecipe", "No recipe selected."));
+            return;
+        }
+
+        status.setText(getText("download.status.downloading", "Downloading..."));
 
         DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("Choose a folder to save the recipe");
+        chooser.setTitle(getText("download.chooseFolder", "Choose a folder to save the recipe"));
 
         Stage stage = (Stage) status.getScene().getWindow();
         File selectedDir = chooser.showDialog(stage);
 
         if (selectedDir == null) {
-            status.setText("Download cancelled.");
+            status.setText(getText("download.status.cancelled", "Download cancelled."));
             return;
         }
 
@@ -149,13 +165,25 @@ public class DownloadRecipeCtrl {
 
         try (FileWriter writer = new FileWriter(file)) {
             writer.write(RecipeUtil.toMarkdown(recipe));
-            String message = "File created : " + file.getAbsolutePath();
-            System.out.println(message);
-            status.setText(message);
+
+            String msg = getText("download.status.saved", "File created: ") + file.getAbsolutePath();
+            status.setText(msg);
+
         } catch (IOException e) {
             e.printStackTrace();
-            status.setText("Error while saving file.");
+            status.setText(getText("download.status.error", "Error while saving file."));
         }
+    }
 
+    /**
+     * Safe helper to read translation keys.
+     */
+    private String getText(String key, String fallback) {
+        if (resources == null) return fallback;
+        try {
+            return resources.getString(key);
+        } catch (Exception e) {
+            return fallback;
+        }
     }
 }

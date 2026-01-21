@@ -1,9 +1,8 @@
 package client.scenes;
 
-import client.utils.RecipeHolder;
-import client.utils.SearchUtil;
-import client.utils.ServerUtils;
+import client.utils.*;
 import com.google.inject.Inject;
+import client.ws.RecipeEvent;
 import commons.Instruction;
 import commons.Recipe;
 import javafx.collections.FXCollections;
@@ -11,22 +10,27 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import client.utils.WsClient;
-import client.ws.RecipeEvent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import commons.Language;
+
+import java.io.IOException;
+import java.util.EnumSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class RecipeOverviewCtrl implements Initializable {
 
-    private Recipe selectedRecipe = null;
+    private Recipe selectedRecipe;
 
     @FXML
     private Button favoritesButton;
     @FXML
     private Button ingredientsButton;
-    @FXML
-    private Button downloadRecipeButton;
     @FXML
     private Button addRecipeButton;
     @FXML
@@ -47,8 +51,22 @@ public class RecipeOverviewCtrl implements Initializable {
     private Label ingredientTitle;
 
     @FXML
-    private ListView<String> ingredientsList;
+    private MenuItem englishItem;
+    @FXML
+    private MenuItem dutchItem;
+    @FXML
+    private MenuItem frenchItem;
+    @FXML
+    private MenuItem turkishItem;
+    @FXML
+    private MenuItem greekItem;
+    @FXML
+    private MenuButton languageFilterMenu;
 
+    private final Set<Language> selectedLangFilter = EnumSet.noneOf(Language.class);
+
+    @FXML
+    private ListView<String> ingredientsList;
     @FXML
     private ListView<String> instructionsList;
 
@@ -63,12 +81,15 @@ public class RecipeOverviewCtrl implements Initializable {
     @FXML
     private Label recipeName;
 
-    private final ObservableList<Recipe> recipes =
-            FXCollections.observableArrayList();
+    private ResourceBundle resources;
+
+    private final ObservableList<Recipe> recipes = FXCollections.observableArrayList();
+
     private WsClient ws;
 
     @Inject
     private ServerUtils server;
+
     @Inject
     private FoodPalCtrl pc;
 
@@ -78,46 +99,27 @@ public class RecipeOverviewCtrl implements Initializable {
         this.server = server;
     }
 
-    public void applyFilters() {
-        String query = searchBar.getText();
-        if (!query.isBlank()) {
-            recipes.setAll(
-                    SearchUtil.search(server.getRecipes(), query)
-            );
-        } else {
-            refresh();
-        }
-    }
-
     public void setWsClient(WsClient ws) {
         this.ws = ws;
     }
 
     public void goToEditScene() {
-        System.out.println(" Go to edit scene ");
         Recipe selected = recipeListView.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            System.out.println("No recipe selected for editing");
             return;
         }
 
         Recipe fullRecipe = server.getRecipeById(selected.getRecipeID());
-
         pc.showEditRecipe(fullRecipe);
-
     }
 
     public void goToAddScene() {
-        System.out.println("Go to add scene");
         pc.showAddRecipe();
     }
 
     public void goToDownloadRecipe() {
         if (selectedRecipe != null) {
-            System.out.println(" Go to download Recipe ");
             pc.showDownloadRecipe(selectedRecipe);
-        } else {
-            System.out.println(" No Recipe Selected ");
         }
     }
 
@@ -126,17 +128,21 @@ public class RecipeOverviewCtrl implements Initializable {
     }
 
     public void goToIngredients() {
-        System.out.println("Go to the Ingredients scene");
         pc.showIngredientOverview();
     }
 
     public void deleteRecipeWarning() {
-        System.out.println("Go to the Delete recipe warning");
+        if (selectedRecipe == null) {
+            return;
+        }
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Recipe deletion");
-        alert.setContentText("Are you sure you want to delete the recipe " + selectedRecipe.getRecipeName() + "?\n" +
-                "This action cannot be undone");
+        alert.setTitle(getText("recipe.delete.title", "Recipe deletion"));
+        alert.setContentText(
+                getText("recipe.delete.confirmPrefix", "Are you sure you want to delete the recipe ")
+                        + selectedRecipe.getRecipeName()
+                        + getText("recipe.delete.confirmSuffix", "?\nThis action cannot be undone")
+        );
 
         alert.showAndWait()
                 .filter(response -> response == ButtonType.OK)
@@ -146,32 +152,23 @@ public class RecipeOverviewCtrl implements Initializable {
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-
-                    System.out.println("Recipe " + selectedRecipe.getRecipeName() + " deleted");
                 });
     }
 
     public void cloneRecipe() {
-        // storing properties of selected recipes (for cloning)
         if (selectedRecipe != null) {
             RecipeHolder holder = RecipeHolder.getInstance();
             holder.setRecipe(selectedRecipe);
         }
-
         goToAddScene();
     }
 
     public void refresh() {
-        System.out.println("Refresh ! (Refresh button clicked or else)");
-
         Recipe previouslySelected = recipeListView.getSelectionModel().getSelectedItem();
         Long prevId = previouslySelected != null ? previouslySelected.getRecipeID() : null;
 
-        recipes.setAll(
-                server.getRecipes().stream()
-                        .sorted(java.util.Comparator.comparing(r -> r.getRecipeName().toLowerCase()))
-                        .toList()
-        );
+        // Re-fetch + re-apply filters so language filter is respected after returning from Add/Edit
+        applyFilters();
 
         if (prevId != null) {
             for (Recipe r : recipes) {
@@ -201,21 +198,39 @@ public class RecipeOverviewCtrl implements Initializable {
         selectedRecipe = server.getRecipeById(selectedInList.getRecipeID());
 
         boolean hasSelection = selectedRecipe != null;
-
         deleteRecipeButton.setDisable(!hasSelection);
         editRecipeButton.setDisable(!hasSelection);
         downloadButton.setDisable(!hasSelection);
         cloneRecipeButton.setDisable(!hasSelection);
 
         if (hasSelection) {
-            System.out.println(selectedRecipe);
             showRecipeDetails(selectedRecipe);
+        }
+    }
+
+    public void applyFilters() {
+        String query = searchBar.getText();
+        var all = server.getRecipes();
+
+        var afterLang = all.stream()
+                .filter(r -> selectedLangFilter.isEmpty()
+                        || selectedLangFilter.contains(r.getRecipeLanguage()))
+                .toList();
+
+        if (query != null && !query.isBlank()) {
+            recipes.setAll(SearchUtil.search(afterLang, query));
+        } else {
+            recipes.setAll(
+                    afterLang.stream()
+                            .sorted(java.util.Comparator.comparing(r -> r.getRecipeName().toLowerCase()))
+                            .toList()
+            );
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("RecipeOverviewCtrl initialized");
+        this.resources = resourceBundle;
 
         recipeListView.setItems(recipes);
 
@@ -223,24 +238,18 @@ public class RecipeOverviewCtrl implements Initializable {
             @Override
             protected void updateItem(Recipe item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getRecipeName());
-                }
+                setText(empty || item == null ? null : item.getRecipeName());
             }
         });
 
         recipeListView.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((obs, oldRecipe, newRecipe) -> {
-
                     boolean hasSelection = newRecipe != null;
                     deleteRecipeButton.setDisable(!hasSelection);
                     editRecipeButton.setDisable(!hasSelection);
                     downloadButton.setDisable(!hasSelection);
                     cloneRecipeButton.setDisable(!hasSelection);
-
                     if (newRecipe != null) {
                         Recipe fullRecipe = server.getRecipeById(newRecipe.getRecipeID());
                         showRecipeDetails(fullRecipe);
@@ -252,42 +261,42 @@ public class RecipeOverviewCtrl implements Initializable {
                         recipeLanguage.setText("");
                     }
                 });
-        //refresh();
+
+        initLanguageFilterMenu();
+        setupFlagItems();
+
+        // Ensure initial load respects stored language filter + empty search
+        applyFilters();
+        if (!recipes.isEmpty()) {
+            recipeListView.getSelectionModel().selectFirst();
+        }
+    }
+
+    private void setupFlagItems() {
+        setFlag(englishItem, "flags/gb.png");
+        setFlag(dutchItem, "flags/nl.png");
+        setFlag(frenchItem, "flags/fr.png");
+        setFlag(turkishItem, "flags/tr.png");
+        setFlag(greekItem, "flags/gr.png");
+    }
+
+    private void setFlag(MenuItem item, String path) {
+        if (item == null) return;
+
+        item.setText(" ");
+        ImageView icon = flagIcon(path);
+        if (icon != null) {
+            item.setGraphic(icon);
+        }
     }
 
     private void handleRecipeListEvent(RecipeEvent ev) {
+        // IMPORTANT: do NOT directly add/remove to recipes list here,
+        // because that bypasses the active language/search filters.
+        // Always refresh via applyFilters() so the filters are respected.
+
         switch (ev.type) {
-            case RECIPE_ADDED -> {
-                Recipe r = new Recipe(ev.title);
-                r.setRecipeID(ev.id);
-                recipes.add(r);
-                recipes.sort(java.util.Comparator.comparing(x -> x.getRecipeName().toLowerCase()));
-            }
-
-            case RECIPE_DELETED -> {
-                recipes.removeIf(r -> r.getRecipeID() == ev.id);
-
-                if (selectedRecipe != null && selectedRecipe.getRecipeID() == ev.id) {
-                    selectedRecipe = null;
-                    recipeName.setText("");
-                    ingredientsList.setItems(FXCollections.observableArrayList());
-                    instructionsList.setItems(FXCollections.observableArrayList());
-                    recipeLanguage.setText("");
-                }
-            }
-            case RECIPE_TITLE_UPDATED -> {
-                for (int i = 0; i < recipes.size(); i++) {
-                    Recipe r = recipes.get(i);
-                    if (r.getRecipeID() == ev.id) {
-                        r.setRecipeName(ev.title);
-                        recipes.set(i, r);
-                        break;
-                    }
-                }
-                if (selectedRecipe != null && selectedRecipe.getRecipeID() == ev.id) {
-                    recipeName.setText(ev.title);
-                }
-            }
+            case RECIPE_ADDED, RECIPE_DELETED, RECIPE_TITLE_UPDATED -> applyFilters();
             default -> {
             }
         }
@@ -302,25 +311,23 @@ public class RecipeOverviewCtrl implements Initializable {
 
     private void showRecipeDetails(Recipe recipe) {
         selectedRecipe = recipe;
-        System.out.println(
-                "DEBUG → recipe id=" + recipe.getRecipeID()
-                        + " steps=" + (recipe.getSteps() == null ? "NULL" : recipe.getSteps().size())
-        );
+
         recipeName.setText(recipe.getRecipeName());
 
         if (recipe.getServings() == 0) {
-            System.out.println("\n\nYou did not remove the .db files before running the project...\n\n");
-            ingredientTitle.setText("Ingredients (Servings unknown)");
+            ingredientTitle.setText(getText("recipe.ingredients.servingsUnknown", "Ingredients (Servings unknown)"));
         } else {
-            ingredientTitle.setText("Ingredients (for " + recipe.getServings() + " people)");
+            ingredientTitle.setText(
+                    getText("recipe.ingredients.forPeoplePrefix", "Ingredients (for ")
+                            + recipe.getServings()
+                            + getText("recipe.ingredients.forPeopleSuffix", " people)")
+            );
         }
 
         ingredientsList.setItems(
                 FXCollections.observableArrayList(
                         recipe.getIngredients().stream()
-                                .map(ri -> ri.getAmount() + " " +
-                                        ri.getUnit() + " " +
-                                        ri.getIngredient().getIngredientName())
+                                .map(ri -> ri.getAmount() + " " + ri.getUnit() + " " + ri.getIngredient().getIngredientName())
                                 .toList()
                 )
         );
@@ -333,20 +340,116 @@ public class RecipeOverviewCtrl implements Initializable {
                 )
         );
 
-        recipeLanguage.setText("Language: " + recipe.getRecipeLanguage().toString());
+        recipeLanguage.setText(
+                getText("recipe.languagePrefix", "Language: ")
+                        + recipe.getRecipeLanguage()
+        );
     }
 
     public void bindWsStatus() {
         if (ws == null) return;
 
-        ws.addStatusListener(status -> {
-            wsStatusLabel.setText(switch (status) {
-                case CONNECTED -> "Live ● Connected";
-                case CONNECTING -> "Connecting…";
-                case RECONNECTING -> "Reconnecting…";
-                case DISCONNECTED -> "Offline";
-            });
-        });
+        ws.addStatusListener(status -> wsStatusLabel.setText(switch (status) {
+            case CONNECTED -> "Live ● Connected";
+            case CONNECTING -> "Connecting…";
+            case RECONNECTING -> "Reconnecting…";
+            case DISCONNECTED -> "Offline";
+        }));
     }
 
+    public void setEnglish() {
+        LanguageManager.setLocale(Locale.ENGLISH);
+        pc.reloadUI();
+    }
+
+    public void setDutch() {
+        LanguageManager.setLocale(new Locale("nl"));
+        pc.reloadUI();
+    }
+
+    public void setFrench() {
+        LanguageManager.setLocale(Locale.FRENCH);
+        pc.reloadUI();
+    }
+
+    public void setTurkish() {
+        LanguageManager.setLocale(new Locale("tr"));
+        pc.reloadUI();
+    }
+
+    public void setGreek() {
+        LanguageManager.setLocale(new Locale("el"));
+        pc.reloadUI();
+    }
+
+    private ImageView flagIcon(String path) {
+        var stream = getClass().getClassLoader().getResourceAsStream(path);
+        if (stream == null) {
+            System.out.println("Missing flag image: " + path);
+            return null;
+        }
+
+        Image img = new Image(stream);
+        ImageView view = new ImageView(img);
+        view.setFitHeight(16);
+        view.setPreserveRatio(true);
+        return view;
+    }
+
+    private String getText(String key, String fallback) {
+        if (resources == null) return fallback;
+        try {
+            return resources.getString(key);
+        } catch (Exception e) {
+            return fallback;
+        }
+    }
+
+    private void initLanguageFilterMenu() {
+        languageFilterMenu.getItems().clear();
+        selectedLangFilter.clear();
+
+        try {
+            LanguageFilterData data = LanguageFilterUtil.loadJson();
+            for (String s : data.getSelectedLanguages()) {
+                try {
+                    selectedLangFilter.add(Language.valueOf(s));
+                } catch (IllegalArgumentException ignored) {
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for (Language lang : Language.values()) {
+            CheckMenuItem item = new CheckMenuItem(lang.name());
+            item.setSelected(selectedLangFilter.contains(lang));
+
+            item.setOnAction(e -> {
+                if (item.isSelected()) {
+                    selectedLangFilter.add(lang);
+                } else {
+                    selectedLangFilter.remove(lang);
+                }
+
+                LanguageFilterData data = new LanguageFilterData();
+                data.setSelectedLanguages(
+                        selectedLangFilter.stream()
+                                .map(Enum::name)
+                                .sorted()
+                                .collect(Collectors.toList())
+                );
+
+                try {
+                    LanguageFilterUtil.saveJson(data);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                applyFilters();
+            });
+
+            languageFilterMenu.getItems().add(item);
+        }
+    }
 }
