@@ -8,44 +8,64 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 <?import javafx.scene.web.WebView?>
-<?import javafx.scene.text.TextFlow?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.DownloadRecipeCtrl">
-   <top>
-      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="78.0" prefWidth="368.0" text="Download Printable Version of the Recipe" BorderPane.alignment="BOTTOM_CENTER">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-   </top>
-   <center>
-         <WebView fx:id="preview" BorderPane.alignment="CENTER">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="client.scenes.DownloadRecipeCtrl">
+
+    <top>
+        <Label alignment="CENTER"
+               contentDisplay="CENTER"
+               prefHeight="78.0"
+               prefWidth="368.0"
+               text="%download.title"
+               BorderPane.alignment="BOTTOM_CENTER">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+    </top>
+
+    <center>
+        <WebView fx:id="preview" BorderPane.alignment="CENTER">
             <BorderPane.margin>
-               <Insets left="20.0" right="20.0" top="10.0" />
+                <Insets left="20.0" right="20.0" top="10.0" />
             </BorderPane.margin>
-         </WebView>
-   </center>
-   <bottom>
-      <VBox prefHeight="63.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label fx:id="status">
-               <VBox.margin>
-                  <Insets left="100.0" />
-               </VBox.margin>
-            </Label>
-            <HBox alignment="CENTER" prefHeight="60.0" prefWidth="600.0">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#goBack" text="← Back" />
-                  <Region prefHeight="200.0" prefWidth="200.0" />
-                  <Button mnemonicParsing="false" onAction="#downloadRecipe" text="Download" />
-               </children>
-               <padding>
-                  <Insets right="10.0" />
-               </padding>
-            </HBox>
-         </children>
-      </VBox>
-   </bottom>
+        </WebView>
+    </center>
+
+    <bottom>
+        <VBox prefHeight="63.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <children>
+
+                <Label fx:id="status">
+                    <VBox.margin>
+                        <Insets left="100.0" />
+                    </VBox.margin>
+                </Label>
+
+                <HBox alignment="CENTER" prefHeight="60.0" prefWidth="600.0">
+                    <children>
+                        <Button mnemonicParsing="false"
+                                onAction="#goBack"
+                                text="%button.back"/>
+
+                        <Region prefHeight="200.0" prefWidth="200.0" />
+
+                        <Button mnemonicParsing="false"
+                                onAction="#downloadRecipe"
+                                text="%button.download"/>
+                    </children>
+                    <padding>
+                        <Insets right="10.0" />
+                    </padding>
+                </HBox>
+
+            </children>
+        </VBox>
+    </bottom>
+
 </BorderPane>
