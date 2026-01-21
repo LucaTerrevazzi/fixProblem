@@ -60,6 +60,8 @@ public class RecipeOverviewCtrl implements Initializable {
 
     @FXML
     private Label recipeName;
+    private ResourceBundle resources;
+
 
     private final ObservableList<Recipe> recipes =
             FXCollections.observableArrayList();
@@ -132,9 +134,12 @@ public class RecipeOverviewCtrl implements Initializable {
         System.out.println("Go to the Delete recipe warning");
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Recipe deletion");
-        alert.setContentText("Are you sure you want to delete the recipe " + selectedRecipe.getRecipeName() + "?\n" +
-                "This action cannot be undone");
+        alert.setTitle(resources.getString("recipe.delete.title"));
+        alert.setContentText(
+                resources.getString("recipe.delete.confirmPrefix")
+                        + selectedRecipe.getRecipeName()
+                        + resources.getString("recipe.delete.confirmSuffix")
+        );
 
         alert.showAndWait()
                 .filter(response -> response == ButtonType.OK)
@@ -214,6 +219,7 @@ public class RecipeOverviewCtrl implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("RecipeOverviewCtrl initialized");
+        this.resources = resourceBundle;
 
         recipeListView.setItems(recipes);
 
@@ -307,31 +313,19 @@ public class RecipeOverviewCtrl implements Initializable {
         recipeName.setText(recipe.getRecipeName());
 
         if (recipe.getServings() == 0) {
-            System.out.println("\n\nYou did not remove the .db files before running the project...\n\n");
-            ingredientTitle.setText("Ingredients (Servings unknown)");
+            ingredientTitle.setText(resources.getString("recipe.ingredients.servingsUnknown"));
         } else {
-            ingredientTitle.setText("Ingredients (for " + recipe.getServings() + " people)");
+            ingredientTitle.setText(
+                    resources.getString("recipe.ingredients.forPeoplePrefix")
+                            + recipe.getServings()
+                            + resources.getString("recipe.ingredients.forPeopleSuffix")
+            );
         }
 
-        ingredientsList.setItems(
-                FXCollections.observableArrayList(
-                        recipe.getIngredients().stream()
-                                .map(ri -> ri.getAmount() + " " +
-                                        ri.getUnit() + " " +
-                                        ri.getIngredient().getIngredientName())
-                                .toList()
-                )
+        recipeLanguage.setText(
+                resources.getString("recipe.languagePrefix") + recipe.getRecipeLanguage()
         );
 
-        instructionsList.setItems(
-                FXCollections.observableArrayList(
-                        recipe.getSteps().stream()
-                                .map(Instruction::getDescription)
-                                .toList()
-                )
-        );
-
-        recipeLanguage.setText("Language: " + recipe.getRecipeLanguage().toString());
     }
 
     public void bindWsStatus() {
