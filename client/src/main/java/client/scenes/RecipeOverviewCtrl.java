@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import client.ws.RecipeEvent;
 import commons.Instruction;
 import commons.Recipe;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,13 +16,12 @@ import javafx.scene.image.ImageView;
 import commons.Language;
 
 import java.io.IOException;
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Set;
 
 import java.net.URL;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class RecipeOverviewCtrl implements Initializable {
 
@@ -43,6 +43,9 @@ public class RecipeOverviewCtrl implements Initializable {
     private Button refreshButton;
     @FXML
     private Button downloadButton;
+
+    @FXML
+    private ToggleButton favoriteToggleButton;
 
     @FXML
     private TextField searchBar;
@@ -81,6 +84,12 @@ public class RecipeOverviewCtrl implements Initializable {
     @FXML
     private Label recipeName;
 
+    @FXML
+    private Label errorLabel;
+
+    @FXML
+    private Label recipeListTitle;
+
     private ResourceBundle resources;
 
     private final ObservableList<Recipe> recipes = FXCollections.observableArrayList();
@@ -102,6 +111,8 @@ public class RecipeOverviewCtrl implements Initializable {
     public void setWsClient(WsClient ws) {
         this.ws = ws;
     }
+    private final Set<Long> favoriteIds = new HashSet<>();
+    private boolean showingFavorites = false;
 
     public void goToEditScene() {
         Recipe selected = recipeListView.getSelectionModel().getSelectedItem();
@@ -124,7 +135,11 @@ public class RecipeOverviewCtrl implements Initializable {
     }
 
     public void goToFavorites() {
-        System.out.println("Go to the Favorites scene *not functional yet*");
+        System.out.println("To favorites");
+        showingFavorites = !showingFavorites;
+        recipeListTitle.setText(showingFavorites ? "Favorite Recipes" : "All Recipes");
+        favoritesButton.setText(showingFavorites ? "All Recipes" : "Favorites");
+        applyFilters();
     }
 
     public void goToIngredients() {
@@ -166,6 +181,11 @@ public class RecipeOverviewCtrl implements Initializable {
     public void refresh() {
         Recipe previouslySelected = recipeListView.getSelectionModel().getSelectedItem();
         Long prevId = previouslySelected != null ? previouslySelected.getRecipeID() : null;
+
+        if (showingFavorites) {
+            applyFavoriteFilters();
+            return;
+        }
 
         // Re-fetch + re-apply filters so language filter is respected after returning from Add/Edit
         applyFilters();
@@ -209,6 +229,10 @@ public class RecipeOverviewCtrl implements Initializable {
     }
 
     public void applyFilters() {
+        if (showingFavorites) {
+            applyFavoriteFilters();
+            return;
+        }
         String query = searchBar.getText();
         var all = server.getRecipes();
 
@@ -238,7 +262,16 @@ public class RecipeOverviewCtrl implements Initializable {
             @Override
             protected void updateItem(Recipe item, boolean empty) {
                 super.updateItem(item, empty);
-                setText(empty || item == null ? null : item.getRecipeName());
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    boolean isFavorite = favoriteIds.contains(item.getRecipeID());
+                    if (isFavorite) {
+                        setText("★ " + item.getRecipeName());
+                    } else {
+                        setText(item.getRecipeName());
+                    }
+                }
             }
         });
 
@@ -260,6 +293,7 @@ public class RecipeOverviewCtrl implements Initializable {
                         instructionsList.setItems(FXCollections.observableArrayList());
                         recipeLanguage.setText("");
                     }
+                    updateFavoriteToggle(newRecipe);
                 });
 
         initLanguageFilterMenu();
@@ -271,7 +305,6 @@ public class RecipeOverviewCtrl implements Initializable {
             recipeListView.getSelectionModel().selectFirst();
         }
     }
-
     private void setupFlagItems() {
         setFlag(englishItem, "flags/gb.png");
         setFlag(dutchItem, "flags/nl.png");
@@ -296,7 +329,32 @@ public class RecipeOverviewCtrl implements Initializable {
         // Always refresh via applyFilters() so the filters are respected.
 
         switch (ev.type) {
-            case RECIPE_ADDED, RECIPE_DELETED, RECIPE_TITLE_UPDATED -> applyFilters();
+            case RECIPE_ADDED, RECIPE_TITLE_UPDATED -> applyFilters();
+            case RECIPE_DELETED -> {
+                try {
+                    Set<Long> favoriteIds = FavoritesStorage.loadFavoriteIds();
+                    boolean wasFavorite = favoriteIds.contains(ev.id);
+                    if (wasFavorite) {
+                        favoriteIds.remove(ev.id);
+                        FavoritesStorage.removeFavorite(new Recipe(ev.id));
+
+                        Platform.runLater(() -> {
+                            Alert a = new Alert(Alert.AlertType.INFORMATION);
+                            a.setTitle(getText("favorites.deleted.title", "A favorite was deleted"));
+                            a.setHeaderText(getText("favorites.deleted.header", "A favorite was deleted"));
+                            a.setContentText(getText(
+                                    "favorites.deleted.content",
+                                    "One of your favorite recipes was deleted by someone else.\n"
+                                            + "Take a moment to mourn its loss."
+                            ));
+                            a.show();
+                        });
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                applyFilters();
+            }
             default -> {
             }
         }
@@ -306,6 +364,7 @@ public class RecipeOverviewCtrl implements Initializable {
         if (ws != null) {
             ws.subscribeRecipeListStored(this::handleRecipeListEvent);
         }
+        loadFavorites();
         refresh();
     }
 
@@ -450,6 +509,126 @@ public class RecipeOverviewCtrl implements Initializable {
             });
 
             languageFilterMenu.getItems().add(item);
+        }
+    }
+    public void toggleFavorite() {
+        if (selectedRecipe == null) {
+            return;
+        }
+        boolean isFavorite = favoriteIds.contains(selectedRecipe.getRecipeID());
+        try {
+            if (isFavorite) {
+                FavoritesStorage.removeFavorite(selectedRecipe);
+                favoriteIds.remove(selectedRecipe.getRecipeID());
+            } else {
+                FavoritesStorage.addFavorite(selectedRecipe);
+                favoriteIds.add(selectedRecipe.getRecipeID());
+            }
+        } catch (IOException e) {
+            errorLabel.setText("Unable to update Favorites");
+            return;
+        }
+        updateFavoriteToggle(selectedRecipe);
+        recipeListView.refresh();
+    }
+
+    private void updateFavoriteToggle(Recipe recipe) {
+        if (recipe == null) {
+            favoriteToggleButton.setDisable(true);
+            favoriteToggleButton.setSelected(false);
+            favoriteToggleButton.setText("☆ Favorite");
+            return;
+        }
+        favoriteToggleButton.setDisable(false);
+        boolean isFavorite = favoriteIds.contains(recipe.getRecipeID());
+        favoriteToggleButton.setSelected(isFavorite);
+        if (isFavorite) {
+            favoriteToggleButton.setText("★ Favorite");
+        } else {
+            favoriteToggleButton.setText("☆ Favorite");
+        }
+
+    }
+
+    private void applyFavoriteFilters() {
+        List<Recipe> favoriteRecipes = server.getRecipes().stream()
+                .filter(r -> favoriteIds.contains(r.getRecipeID()))
+                .sorted(java.util.Comparator.comparing(r -> r.getRecipeName().toLowerCase()))
+                .toList();
+
+        String query = searchBar.getText();
+        if (query != null && !query.isBlank()) {
+            favoriteRecipes = SearchUtil.search(favoriteRecipes, query);
+        }
+
+        updateRecipes(favoriteRecipes);
+    }
+
+    private void updateRecipes(List<Recipe> newRecipes) {
+        Recipe previouslySelected = recipeListView.getSelectionModel().getSelectedItem();
+        Long prevId = previouslySelected != null ? previouslySelected.getRecipeID() : null;
+
+        recipes.setAll(newRecipes);
+
+        updateSelection(prevId);
+    }
+
+    private void updateSelection(Long prevId) {
+        if (prevId != null) {
+            for (Recipe r : recipes) {
+                if (prevId.equals(r.getRecipeID())) {
+                    recipeListView.getSelectionModel().select(r);
+                    break;
+                }
+            }
+        }
+
+        if (recipeListView.getSelectionModel().getSelectedItem() == null && !recipes.isEmpty()) {
+            recipeListView.getSelectionModel().selectFirst();
+        }
+
+        Recipe selectedInList = recipeListView.getSelectionModel().getSelectedItem();
+        if (selectedInList == null) {
+            selectedRecipe = null;
+
+            deleteRecipeButton.setDisable(true);
+            editRecipeButton.setDisable(true);
+            downloadButton.setDisable(true);
+            cloneRecipeButton.setDisable(true);
+            updateFavoriteToggle(null);
+
+            recipeName.setText("");
+            ingredientsList.setItems(FXCollections.observableArrayList());
+            instructionsList.setItems(FXCollections.observableArrayList());
+            recipeLanguage.setText("");
+
+            return;
+        }
+
+        selectedRecipe = server.getRecipeById(selectedInList.getRecipeID());
+
+        boolean hasSelection = selectedRecipe != null;
+
+        deleteRecipeButton.setDisable(!hasSelection);
+        editRecipeButton.setDisable(!hasSelection);
+        downloadButton.setDisable(!hasSelection);
+        cloneRecipeButton.setDisable(!hasSelection);
+
+        if (hasSelection) {
+            System.out.println(selectedRecipe);
+            showRecipeDetails(selectedRecipe);
+        }
+    }
+
+    private void loadFavorites() {
+        try {
+            favoriteIds.clear();
+            favoriteIds.addAll(FavoritesStorage.loadFavoriteIds());
+            recipeListView.refresh();
+        } catch (IOException e) {
+            if (errorLabel != null) {
+                errorLabel.setText("Unable to load Favorites");
+            }
         }
     }
 }
